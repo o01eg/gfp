@@ -1,0 +1,18 @@
+gfp
+===
+
+Version 0.0.1 (date unknown)
+ * Grow some program.
+
+Snapshot 2010-02-21
+ * Add all needed files for GNU GPL.
+ * Start adding of calculation.
+ * Add LaTeX documentation.
+
+Snapshot 2010-02-20
+ * Add support for function names and loading functions from shared library.
+
+Snapshot 2010-01-05
+ * Inital snapshot of new branch and closing dead branch
+ * Some copying and refactoring old code.
+

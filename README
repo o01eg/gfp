@@ -1,0 +1,30 @@
+README from 2010-02-21
+
+		gfp - Genetic Function Programming
+	GFP use Genetic Programming and LISP-like language for growing program.
+	For installing use:
+		$ ./autogen.sh
+		$ ./configure --prefix=<where you want install into>
+		$ make
+		$ make install
+	For generate documantation use LaTeX or pdfLaTeX.
+
+
+   Copyright (C) 2010, O01eg
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+
