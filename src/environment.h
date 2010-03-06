@@ -7,6 +7,7 @@
 namespace VM
 {
 	class Object;
+	class Program;
 
 	typedef void (*FunctionPtr)(const Object& args, Object *result); ///< Pointer to LISP function.
 

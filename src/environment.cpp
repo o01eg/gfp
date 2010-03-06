@@ -42,7 +42,7 @@ Object Environment::Eval(const Object &arg1)
 		Object obj = obj_to_calc.top();
 		obj_to_calc.pop();
 
-		if((obj.IsNIL()) || (obj.GetType() == Object::ERROR) || (obj.GetType() == Object::INTEGER))
+		if(obj.IsNIL() || (obj.GetType() == Object::ERROR) || (obj.GetType() == Object::INTEGER))
 		{
 			obj_from_calc.push(obj);
 		}
@@ -54,13 +54,53 @@ Object Environment::Eval(const Object &arg1)
 					// make arguments list and call
 					obj_to_calc.push(CallFunction(obj.GetValue(), &obj_from_calc));
 					break;
+				case Object::LIST:
+					{
+						Object head = obj.GetHead();
+						if(head.IsNIL())
+						{
+							obj_from_calc.push(Object(*this, Object::ERROR));
+						}
+						else
+						{
+							switch(head.GetType())
+							{
+								case Object::FUNC:
+								case Object::ADF:
+									while((! obj.IsNIL()) && (obj.GetType() == Object::LIST)) // while LIST isn't ended
+									{
+										head = obj.GetHead();
+										obj_to_calc.push(head);
+										obj = obj.GetTail();
+									}
+									break;
+								case Object::QUOTE:
+									obj_from_calc.push(obj.GetTail().GetHead());
+									break;
+								case Object::IF:
+									{
+										Object cond = obj.GetTail().GetHead();
+										Object otrue = obj.GetTail().GetTail().GetHead();
+										Object ofalse = obj.GetTail().GetTail().GetTail().GetHead();
+										obj_to_calc.push(ofalse);
+										obj_to_calc.push(otrue);
+										obj_to_calc.push(head);
+										obj_to_calc.push(cond);
+									}
+									break;
+								default: // here get ERROR and INTEGER
+									obj_from_calc.push(Object(*this, Object::ERROR));
+									break;
+							}
+						}
+					}
+					break;
 				case Object::ADF:
 					/// \todo Write this.
+					
 				case Object::PARAM:
 					/// \todo Write this.
 				case Object::IF:
-					/// \todo Write this.
-				case Object::LIST:
 					/// \todo Write this.
 				case Object::QUOTE:
 				default:
