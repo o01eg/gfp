@@ -7,6 +7,7 @@
 #include <stack>
 #include <glibmm/module.h>
 #include "environment.h"
+#include "object.h"
 
 using namespace VM;
 

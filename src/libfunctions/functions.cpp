@@ -1,19 +1,25 @@
-#include "object.h"
+#include "../object.h"
 
 /// \file functions.cpp
 /// \todo Write all needed functions.
 /// \todo Write description for functions.
 
+#ifdef _USRDLL
+# define DLLEXPORT __declspec(dllexport)
+#else
+# define DLLEXPORT 
+#endif
+
 using namespace VM;
 
 extern "C"
 {
-	void func_00_eval(const Object& args, Object *result);
-	void func_01_cons(const Object& args, Object *result);
-	void func_02_car(const Object& args, Object *result);
-	void func_03_cdr(const Object& args, Object *result);
-	void func_04_is_nil(const Object& args, Object *result);
-	void func_12_int_plus(const Object& args, Object *result);
+	void DLLEXPORT func_00_eval(const Object& args, Object *result);
+	void DLLEXPORT func_01_cons(const Object& args, Object *result);
+	void DLLEXPORT func_02_car(const Object& args, Object *result);
+	void DLLEXPORT func_03_cdr(const Object& args, Object *result);
+	void DLLEXPORT func_04_is_nil(const Object& args, Object *result);
+	void DLLEXPORT func_12_int_plus(const Object& args, Object *result);
 }
 
 /// \brief EVAL - Calculate value of expression in arg1.

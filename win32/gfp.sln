@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gfp", "gfp.vcproj", "{54DF6965-AAD9-4F73-9B07-20638B92ADA4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfunctions", "libfunctions.vcproj", "{EBF7D280-8F5D-46E0-957B-8DA0CA040E4D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54DF6965-AAD9-4F73-9B07-20638B92ADA4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54DF6965-AAD9-4F73-9B07-20638B92ADA4}.Debug|Win32.Build.0 = Debug|Win32
+		{54DF6965-AAD9-4F73-9B07-20638B92ADA4}.Release|Win32.ActiveCfg = Release|Win32
+		{54DF6965-AAD9-4F73-9B07-20638B92ADA4}.Release|Win32.Build.0 = Release|Win32
+		{EBF7D280-8F5D-46E0-957B-8DA0CA040E4D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EBF7D280-8F5D-46E0-957B-8DA0CA040E4D}.Debug|Win32.Build.0 = Debug|Win32
+		{EBF7D280-8F5D-46E0-957B-8DA0CA040E4D}.Release|Win32.ActiveCfg = Release|Win32
+		{EBF7D280-8F5D-46E0-957B-8DA0CA040E4D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
