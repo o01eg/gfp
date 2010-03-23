@@ -46,6 +46,7 @@ AC_CONFIG_FILES([
     doc/Makefile
     src/Makefile
     src/libfunctions/Makefile
+    win32/Makefile
 ])
 
 AC_OUTPUT
