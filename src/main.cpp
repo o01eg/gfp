@@ -9,6 +9,7 @@
 #include "object.h"
 #include "environment.h"
 #include "ioobject.h"
+#include "program.h"
 
 /// \brief Maximum step for persistent best individuals.
 const size_t MAX_STEP_UNCHANGED = 20;
@@ -89,6 +90,7 @@ int main(int argc, char **argv)
 		env.LoadFunctions(DATA_DIR "functions.txt");
 		try
 		{
+			VM::Program prog(env, DATA_DIR "1.lsp");
 			const size_t MAX_CIRCLES = 1000;
 			VM::Object a(env);
 			std::cin >> a;

@@ -96,12 +96,30 @@ Object Environment::Eval(const Object &arg1)
 						}
 					}
 					break;
+				case Object::IF:
+					{
+						Object cond = obj_from_calc.top();
+						obj_from_calc.pop();
+						Object otrue = obj_to_calc.top();
+						obj_to_calc.pop();
+						Object ofalse = obj_to_calc.top();
+						obj_to_calc.pop();
+						if(cond.IsNIL())
+						{
+							// false
+							obj_to_calc.push(ofalse);
+						}
+						else
+						{
+							// true
+							obj_to_calc.push(otrue);
+						}
+					}
+					break;
 				case Object::ADF:
 					/// \todo Write this.
 					
 				case Object::PARAM:
-					/// \todo Write this.
-				case Object::IF:
 					/// \todo Write this.
 				case Object::QUOTE:
 				default:
@@ -264,5 +282,10 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Obje
 		return Object(*this);
 	}
 	return args;
+}
+
+Object Environment::Run(const Object& param)
+{
+	/// \todo Write this.
 }
 

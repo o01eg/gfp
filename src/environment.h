@@ -13,6 +13,7 @@ namespace VM
 
 	/// \brief Environment of execution.
 	/// \todo Add hash table for functions name.
+	/// \todo Add support for programs.
 	class Environment
 	{
 	public:
@@ -36,6 +37,7 @@ namespace VM
 		Heap heap; ///< Heap of objects.
 		Stack stack; ///< Stack.
 		std::vector<Func> functions; ///< Functions' list.
+		Program *program; ///< Program executing in environment.
 
 		size_t circle_count; ///< Number of remain circles to prevent infinity loops.
 
@@ -53,6 +55,11 @@ namespace VM
 		/// \todo Add upcasing of function's names.
 		/// \param filename Path to file with functions.
 		void LoadFunctions(const char* filename);
+
+		/// \brief Run program with parameter.
+		/// \param Parameter.
+		/// \return Result.
+		Object Run(const Object& param);
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.

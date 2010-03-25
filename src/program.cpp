@@ -1,4 +1,6 @@
+#include <fstream>
 #include "program.h"
+#include "ioobject.h"
 
 using namespace VM;
 
@@ -18,6 +20,15 @@ Program::Program(const Object &obj)
 
 		ptr = ptr.GetTail();
 	}
+}
+
+Program::Program(Environment &env, const std::string &fn)
+{
+	std::ifstream f(fn.c_str());
+	Object obj(env);
+	f >> obj;
+	this->~Program();
+	new (this) Program(obj);
 }
 
 Object Program::Save() const
