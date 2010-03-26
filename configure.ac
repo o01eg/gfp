@@ -22,7 +22,7 @@ AC_PROG_CXX_C_O
 
 AC_LANG(C++)
 
-CXXFLAGS="-ggdb3 -Wall -Wextra -pedantic -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_"
+CXXFLAGS="-ggdb3 -Wall -Wextra -pedantic -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_"
 
 # == check for libraries ==
 

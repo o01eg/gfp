@@ -5,13 +5,16 @@
 #include <fstream>
 #include <cstdlib>
 #include <stack>
+#include <deque>
 #include <glibmm/module.h>
 #include "environment.h"
 #include "object.h"
+#include "program.h"
 
 using namespace VM;
 
 Environment::Environment()
+	:program(0)
 {
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
@@ -32,20 +35,45 @@ Object Environment::Eval(const Object &arg1)
 	std::clog << "Evalation object " << arg1 << " in " << this << std::endl;
 #endif
 	// create all needed stacks
-	std::stack<Object> obj_to_calc, obj_from_calc, adf_params_obj;
-	std::stack<Heap::UInt> adf_params;
+	std::stack<Object> adf_params_obj;
+	std::deque<Object> obj_to_calc, obj_from_calc;
+	std::stack<Heap::UInt> adf_depth;
 	bool is_in_adf = false;
 
-	obj_to_calc.push(arg1);
+	obj_to_calc.push_back(arg1);
 
 	while((! obj_to_calc.empty()) && (circle_count))
 	{
-		Object obj = obj_to_calc.top();
-		obj_to_calc.pop();
+#if _DEBUG_EVAL_
+		std::clog << "===" << std::endl;
+#endif
+		Heap::UInt depth = obj_to_calc.size();
+		while(is_in_adf && (depth <= adf_depth.top()))
+		{
+#if _DEBUG_EVAL_
+			std::clog << "Leave " << adf_depth.top() << std::endl;
+#endif
+			adf_params_obj.pop();
+			adf_depth.pop();
+			if(adf_depth.empty())
+			{
+				is_in_adf = false;
+			}
+		}
+
+#if _DEBUG_EVAL_
+		std::clog << "Objects to calculate:" << std::endl;
+		DumpStack(obj_to_calc);
+		std::clog << "Objects from calculate:" << std::endl;
+		DumpStack(obj_from_calc);
+#endif
+
+		Object obj = obj_to_calc.back();
+		obj_to_calc.pop_back();
 
 		if(obj.IsNIL() || (obj.GetType() == Object::ERROR) || (obj.GetType() == Object::INTEGER))
 		{
-			obj_from_calc.push(obj);
+			obj_from_calc.push_back(obj);
 		}
 		else
 		{
@@ -53,14 +81,14 @@ Object Environment::Eval(const Object &arg1)
 			{
 				case Object::FUNC:
 					// make arguments list and call
-					obj_to_calc.push(CallFunction(obj.GetValue(), &obj_from_calc));
+					obj_from_calc.push_back(CallFunction(obj.GetValue(), &obj_from_calc));
 					break;
 				case Object::LIST:
 					{
 						Object head = obj.GetHead();
 						if(head.IsNIL())
 						{
-							obj_from_calc.push(Object(*this, Object::ERROR));
+							obj_from_calc.push_back(Object(*this, Object::ERROR));
 						}
 						else
 						{
@@ -71,26 +99,26 @@ Object Environment::Eval(const Object &arg1)
 									while((! obj.IsNIL()) && (obj.GetType() == Object::LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push(head);
+										obj_to_calc.push_back(head);
 										obj = obj.GetTail();
 									}
 									break;
 								case Object::QUOTE:
-									obj_from_calc.push(obj.GetTail().GetHead());
+									obj_from_calc.push_back(obj.GetTail().GetHead());
 									break;
 								case Object::IF:
 									{
 										Object cond = obj.GetTail().GetHead();
 										Object otrue = obj.GetTail().GetTail().GetHead();
 										Object ofalse = obj.GetTail().GetTail().GetTail().GetHead();
-										obj_to_calc.push(ofalse);
-										obj_to_calc.push(otrue);
-										obj_to_calc.push(head);
-										obj_to_calc.push(cond);
+										obj_to_calc.push_back(ofalse);
+										obj_to_calc.push_back(otrue);
+										obj_to_calc.push_back(head);
+										obj_to_calc.push_back(cond);
 									}
 									break;
 								default: // here get ERROR and INTEGER
-									obj_from_calc.push(Object(*this, Object::ERROR));
+									obj_from_calc.push_back(Object(*this, Object::ERROR));
 									break;
 							}
 						}
@@ -98,44 +126,62 @@ Object Environment::Eval(const Object &arg1)
 					break;
 				case Object::IF:
 					{
-						Object cond = obj_from_calc.top();
-						obj_from_calc.pop();
-						Object otrue = obj_to_calc.top();
-						obj_to_calc.pop();
-						Object ofalse = obj_to_calc.top();
-						obj_to_calc.pop();
+						Object cond = obj_from_calc.back();
+						obj_from_calc.pop_back();
+						Object otrue = obj_to_calc.back();
+						obj_to_calc.pop_back();
+						Object ofalse = obj_to_calc.back();
+						obj_to_calc.pop_back();
 						if(cond.IsNIL())
 						{
 							// false
-							obj_to_calc.push(ofalse);
+							obj_to_calc.push_back(ofalse);
 						}
 						else
 						{
 							// true
-							obj_to_calc.push(otrue);
+							obj_to_calc.push_back(otrue);
 						}
 					}
 					break;
 				case Object::ADF:
-					/// \todo Write this.
-					
+					if(! is_in_adf)
+					{
+						is_in_adf = true;
+					}
+					adf_params_obj.push(obj_from_calc.back());
+					obj_from_calc.pop_back();
+					adf_depth.push(obj_to_calc.size());
+#if _DEBUG_EVAL_
+					std::clog << "Enter " << adf_depth.top() << std::endl;
+#endif
+					obj_to_calc.push_back(program->GetADF(obj.GetValue()));
+					break;
 				case Object::PARAM:
-					/// \todo Write this.
+					if(is_in_adf)
+					{
+						obj_from_calc.push_back(adf_params_obj.top());
+					}
+					else
+					{
+						obj_from_calc.push_back(Object(*this, Object::ERROR));
+					}
+					break;
 				case Object::QUOTE:
 				default:
-					obj_from_calc.push(Object(*this, Object::ERROR));
+					obj_from_calc.push_back(Object(*this, Object::ERROR));
 					break;
 			}
 		}
 
 		circle_count --;
 	}
-	if((! is_in_adf) && (obj_from_calc.size() == 1))
+	if(obj_from_calc.size() == 1)
 	{
 #if _DEBUG_ENV_
-		std::clog << "Result of evalatuon is " << obj_from_calc.top() << std::endl;
+		std::clog << "Result of evalatuon is " << obj_from_calc.back() << std::endl;
 #endif
-		return obj_from_calc.top();
+		return obj_from_calc.back();
 	}
 	else
 	{
@@ -244,36 +290,63 @@ void Environment::LoadFunctions(const char* filename)
 		}
 		throw;
 	}
+	if(module)
+	{
+		delete module;
+	}
 }
 
-Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc)
+Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc)
 {
-	const Func &function = functions[func_number];	
+	const Func &function = functions[func_number];
+#if _DEBUG_EVAL_
+	std::clog << "Function " << function.name << " with " << static_cast<int>(function.number_param) << " args" << std::endl;
+#endif
 	Object args = GenerateArgsList(function.number_param, ptr_obj_from_calc);
+#if _DEBUG_EVAL_
+		std::clog << "args " << args << std::endl;
+#endif
 	if(args.IsNIL())
 	{
 		return Object(*this, Object::ERROR);
 	}
 	Object result(*this);
 	function.func(args, &result);
+#if _DEBUG_EVAL_
+	std::clog << " -> " << result << std::endl;
+#endif
 	return result;
 }
 
-Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc)
+Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc)
 {
-	std::stack<Object> &obj_from_calc = *ptr_obj_from_calc;
+	std::deque<Object> &obj_from_calc = *ptr_obj_from_calc;
 	Object args(*this);
+	std::stack<Object> arguments;
 	//check number of parameters and ERROR
 	while(param_number)
 	{
-		if((! obj_from_calc.empty()) && (obj_from_calc.top().IsNIL() || (obj_from_calc.top().GetType() != Object::ERROR)))
+		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != Object::ERROR)))
 		{
-			args = Object(obj_from_calc.top(), args);
-			obj_from_calc.pop();
+#if _DEBUG_EVAL_
+			std::clog << "arg " << obj_from_calc.back() << std::endl;
+#endif
+			arguments.push(obj_from_calc.back());
+			obj_from_calc.pop_back();
 			param_number --;
 		}
 		else
 		{
+#if _DEBUG_EVAL_
+			if(obj_from_calc.empty())
+			{
+				std::clog << "arg end empty" << std::endl;
+			}
+			else
+			{
+				std::clog << "arg end " << obj_from_calc.back() << std::endl;
+			}
+#endif
 			break;
 		}
 	}
@@ -281,11 +354,30 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Obje
 	{
 		return Object(*this);
 	}
+	while(! arguments.empty())
+	{
+		args = Object(arguments.top(), args);
+		arguments.pop();
+	}
 	return args;
 }
 
 Object Environment::Run(const Object& param)
 {
-	/// \todo Write this.
+	if(! program)
+	{
+		THROW("Null pointer to program");
+	}
+	Object param_adf0(Object(*this, Object::QUOTE), Object(param, Object(*this)));
+	Object expr(Object(*this, Object::ADF, 0), Object(param_adf0, Object(*this)));
+	return Eval(expr);
+}
+
+void Environment::DumpStack(const std::deque<Object> &stack)
+{
+	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); it ++)
+	{
+		std::clog << (*it) << std::endl;
+	}
 }
 

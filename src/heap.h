@@ -49,6 +49,7 @@ namespace VM
 		const Element& operator[](UInt position) const {return At(position);}
 
 		/// \brief Check heap for leaks.
+		/// \todo Show more information.
 		void CheckLeaks() const;
 
 		/// \brief Allocator.

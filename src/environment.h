@@ -13,7 +13,7 @@ namespace VM
 
 	/// \brief Environment of execution.
 	/// \todo Add hash table for functions name.
-	/// \todo Add support for programs.
+	/// \todo Fix memory leaks in heap.
 	class Environment
 	{
 	public:
@@ -45,8 +45,6 @@ namespace VM
 		~Environment(); ///< Destructor of environment.
 		
 		/// \brief Evalation of Object.
-		/// \todo Write this.
-		/// \todo Add ADF support.
 		/// \param arg1 Argument.
 		/// \return Result of evalation or ERROR.
 		Object Eval(const Object &arg1);
@@ -57,7 +55,7 @@ namespace VM
 		void LoadFunctions(const char* filename);
 
 		/// \brief Run program with parameter.
-		/// \param Parameter.
+		/// \param param Parameter.
 		/// \return Result.
 		Object Run(const Object& param);
 	private:
@@ -65,13 +63,17 @@ namespace VM
 		/// \param func_number Number of function in functions.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return Result of execution.
-		Object CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc);
+		Object CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc);
 
 		/// \brief Generate list of arguments.
 		/// \param param_number Nuber of parameters.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return List of arguments or NIL if error.
-		Object GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc);
+		Object GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc);
+
+		/// \brief Dump content of stack.
+		/// \param stack Stack of object.
+		void DumpStack(const std::deque<Object> &stack);
 	};
 }
 

@@ -17,7 +17,7 @@ namespace VM
 		/// \brief Construct program from file.
 		/// \param env Environment.
 		/// \param fn File name.
-		Program(Environment &env, const std::string &fn);
+		Program(Environment &env, const char *fn);
 
 		/// \brief Destroy program.
 		~Program() {}
@@ -27,7 +27,7 @@ namespace VM
 		Object Save() const;
 
 		/// \brief Get ADF.
-		/// \param Number of ADF.
+		/// \param num Number of ADF.
 		/// \return ADF.
 		Object GetADF(int num) const {return adfs[num];}
 	private:

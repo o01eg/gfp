@@ -91,11 +91,12 @@ int main(int argc, char **argv)
 		try
 		{
 			VM::Program prog(env, DATA_DIR "1.lsp");
-			const size_t MAX_CIRCLES = 1000;
+			env.program = &prog;
+			const size_t MAX_CIRCLES = 100;
 			VM::Object a(env);
 			std::cin >> a;
 			env.circle_count = MAX_CIRCLES;
-			std::cout << "result = " << env.Eval(a) << std::endl;
+			std::cout << "result = " << env.Run(a) << std::endl;
 			std::cout << "use " << (MAX_CIRCLES - env.circle_count) << " circles" << std::endl;
 		}
 		catch(Glib::Error &e)

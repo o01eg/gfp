@@ -1,6 +1,10 @@
+Snapshot 2010-03-26
+ * Add support for execution of program.
+
 Snapshot 2010-02-21
  * Add all needed files for GNU GPL.
  * Start adding of calculation.
+ * Add LaTeX documentation.
 
 Snapshot 2010-02-20
  * Add support for function names and loading functions from shared library.

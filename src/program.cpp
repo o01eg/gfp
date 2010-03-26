@@ -22,9 +22,9 @@ Program::Program(const Object &obj)
 	}
 }
 
-Program::Program(Environment &env, const std::string &fn)
+Program::Program(Environment &env, const char *fn)
 {
-	std::ifstream f(fn.c_str());
+	std::ifstream f(fn);
 	Object obj(env);
 	f >> obj;
 	this->~Program();

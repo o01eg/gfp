@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 					stack.push(obj);
 					Object object(obj);
 					bool arrow = true;
-					size_t level = 0;
+					//size_t level = 0;
 					while(! stack.empty())
 					{
 						object = stack.top();
@@ -70,13 +70,13 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 							{
 								if(object.GetType() == Object::LIST)
 								{
-									os << std::endl;
-									for(size_t i = 0; i < level; i ++)
+									//os << std::endl;
+									/*for(size_t i = 0; i < level; i ++)
 									{
 										os << " ";
-									}
+									}*/
 									os << "( ";
-									level ++;
+									//level ++;
 									stack.push(object.GetTail());
 									arrow_stack.push(false);
 									stack.push(object.GetHead());
@@ -93,7 +93,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 							if(object.IsNIL())
 							{
 								os << ") ";
-								level --;
+								//level --;
 							}
 							else
 							{
@@ -107,7 +107,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 								else
 								{
 									os << ". " << object << ") ";
-									level --;
+									//level --;
 								}
 							}
 						}

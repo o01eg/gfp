@@ -1,8 +1,11 @@
 gfp
 ===
 
-Version 0.0.1 (date unknown)
+Version 0.0.0.1 (date unknown)
  * Grow some program.
+
+Snapshot 2010-03-26
+ * Add support for execution of program.
 
 Snapshot 2010-02-21
  * Add all needed files for GNU GPL.
