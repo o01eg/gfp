@@ -208,3 +208,32 @@ Object Object::GetTail() const
 	return GetObjectFrom(env, env.heap.At(pos).tail);
 }
 
+bool Object::operator==(const Object& obj) const
+{
+	if(pos == obj.pos)
+	{
+		return true;
+	}
+	else
+	{
+		if(IsNIL() || obj.IsNIL())
+		{
+			// one is NIL but another isn't
+			return false;
+		}
+		else
+		{
+			if(GetType() == obj.GetType())
+			{
+				/// \todo Write this.
+			}
+			else
+			{
+				// different types
+				return false;
+			}
+		}
+	}
+	return false;
+}
+

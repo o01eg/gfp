@@ -51,7 +51,14 @@ namespace VM
 		~Object();
 
 		/// \brief Copying.
+		/// \param[in] obj Right value.
+		/// \return l-value object.
 		Object& operator=(const Object& obj);
+
+		/// \brief Compare.
+		/// \param[in] obj Right value.
+		/// \return result of comparsion.
+		bool operator==(const Object& obj) const;
 
 		/// \brief Check object for NIL.
 		/// \return Answer.
