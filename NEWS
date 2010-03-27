@@ -4,6 +4,10 @@ gfp
 Version 0.0.0.1 (date unknown)
  * Grow some program.
 
+Snapshot 2010-03-27
+ * Add Ruby support.
+ * Finish functions.
+
 Snapshot 2010-03-26
  * Add support for execution of program.
 
