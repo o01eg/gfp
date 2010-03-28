@@ -1,6 +1,6 @@
 #include <glibmm/threadpool.h>
 #include "gfp_handler.h"
-#include "heap.h"
+#include "environment.h"
 
 bool operator<(const GFP_Handler::ExamineResult& op1,
 	const GFP_Handler::ExamineResult& op2)
@@ -19,7 +19,7 @@ std::vector<GFP_Handler::ExamineResult> GFP_Handler::Examine(
 	const std::vector<GFP_Handler::Individual> &population)
 {
 	/// \todo Write this.
-	VM::Heap heap;
+	VM::Environment env;
 	std::vector<GFP_Handler::ExamineResult> res;
 	for(size_t i = 0; i < population.size(); i ++)
 	{

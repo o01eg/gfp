@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 		{
 			VM::Program prog(env, DATA_DIR "1.lsp");
 			env.program = &prog;
-			const size_t MAX_CIRCLES = 100;
+			const size_t MAX_CIRCLES = 1000;
 			VM::Object a(env);
 			std::cin >> a;
 			env.circle_count = MAX_CIRCLES;

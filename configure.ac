@@ -52,10 +52,8 @@ else
  AC_CHECK_FILE([$ruby_binary], RUBY=$ruby_binary, [AC_MSG_ERROR([Sorry, but you need Ruby])])
 fi
 
-if test $RUBY == "no"
+if test $RUBY != "no"
 then
- echo "It would be better if you have ruby."
-else
  RUBY_LDFLAGS=[`$RUBY -e 'require "rbconfig"; print Config::CONFIG["LIBRUBYARG_SHARED"], "\n"'`]
  AC_SUBST(RUBY_LDFLAGS)
  RUBY_CXXFLAGS=[-I`$RUBY -e 'require "rbconfig"; print Config::CONFIG["rubyhdrdir"], "\n"'`]
@@ -66,6 +64,7 @@ else
 
  echo -ne "Checking for Ruby C API... "
  AC_LINK_IFELSE(AC_LANG_PROGRAM,[echo "yes"],[AC_MSG_ERROR([Sorry, but you need Ruby C API])])
+ AC_DEFINE([HAVE_RUBY], [1], [Set if program compiled with Ruby support])
 fi
 
 # == check for header files ==

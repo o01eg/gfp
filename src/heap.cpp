@@ -4,6 +4,21 @@
 #include <string.h>
 #include "heap.h"
 
+#undef Alloc
+
+#if _DEBUG_HEAP_
+const char *type_str[] = {
+	"ERROR",
+	"INTEGER",
+	"FUNC",
+	"ADF",
+	"PARAM",
+	"QUOTE",
+	"IF",
+	"LIST"
+};
+#endif
+
 using namespace VM;
 
 const Heap::UInt BLOCK_ADDRESS_OFFSET = 4; ///< Number of bits in position pointed to block.
@@ -45,7 +60,12 @@ void Heap::CheckLeaks() const
 			if(blocks[i][j].hash)
 			{
 				/// \todo Add here call for logging leaks.
-				std::clog << "Heap " << this << ": Leak at position " << ((i << BLOCK_ADDRESS_OFFSET) | j) << std::endl;
+				std::clog << "Heap " << this << ": Leak at position " << ((i << BLOCK_ADDRESS_OFFSET) | j);
+				std::clog << " type:" << type_str[blocks[i][j].hash & 0xf];
+				std::clog << " count:" << blocks[i][j].count;
+				std::clog << " value:" << blocks[i][j].value;
+				std::clog << " tail:" << blocks[i][j].tail;
+				std::clog << " " << blocks[i][j].at << std::endl;
 			}
 		}
 	}
@@ -137,6 +157,13 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	elem.value = value;
 	elem.tail = tail;
 	return pos;
+}
+
+Heap::UInt Heap::AllocD(const char *at, UInt hash, UInt value, UInt tail)
+{
+	UInt res = Alloc(hash, value, tail);
+	UnsafeAt(res, false).at = at;
+	return res;
 }
 
 void Heap::Attach(Heap::UInt pos)
