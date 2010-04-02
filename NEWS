@@ -1,8 +1,22 @@
 gfp
 ===
 
-Version 0.0.0.1 (date unknown)
+Version 0.0.0.1 ????-??-??
  * Grow some program.
+
+Snapshot ????-??-?? ToDo
+ * Add MS VC compilation.
+ * Add inital generation.
+ * Add crossover.
+ * Add mutation.
+ * Add first world.
+ * Add scripting for individual testing and comparsion.
+ * Fix memory leak.
+ * Add multithread support.
+
+Snapshot Now
+ * Prepare for inital generation.
+ * Add config singleton.
 
 Snapshot 2010-03-27
  * Add Ruby support.

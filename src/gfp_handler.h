@@ -2,17 +2,24 @@
 #define _GFP_HANDLER_H_
 
 #include <vector>
-#include "heap.h"
+#include "environment.h"
 
 /// \brief Handler of Genetic Functional Programming.
 class GFP_Handler
 {
-public:
+//public:
 	/// \brief Individual.
 	class Individual
 	{
+	public:
+		/// \brief Construct new individual;
+		Individual();
+
+		/// \brief Destructor. (C.O.)
+		~Individual();
+	private:
 	};
-	
+public:	
 	/// \brief Examination results.
 	class ExamineResult
 	{
