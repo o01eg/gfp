@@ -2,7 +2,7 @@
 #define _HEAP_H_
 
 #include <vector>
-#include "shared.h"
+#include "logger.h"
 
 /// \brief Virtual LISP-Machine.
 namespace VM
@@ -104,7 +104,6 @@ namespace VM
 
 #if _DEBUG_HEAP_
  #define Alloc(args...) AllocD(AT, ##args)
-
 #endif
 
 #endif

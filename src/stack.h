@@ -2,7 +2,6 @@
 #define _STACK_H_
 
 #include <stack>
-#include "shared.h"
 #include "heap.h"
 
 namespace VM
