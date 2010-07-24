@@ -29,7 +29,6 @@ CXXFLAGS="-ggdb3 -Wall -Wextra -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_
 # == check for libraries ==
 
 PKG_CHECK_MODULES([GTHREAD],[gthread-2.0],[LDFLAGS="$GTHREAD_LIBS $LDFLAGS";CXXFLAGS="$GTHREAD_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GThread library])])
-PKG_CHECK_MODULES([GIOMM],[giomm-2.4],[LDFLAGS="$GIOMM_LIBS $LDFLAGS";CXXFLAGS="$GIOMM_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GLibmm library])])
 PKG_CHECK_MODULES([GLIBMM],[glibmm-2.4],[LDFLAGS="$GLIBMM_LIBS $LDFLAGS";CXXFLAGS="$GLIBMM_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GLibmm library])])
 
 # ToDo: delete it when Gentoo move into ruby 1.9
