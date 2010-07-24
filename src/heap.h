@@ -30,8 +30,10 @@ namespace VM
 			/// In unused element mean next unused element.
 			UInt tail;
 
+#if _DEBUG_HEAP_
 			/// \brief Where was allocated.
 			const char *at;
+#endif
 		};
 	
 		/// \brief Heap constructor.
@@ -62,6 +64,7 @@ namespace VM
 		/// \return Position of allocated object.
 		UInt Alloc(UInt hash, UInt value, UInt tail = 0);
 
+#if _DEBUG_HEAP_
 		/// \brief Debug Allocator
 		/// \param at Where was allocated.
 		/// \param hash
@@ -69,6 +72,7 @@ namespace VM
 		/// \param tail
 		/// \return Position of allocated object.
 		UInt AllocD(const char *at, UInt hash, UInt value, UInt tail = 0);
+#endif
 
 		/// \brief Attacher.
 		/// \param pos Position to attached element.

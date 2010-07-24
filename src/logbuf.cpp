@@ -20,7 +20,7 @@ LogBuf::~LogBuf()
 
 int LogBuf::overflow(int c)
 {
-	if(c != EOF)
+	if(c != -1)
 	{
 		char ch = c;
 		//std::cout << "Overflow ";

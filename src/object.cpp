@@ -210,6 +210,12 @@ Object Object::GetTail() const
 
 bool Object::operator==(const Object& obj) const
 {
+#if _DEBUG_OBJECT_
+	if(&env != &obj.env)
+	{
+		THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
+	}
+#endif
 	if(pos == obj.pos)
 	{
 		return true;
@@ -225,7 +231,21 @@ bool Object::operator==(const Object& obj) const
 		{
 			if(GetType() == obj.GetType())
 			{
-				/// \todo Write this.
+				/// \todo Rewrite this into low-level work with heap data.
+				switch(GetType())
+				{
+					case ERROR:
+					case PARAM:
+					case QUOTE:
+					case IF:
+						return true;
+					case INTEGER:
+					case FUNC:
+					case ADF:
+						return GetValue() == obj.GetValue();
+					case LIST:
+						return (GetHead() == obj.GetHead()) && (GetTail() == obj.GetTail());
+				}
 			}
 			else
 			{

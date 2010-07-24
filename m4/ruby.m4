@@ -21,7 +21,7 @@ dnl
   fi
 
   
-  minimum_version=ifelse([$1], ,1.4.4, $1)
+  minimum_version=ifelse([$1], ,1.8.0, $1)
   AC_MSG_CHECKING([for Ruby - version >= $minimum_version])
   ruby_major_version=`$RUBY -e "print RUBY_VERSION.split('.')[[0]]"`
   ruby_minor_version=`$RUBY -e "print RUBY_VERSION.split('.')[[1]]"`
