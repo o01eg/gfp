@@ -53,9 +53,11 @@ namespace VM
 		/// \return Request element.
 		const Element& operator[](UInt position) const {return At(position);}
 
+#if _DEBUG_HEAP_		
 		/// \brief Check heap for leaks.
 		/// \todo Show more information.
 		void CheckLeaks() const;
+#endif
 
 		/// \brief Allocator.
 		/// \param hash

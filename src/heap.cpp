@@ -49,9 +49,9 @@ Heap::~Heap()
 #endif
 }
 
+#if _DEBUG_HEAP_
 void Heap::CheckLeaks() const
 {
-#if _DEBUG_HEAP_
 	Heap::UInt j;
 	for(Heap::UInt i = 0; i < blocks.size(); i ++)
 	{
@@ -69,8 +69,8 @@ void Heap::CheckLeaks() const
 			}
 		}
 	}
-#endif
 }
+#endif
 
 Heap::Element& Heap::UnsafeAt(Heap::UInt position, bool allow_free)
 {

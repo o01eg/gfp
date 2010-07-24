@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 		env.LoadFunctions(DATA_DIR "functions.txt");
 		try
 		{
-			VM::Program prog(env, DATA_DIR "1.lsp");
+			VM::Program prog(env, DATA_DIR "2.lsp");
 			env.program = &prog;
 			const size_t MAX_CIRCLES = 1000;
 			VM::Object a(env);
