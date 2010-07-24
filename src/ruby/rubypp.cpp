@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <iostream>
-#include "ruby.hpp"
-#include "error.hpp"
+#include "rubypp.h"
+#include "error.h"
 
 Ruby::RubyImpl::RubyImpl()
 {

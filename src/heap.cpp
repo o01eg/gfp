@@ -159,12 +159,14 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	return pos;
 }
 
+#if _DEBUG_HEAP_
 Heap::UInt Heap::AllocD(const char *at, UInt hash, UInt value, UInt tail)
 {
 	UInt res = Alloc(hash, value, tail);
 	UnsafeAt(res, false).at = at;
 	return res;
 }
+#endif
 
 void Heap::Attach(Heap::UInt pos)
 {

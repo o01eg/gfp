@@ -1,5 +1,5 @@
-#include "error.hpp"
-#include "string.hpp"
+#include "error.h"
+#include "r_string.h"
 
 Ruby::Error::Error(int status)
 	:m_Status(status)

@@ -2,8 +2,8 @@
 #define _RUBY_PROTECT_HPP_
 
 #include <stdexcept>
-#include "ruby.hpp"
-#include "error.hpp"
+#include "ruby.h"
+#include "error.h"
 
 namespace Ruby
 {

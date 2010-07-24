@@ -2,6 +2,9 @@
 #define _RUBY_VALUE_H_
 
 #include <ruby.h>
+extern "C" {
+#include <ruby/encoding.h>
+}
 
 namespace Ruby
 {

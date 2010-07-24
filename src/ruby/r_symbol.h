@@ -2,8 +2,8 @@
 #define _RUBY_SYMBOL_HPP_
 
 #include <stdexcept>
-#include "value.hpp"
-#include "string.hpp"
+#include "value.h"
+#include "r_string.h"
 
 namespace Ruby
 {

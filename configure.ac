@@ -24,7 +24,7 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-ggdb3 -Wall -Wextra -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -pedantic"
+CXXFLAGS="-ggdb3 -Wall -Wextra -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_"
 
 # == check for libraries ==
 

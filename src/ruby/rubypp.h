@@ -1,11 +1,7 @@
-#ifndef _RUBY_H_
-#define _RUBY_H_
+#ifndef _RUBY_RUBY_H_
+#define _RUBY_RUBY_H_
 
-#include <ruby.h>
-extern "C" {
-#include <ruby/encoding.h>
-}
-#include "value.hpp"
+#include "value.h"
 
 namespace Ruby
 {

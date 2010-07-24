@@ -2,7 +2,7 @@
 #define _RUBY_STRING_H_
 
 #include <stdexcept>
-#include "value.hpp"
+#include "value.h"
 
 namespace Ruby
 {
