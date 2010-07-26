@@ -1,17 +1,16 @@
 #ifndef _GA_H_
 #define _GA_H_
 
-#include <vector>
 #include <algorithm>
+#include "individual.h"
 
 /// \class GA
-/// \brief Genetic Algoritms where GAHandler store some data about process and
-///  functions.
-/// \note operator< for GAHandler::Individual use "less" as better
-template <class GAHandler> class GA
+/// \brief Genetic Algoritms.
+/// \note operator< for Individual::Result use "less" as better
+class GA
 {
-	typedef std::vector<typename GAHandler::Individual> Population;
-	typedef std::vector<typename GAHandler::ExamineResult> Results;
+	typedef std::vector<Individual> Population;
+	typedef std::vector<Individual::Result> Results;
 public:
 	/// \brief Genetic operation.
 	/// If first is -1 then it's mutation.
@@ -20,16 +19,15 @@ public:
 	
 	
 	/// \brief GA constructor.
-	/// @param ga_handler_ Pointer to GA handler.
 	/// @param population_size_ Size of population.
-	GA(GAHandler *ga_handler_, size_t population_size_)
-		:ga_handler(ga_handler_),
-		population_size(population_size_)
+	GA(size_t population_size_)
+		:population_size(population_size_)
 	{
+		VM::Environment env;
 		population = new Population;
 		for(size_t i = 0; i < population_size; i ++)
 		{
-			population->push_back(ga_handler->Generate());
+			population->push_back(Individual::GenerateRand(env));
 		}
 	}
 	
@@ -43,15 +41,16 @@ public:
 	/// \return True if best individuals changed.
 	bool Step(const std::vector<Operation> &operations)
 	{
-		Results results = ga_handler->Examine(*population);
+		Results results = Individual::Execute(*population);
 		std::sort(results.begin(), results.end());
 		
 		std::vector<Operation>::const_iterator operation;
-		typename std::vector<typename GAHandler::ExamineResult>::iterator result;
+		Results::iterator result;
 		Population *new_population = new Population;
 		bool updated = false;
 		try //added here to avoid memory leak with new_population
 		{
+			VM::Environment env;
 			// Add best individuals.
 			size_t num_best = population->size() - operations.size();
 			size_t index = num_best;
@@ -70,15 +69,12 @@ public:
 				if(operation->first == -1)
 				{
 					// Mutation.
-					new_population->push_back(ga_handler->Mutation(
-						population->at(results[operation->second].GetIndex())));
+					new_population->push_back(Individual::Mutation(env, population->at(results[operation->second].GetIndex())));
 				}
 				else
 				{
 					// Crossover.
-					new_population->push_back(ga_handler->Crossover(
-						population->at(results[operation->first].GetIndex()),
-						population->at(results[operation->second].GetIndex())));
+					new_population->push_back(Individual::Crossover(env, population->at(results[operation->first].GetIndex()), population->at(results[operation->second].GetIndex())));
 				}
 			}
 		}
@@ -121,7 +117,6 @@ public:
 		return Operation(i, j);
 	}
 private:
-	GAHandler *ga_handler; ///< Pointer to GA handler.
 	size_t population_size; ///< Size of population.
 	Population *population; ///< Auto pointer to population.
 };

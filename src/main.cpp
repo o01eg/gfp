@@ -5,7 +5,6 @@
 #include "logger.h"
 #include "logbuf.h"
 #include "ga.h"
-#include "gfp_handler.h"
 #include "object.h"
 #include "environment.h"
 #include "ioobject.h"
