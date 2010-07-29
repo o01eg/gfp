@@ -24,7 +24,7 @@ public:
 	
 	~GA() ///< GA Desctructor
 	{
-		delete population;
+		delete m_Population;
 	}
 
 	/// \brief Step.
@@ -54,15 +54,15 @@ public:
 
 	/// \brief Crossover.
 	/// \param i Index of first individual.
-	/// \param j Index of first individual.
+	/// \param j Index of second individual.
 	/// \return Genetic operation.
 	static Operation Crossover(int i, int j)
 	{
 		return Operation(i, j);
 	}
 private:
-	size_t population_size; ///< Size of population.
-	Population *population; ///< Auto pointer to population.
+	size_t m_PopulationSize; ///< Size of population.
+	Population *m_Population; ///< Auto pointer to population.
 };
 
 #endif

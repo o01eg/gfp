@@ -3,7 +3,7 @@
 
 Individual Individual::GenerateRand(VM::Environment &env)
 {
-	VM::Object obj(env);
+	VM::Object obj(VM::Object(env, VM::Object::INTEGER, 0), VM::Object(env));
 	VM::Program prog(obj);
 	/// \todo Write this.
 	std::clog << "Individual random program created." << std::endl;
@@ -12,18 +12,14 @@ Individual Individual::GenerateRand(VM::Environment &env)
 
 Individual Individual::Mutation(VM::Environment &env, const Individual& ind)
 {
-	VM::Object obj(env);
-	VM::Program prog(obj);
 	/// \todo Write this.
-	return Individual(prog);
+	return Individual(ind);
 }
 
 Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2)
 {
-	VM::Object obj(env);
-	VM::Program prog(obj);
 	/// \todo Write this.
-	return Individual(prog);
+	return Individual(ind1);
 }
 
 std::vector<Individual::Result> Individual::Execute(const std::vector<Individual> &population)

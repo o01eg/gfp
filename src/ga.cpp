@@ -2,22 +2,26 @@
 #include "ga.h"
 
 GA::GA(size_t population_size_)
-	:population_size(population_size_)
+	:m_PopulationSize(population_size_)
 {
 	VM::Environment env;
 	env.LoadFunctions(DATA_DIR "functions.txt");
-	population = new Population;
-	for(size_t i = 0; i < population_size; i ++)
+	m_Population = new Population;
+	for(size_t i = 0; i < m_PopulationSize; i ++)
 	{
 		std::clog << "Generating " << i << " individual..." << std::endl;
-		population->push_back(Individual::GenerateRand(env));
+		m_Population->push_back(Individual::GenerateRand(env));
 		std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
 
 bool GA::Step(const std::vector<Operation> &operations)
 {
-	Results results = Individual::Execute(*population);
+	Results results = Individual::Execute(*m_Population);
+	if(m_PopulationSize != results.size())
+	{
+		THROW("Different sizes between population and results of individuals.");
+	}
 	std::sort(results.begin(), results.end());
 	
 	std::vector<Operation>::const_iterator operation;
@@ -29,11 +33,11 @@ bool GA::Step(const std::vector<Operation> &operations)
 		VM::Environment env;
 		env.LoadFunctions(DATA_DIR "functions.txt");
 		// Add best individuals.
-		size_t num_best = population->size() - operations.size();
+		size_t num_best = m_Population->size() - operations.size();
 		size_t index = num_best;
 		for(result = results.begin(); index; index --, result++)
 		{
-			new_population->push_back(population->at(result->GetIndex()));
+			new_population->push_back(m_Population->at(result->GetIndex()));
 			if(result->GetIndex() >= num_best)
 			{
 				updated = true;
@@ -46,12 +50,12 @@ bool GA::Step(const std::vector<Operation> &operations)
 			if(operation->first == -1)
 			{
 				// Mutation.
-				new_population->push_back(Individual::Mutation(env, population->at(results[operation->second].GetIndex())));
+				new_population->push_back(Individual::Mutation(env, m_Population->at(results[operation->second].GetIndex())));
 			}
 			else
 			{
 				// Crossover.
-				new_population->push_back(Individual::Crossover(env, population->at(results[operation->first].GetIndex()), population->at(results[operation->second].GetIndex())));
+				new_population->push_back(Individual::Crossover(env, m_Population->at(results[operation->first].GetIndex()), m_Population->at(results[operation->second].GetIndex())));
 			}
 		}
 	}
@@ -60,8 +64,8 @@ bool GA::Step(const std::vector<Operation> &operations)
 		delete new_population;
 		throw;
 	}
-	delete population;
-	population = new_population;
+	delete m_Population;
+	m_Population = new_population;
 	return updated;
 }
 
