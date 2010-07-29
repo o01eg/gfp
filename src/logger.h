@@ -15,13 +15,13 @@
 
 template <class T> void inline THROW_impl_(const T& a, const char* func, const char* file, unsigned int line)
 {
-	Glib::Error(1, 0, Glib::ustring::compose("Exception: %1 in %2 at %3:%4",
+	throw Glib::Error(1, 0, Glib::ustring::compose("Exception: %1 in %2 at %3:%4",
 		a, func, file, line));
 }
 
 template <int N> void inline THROW_impl_(const char a[N], const char* func, const char* file, unsigned int line)
 {
-	Glib::Error(1, 0, Glib::ustring::compose("Exception: %1 in %2 at %3:%4",
+	throw Glib::Error(1, 0, Glib::ustring::compose("Exception: %1 in %2 at %3:%4",
 		static_cast<const char*>(a), func, file, line));
 }
 

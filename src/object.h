@@ -28,7 +28,7 @@ namespace VM
 
 		/// \brief Create NIL object.
 		/// \param env_ Used environment.
-		Object(Environment &env_)
+		explicit Object(Environment &env_)
 			:env(env_), pos(0) {}
 
 		/// \brief Create parameterless object.

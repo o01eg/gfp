@@ -1,13 +1,17 @@
+#include <iostream>
 #include "ga.h"
 
 GA::GA(size_t population_size_)
 	:population_size(population_size_)
 {
 	VM::Environment env;
+	env.LoadFunctions(DATA_DIR "functions.txt");
 	population = new Population;
 	for(size_t i = 0; i < population_size; i ++)
 	{
+		std::clog << "Generating " << i << " individual..." << std::endl;
 		population->push_back(Individual::GenerateRand(env));
+		std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
 
@@ -23,6 +27,7 @@ bool GA::Step(const std::vector<Operation> &operations)
 	try //added here to avoid memory leak with new_population
 	{
 		VM::Environment env;
+		env.LoadFunctions(DATA_DIR "functions.txt");
 		// Add best individuals.
 		size_t num_best = population->size() - operations.size();
 		size_t index = num_best;

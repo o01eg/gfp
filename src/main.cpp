@@ -2,16 +2,10 @@
 #include <glibmm/thread.h>
 #include <csignal>
 #include <string>
-#include "logger.h"
-#include "logbuf.h"
 #include "ga.h"
-#include "object.h"
-#include "environment.h"
-#include "ioobject.h"
-#include "program.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 20;
+const size_t MAX_STEP_UNCHANGED = 1;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -55,6 +49,7 @@ int main(int argc, char **argv)
 	
 	try
 	{
+#if 0
 		VM::Environment env;
 		env.LoadFunctions(DATA_DIR "functions.txt");
 		try
@@ -72,6 +67,9 @@ int main(int argc, char **argv)
 		{
 			std::clog << "Catch Glib::Error in environment: " << e.what() << std::endl;
 		}
+#endif
+		// Genetic programming
+		GA ga(10);
 	}
 	catch(std::exception &e)
 	{
