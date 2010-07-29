@@ -21,7 +21,7 @@ Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, c
 	return Individual(prog);
 }
 
-std::vector<Individual::Result> Execute(const std::vector<Individual> &population)
+std::vector<Individual::Result> Individual::Execute(const std::vector<Individual> &population)
 {
 	std::vector<Individual::Result> res;
 	/// \todo Write this.
