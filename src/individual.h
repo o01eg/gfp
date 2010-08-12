@@ -57,11 +57,11 @@ public:
 private:
 	/// \brief Create individual from program.
 	/// \param prog LISP-program.
-	Individual(const VM::Program &prog)
-	{
-	}
+	Individual(const VM::Program &prog);
 
-	Individual(); /// < Block for contsructor.
+	Individual(); ///< Block for contsructor.
+
+	std::string m_ProgramText; ///< Text of program.
 };
 
 #endif

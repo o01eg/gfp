@@ -4,6 +4,7 @@ gfp_SOURCES = conf.cpp \
 	      environment.cpp \
 	      errors.cpp \
 	      ga.cpp \
+	      ga_utils.cpp \
 	      heap.cpp \
 	      individual.cpp \
 	      ioobject.cpp \
@@ -17,6 +18,7 @@ noinst_HEADERS = conf.h \
 		 environment.h \
 		 errors.h \
 		 ga.h \
+		 ga_utils.h \
 		 heap.h \
 		 individual.h \
 		 ioobject.h \

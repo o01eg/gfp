@@ -1,5 +1,16 @@
 #include <iostream>
+#include <sstream>
 #include "individual.h"
+#include "ioobject.h"
+
+const size_t MAX_FUNCTIONS = 255;
+
+Individual::Individual(const VM::Program &prog)
+{
+	std::stringstream ss;
+	ss << prog.Save();
+	m_ProgramText = ss.str();
+}
 
 Individual Individual::GenerateRand(VM::Environment &env)
 {
