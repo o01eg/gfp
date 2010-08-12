@@ -1,3 +1,8 @@
+Snapshot 2010-08-12
+ * Make own binary for test interpreter.
+ * Prepare for inital generation.
+ * Add config singleton.
+
 Snapshot 2010-03-27
  * Add Ruby support.
  * Finish functions.

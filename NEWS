@@ -14,7 +14,8 @@ Snapshot ????-??-?? ToDo
  * Fix memory leak.
  * Add multithread support.
 
-Snapshot Now
+Snapshot 2010-08-12
+ * Make own binary for test interpreter.
  * Prepare for inital generation.
  * Add config singleton.
 
