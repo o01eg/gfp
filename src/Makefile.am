@@ -1,5 +1,5 @@
 SUBDIRS = libfunctions ruby
-bin_PROGRAMS = gfp
+bin_PROGRAMS = gfp gplisp
 gfp_SOURCES = conf.cpp \
 	      environment.cpp \
 	      errors.cpp \
@@ -14,6 +14,15 @@ gfp_SOURCES = conf.cpp \
 	      object.cpp \
 	      program.cpp \
 	      stack.cpp
+gplisp_SOURCES = environment.cpp \
+	 errors.cpp \
+	 gplisp.cpp \
+	 heap.cpp \
+	 ioobject.cpp \
+	 logbuf.cpp \
+	 object.cpp \
+	 program.cpp \
+	 stack.cpp
 noinst_HEADERS = conf.h \
 		 environment.h \
 		 errors.h \
@@ -30,4 +39,5 @@ noinst_HEADERS = conf.h \
 		 stack.h
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfp_LDADD = ruby/librubypp.a
+gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 
