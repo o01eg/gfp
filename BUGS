@@ -1,0 +1,7 @@
+Got wrong free pointer when execute program 'data/1.lsp' with parameter "( 1 2 3 )"
+===
+Got wrong free pointer when execute program 'data/2.lsp' with parameter "( 1 2 3 1 )"
+===
+Cann't read "( )" from std::cin.
+===
+

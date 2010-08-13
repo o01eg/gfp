@@ -129,6 +129,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 std::istream& operator>>(std::istream& is, Object& obj)
 {
 	/// \todo Use normal stack.
+	/// \todo Add check for empty stacks.
 	Environment& env = obj.GetEnv();
 	std::stack<Object> obj_stack;
 	std::stack<size_t> stack;

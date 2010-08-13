@@ -53,6 +53,7 @@ Heap::~Heap()
 void Heap::CheckLeaks() const
 {
 	Heap::UInt j;
+	std::clog << "Heap: " << this << ": Free pointer: " << blocks[0][0].tail << std::endl;
 	for(Heap::UInt i = 0; i < blocks.size(); i ++)
 	{
 		for(j = 0 ; j < BLOCK_SIZE; j ++)
@@ -144,6 +145,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 		THROW(Glib::ustring::compose("Heap 0x%1: Trying to allocate used element at position %2.", this, pos));
 	}
 #endif
+	// element is free. Tail point to other free element.
 	if((! elem.tail) && (pos < ((blocks.size() << BLOCK_ADDRESS_OFFSET) - 1)))
 	{
 		blocks[0][0].tail = pos + 1;
@@ -152,6 +154,12 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	{
 		blocks[0][0].tail = elem.tail;
 	}
+#if _DEBUG_HEAP_
+	if(blocks[0][0].tail && UnsafeAt(blocks[0][0].tail, true).hash) // Check new point of free pointer.
+	{
+		THROW(Glib::ustring::compose("Heap 0x%1: Free pointer point to used element at position %2.", this, pos));
+	}
+#endif
 	elem.hash = hash;
 	elem.count = 1;
 	elem.value = value;
