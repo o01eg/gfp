@@ -16,6 +16,7 @@ Snapshot ????-??-?? ToDo
 
 Snapshot now
  * Fix bugs in allocation.
+ * Fix bugs in reading streams into objects.
 
 Snapshot 2010-08-12
  * Make own binary for test interpreter.

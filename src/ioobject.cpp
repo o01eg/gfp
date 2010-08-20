@@ -152,7 +152,7 @@ std::istream& operator>>(std::istream& is, Object& obj)
 			case ')':
 				if(point_pair)
 				{
-					if(stack.top() == level)
+					if((! stack.empty()) && (stack.top() == level))
 					{
 						obj_temp = obj_stack.top();
 						obj_stack.pop();
@@ -167,7 +167,7 @@ std::istream& operator>>(std::istream& is, Object& obj)
 				{
 					obj_temp = Object(env); // NIL
 				}
-				while(stack.top() == level)
+				while((! stack.empty()) && (stack.top() == level))
 				{
 					stack.pop();
 					obj_temp = Object(obj_stack.top(), obj_temp);
