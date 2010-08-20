@@ -50,5 +50,5 @@ noinst_HEADERS = conf.h \
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfp_LDADD = ruby/librubypp.a
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
-gptest_CPPFLAGS = -DLIB_DIR=\"$(pkglibdir)/\"
+gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 
