@@ -146,8 +146,9 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	}
 #endif
 	// element is free. Tail point to other free element.
-	if((! elem.tail) && (pos < ((blocks.size() << BLOCK_ADDRESS_OFFSET) - 1)))
+	if((! elem.tail) && (pos < ((blocks.size() << BLOCK_ADDRESS_OFFSET) - 1)) && (! UnsafeAt(pos + 1, true).hash))
 	{
+		// elem.tail point to null and allocated position before end and next elemnt is free
 		blocks[0][0].tail = pos + 1;
 	}
 	else
@@ -157,7 +158,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #if _DEBUG_HEAP_
 	if(blocks[0][0].tail && UnsafeAt(blocks[0][0].tail, true).hash) // Check new point of free pointer.
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Free pointer point to used element at position %2.", this, pos));
+		THROW(Glib::ustring::compose("Heap 0x%1: Free pointer point to used element at position %2.", this, pos + 1));
 	}
 #endif
 	elem.hash = hash;

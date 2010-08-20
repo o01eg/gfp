@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {
 	VM::Heap heap;
 	const size_t ARR_SIZE = 128;
-	const size_t TEST_SIZE = 50;
+	const size_t TEST_SIZE = 20;
 	size_t ptrs[ARR_SIZE] = { 0 };
 	srand(0);
 
@@ -33,6 +33,7 @@ int main(int argc, char **argv)
 					break;
 				}
 			}
+			heap.CheckLeaks();
 		}
 		for(size_t index = 0; index < ARR_SIZE; index ++)
 		{
