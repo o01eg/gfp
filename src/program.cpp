@@ -33,6 +33,10 @@ Program::Program(Environment &env, const char *fn)
 
 Object Program::Save() const
 {
+	if(adfs.size() == 0)
+	{
+		THROW("No ADFs in program");
+	}
 	Environment &env = adfs[0].GetEnv();
 	Object res(env);
 	signed long index;

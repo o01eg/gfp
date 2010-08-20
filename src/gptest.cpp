@@ -1,4 +1,6 @@
-#include "heap.h"
+#include "environment.h"
+#include "ga_utils.h"
+#include "ioobject.h"
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
@@ -6,42 +8,16 @@
 
 int main(int argc, char **argv)
 {
-	VM::Heap heap;
-	const size_t ARR_SIZE = 128;
-	const size_t TEST_SIZE = 20;
-	size_t ptrs[ARR_SIZE] = { 0 };
-	srand(0);
+	srand(time(NULL));
 
 	try
 	{
-		for(size_t i = 0; i < TEST_SIZE; i ++)
-		{
-			size_t index = rand() % ARR_SIZE;
-			if(ptrs[index])
-			{
-				std::cout << "= Free " << ptrs[index] << std::endl;
-				heap.Detach(ptrs[index]);
-				ptrs[index] = 0;
-			}
-			else
-			{
-				ptrs[index] = heap.Alloc(0x1, i);
-				std::cout << "= Alloc " << ptrs[index] << std::endl;
-				if(! ptrs[index])
-				{
-					std::cout << "Error Alloc" << std::endl;
-					break;
-				}
-			}
-			heap.CheckLeaks();
-		}
-		for(size_t index = 0; index < ARR_SIZE; index ++)
-		{
-			if(ptrs[index])
-			{
-				heap.Detach(ptrs[index]);
-			}
-		}
+		VM::Environment env;
+		std::vector<std::pair<VM::Object, size_t> > funcs;
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+
+		VM::Object res = GP::GenerateExec(env, funcs, 0);
+		std::cout << "res: " << res << std::endl;
 	}
 	catch(Glib::Error &e)
 	{

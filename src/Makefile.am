@@ -25,6 +25,7 @@ gplisp_SOURCES = environment.cpp \
 	 stack.cpp
 gptest_SOURCES = environment.cpp \
 	 errors.cpp \
+	 ga_utils.cpp \
 	 gptest.cpp \
 	 heap.cpp \
 	 ioobject.cpp \
