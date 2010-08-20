@@ -90,4 +90,75 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	return res;
 }
 
+VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth)
+{
+	VM::Object res(obj.GetEnv());
+	if(is_exec)
+	{
+		if((rand() % 100) > 90)
+		{
+			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
+		}
+		else
+		{
+			// no change or go deeper
+			if((! obj.IsNIL()) && (obj.GetType() == VM::Object::LIST))
+			{
+				// mutate arguments of function
+				VM::Object head(obj.GetHead());
+				if(head.IsNIL())
+				{
+					THROW("Head of callable list cann't be NIL");
+				}
+				if(head.GetType() == VM::Object::QUOTE)
+				{
+					// it's quote, make argument as non executable
+					res = GP::Mutation(obj.GetTail().GetHead(), false, funcs, depth + 1);
+					res = VM::Object(res, VM::Object(obj.GetEnv()));
+				}
+				else
+				{
+					std::stack<VM::Object> stack;
+					VM::Object temp(obj.GetTail());
+					while((! temp.IsNIL()) && (temp.GetType() == VM::Object::LIST))
+					{
+						stack.push(temp.GetHead());
+						temp = temp.GetTail();
+					}
+					while(! stack.empty())
+					{
+						res = VM::Object(GP::Mutation(stack.top(), true, funcs, depth + 1), res);
+						stack.pop();
+					}
+				}
+				res = VM::Object(head, res);
+			}
+			else
+			{
+				res = obj;
+			}
+		}
+	}
+	else
+	{
+		// non exec mutation
+		if((rand() % 100) > 90)
+		{
+			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
+		}
+		else
+		{
+			// no change or go deeper
+			if((! obj.IsNIL()) && (obj.GetType() == VM::Object::LIST))
+			{
+				res = VM::Object(GP::Mutation(obj.GetHead(), false, funcs, depth + 1), GP::Mutation(obj.GetTail(), false, funcs, depth + 1));
+			}
+			else
+			{
+				res = obj;
+			}
+		}
+	}
+	return res;
+}
 

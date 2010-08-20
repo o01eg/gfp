@@ -20,10 +20,18 @@ namespace GP
 
 	/// \brief Generate any object.
 	/// \param env Environment.
-	/// \param adfs Array of callable objects.
+	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
 	/// \return Generated object.
 	VM::Object GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
+
+	/// \brief Mutation of objects.
+	/// \param obj Object.
+	/// \param is_exec Execatable object.
+	/// \param funcs Array of callable objects.
+	/// \param depth Depth.
+	/// \return New object.
+	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
 }
 
 #endif
