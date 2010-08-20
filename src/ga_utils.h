@@ -32,6 +32,11 @@ namespace GP
 	/// \param depth Depth.
 	/// \return New object.
 	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
+
+	/// \brief Generate new program.
+	/// \param env Environment.
+	/// \return Generated program.
+	VM::Program GenerateProg(VM::Environment &env);
 }
 
 #endif

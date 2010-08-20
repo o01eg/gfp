@@ -11,12 +11,13 @@ Snapshot ????-??-?? ToDo
  * Add mutation.
  * Add first world.
  * Add scripting for individual testing and comparsion.
- * Fix memory leak.
  * Add multithread support.
 
 Snapshot now
  * Fix bugs in allocation.
  * Fix bugs in reading streams into objects.
+ * Fix memory leak.
+ * Add object's generation and mutation support.
 
 Snapshot 2010-08-12
  * Make own binary for test interpreter.

@@ -1,6 +1,7 @@
 #include <stack>
 #include <cstdlib>
 #include "ga_utils.h"
+#include "program.h"
 
 const size_t MAX_DEPTH = 16;
 
@@ -159,6 +160,12 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 			}
 		}
 	}
+	return res;
+}
+
+VM::Program GP::GenerateProg(VM::Environment &env)
+{
+	VM::Program res(env);
 	return res;
 }
 

@@ -5,17 +5,18 @@
 using namespace VM;
 
 Program::Program(const Object &obj)
+	:m_Env(obj.GetEnv())
 {
 	Object head = obj.GetHead();
 	Heap::UInt num_adfs = head.GetValue();
-	adfs.resize(num_adfs, Object(obj.GetEnv()));
+	m_ADFs.resize(num_adfs, Object(obj.GetEnv()));
 	Object ptr = obj.GetTail();
 	while(! ptr.IsNIL())
 	{
 		if((! ptr.GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetType() == Object::ADF))
 		{
 			Heap::UInt num = ptr.GetHead().GetHead().GetValue();
-			adfs[num] = ptr.GetHead().GetTail().GetHead();
+			m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
 		}
 
 		ptr = ptr.GetTail();
@@ -23,6 +24,7 @@ Program::Program(const Object &obj)
 }
 
 Program::Program(Environment &env, const char *fn)
+	:m_Env(env)
 {
 	std::ifstream f(fn);
 	Object obj(env);
@@ -33,22 +35,31 @@ Program::Program(Environment &env, const char *fn)
 
 Object Program::Save() const
 {
-	if(adfs.size() == 0)
+	if(m_ADFs.size() == 0)
 	{
 		THROW("No ADFs in program");
 	}
-	Environment &env = adfs[0].GetEnv();
+	Environment &env = m_ADFs[0].GetEnv();
 	Object res(env);
 	signed long index;
-	for(index = adfs.size() - 1; index >= 0; index --)
+	for(index = m_ADFs.size() - 1; index >= 0; index --)
 	{
-		if(! adfs[index].IsNIL())
+		if(! m_ADFs[index].IsNIL())
 		{
-			Object func_entry = Object(adfs[index], Object(env));
+			Object func_entry = Object(m_ADFs[index], Object(env));
 			func_entry = Object(Object(env, Object::ADF, index), func_entry);
 			res = Object(func_entry, res);
 		}
 	}
-	return Object(Object(env, Object::INTEGER, adfs.size()), res);
+	return Object(Object(env, Object::INTEGER, m_ADFs.size()), res);
+}
+
+void Program::SetADF(int num, const Object& obj)
+{
+	if(m_ADFs.size() <= num)
+	{
+		m_ADFs.resize(num + 1, Object(m_Env));
+	}
+	m_ADFs[num] = obj;
 }
 
