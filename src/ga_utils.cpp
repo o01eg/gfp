@@ -9,10 +9,18 @@ bool GP::CheckForParam(const VM::Object &func)
 {
 	std::stack<VM::Object> stack;
 	bool result = false;
+	if(func.IsNIL())
+	{
+		return false;
+	}
+	if(func.GetType() != VM::Object::LIST)
+	{
+		return false;
+	}
 	stack.push(func);
 	while(! stack.empty())
 	{
-		const VM::Object& obj = stack.top();
+		VM::Object obj = stack.top();
 		stack.pop();
 
 		if(! obj.IsNIL())
@@ -163,9 +171,26 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	return res;
 }
 
-VM::Program GP::GenerateProg(VM::Environment &env)
+VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 {
 	VM::Program res(env);
+	std::vector<std::pair<VM::Object, size_t> > funcs;
+	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	for(size_t i = 0 ; i < env.functions.size(); i ++)
+	{
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+	}
+	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	{
+		VM::Object adf(env);
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::ADF, adf_index), 1));
+		do
+		{
+			adf = GP::GenerateExec(env, funcs, 0);
+		}
+		while(! GP::CheckForParam(adf));
+		res.SetADF(adf_index, adf);
+	}
 	return res;
 }
 

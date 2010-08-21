@@ -35,8 +35,9 @@ namespace GP
 
 	/// \brief Generate new program.
 	/// \param env Environment.
+	/// \param max_funcs Maximum number of functions.
 	/// \return Generated program.
-	VM::Program GenerateProg(VM::Environment &env);
+	VM::Program GenerateProg(VM::Environment &env, size_t max_funcs);
 }
 
 #endif

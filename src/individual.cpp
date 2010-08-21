@@ -2,8 +2,9 @@
 #include <sstream>
 #include "individual.h"
 #include "ioobject.h"
+#include "ga_utils.h"
 
-const size_t MAX_FUNCTIONS = 255;
+const size_t MAX_FUNCTIONS = 256;
 
 Individual::Individual(const VM::Program &prog)
 {
@@ -14,9 +15,7 @@ Individual::Individual(const VM::Program &prog)
 
 Individual Individual::GenerateRand(VM::Environment &env)
 {
-	VM::Object obj(VM::Object(env, VM::Object::INTEGER, 0), VM::Object(env));
-	VM::Program prog(obj);
-	/// \todo Write this.
+	VM::Program prog = GP::GenerateProg(env, MAX_FUNCTIONS);
 	std::clog << "Individual random program created." << std::endl;
 	return Individual(prog);
 }

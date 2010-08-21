@@ -22,13 +22,10 @@ int main(int argc, char **argv)
 			funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
 		}
 
-		VM::Object adf0 = GP::GenerateExec(env, funcs, 0);
-		std::cout << "adf=" << adf0 << std::endl;
-		VM::Object prog = VM::Object(adf0, VM::Object(env));
-		prog = VM::Object(VM::Object(env, VM::Object::ADF, 0), prog);
-		prog = VM::Object(prog, VM::Object(env));
-		prog = VM::Object(VM::Object(env, VM::Object::INTEGER, 1), prog);
-		VM::Program prg(prog);
+		std::cout << "Generate program... " << std::endl;
+		VM::Program prg = GP::GenerateProg(env, 16);
+		std::cout << "Program: " << prg.Save() << std::endl;
+		std::cout << "Generated." << std::endl;
 		env.program = &prg;
 		env.circle_count = 1000;
 		VM::Object param = GP::GenerateObj(env, funcs, 0);
