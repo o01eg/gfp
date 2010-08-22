@@ -7,9 +7,16 @@
 
 using namespace VM;
 
+#if _DEBUG_OBJECT_
+std::set<Object*> Object::m_AllObjects;
+#endif
+
 Object::Object(const Object &obj)
 	:env(obj.env)
 {
+#if _DEBUG_OBJECT_
+	m_AllObjects.insert(this);
+#endif
 	pos = obj.pos;
 	if(pos)
 	{
@@ -23,6 +30,9 @@ Object::Object(const Object &obj)
 Object::Object(Environment &env_, Types type)
 	:env(env_)
 {
+#if _DEBUG_OBJECT_
+	m_AllObjects.insert(this);
+#endif
 #if _DEBUG_OBJECT_
 	if((type != ERROR) && (type != PARAM) && (type != QUOTE) && (type != IF))
 	{
@@ -44,6 +54,9 @@ Object::Object(Environment &env_, Types type, Heap::UInt value)
 	:env(env_)
 {
 #if _DEBUG_OBJECT_
+	m_AllObjects.insert(this);
+#endif
+#if _DEBUG_OBJECT_
 	if((type != INTEGER) && (type != FUNC) && (type != ADF))
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Non one-parameter type %2.", this, type));
@@ -63,6 +76,9 @@ Object::Object(Environment &env_, Types type, Heap::UInt value)
 Object::Object(const Object& head, const Object& tail)
 	:env(head.env)
 {
+#if _DEBUG_OBJECT_
+	m_AllObjects.insert(this);
+#endif
 #if _DEBUG_OBJECT_
 	if(&env != &tail.env)
 	{
@@ -92,6 +108,17 @@ Object::Object(const Object& head, const Object& tail)
 
 Object::~Object()
 {
+#if _DEBUG_OBJECT_
+	std::set<Object*>::iterator it = m_AllObjects.find(this);
+	if(it != m_AllObjects.end())
+	{
+		m_AllObjects.erase(it);
+	}
+	else
+	{
+		std::cout << "Object 0x" << this << ": It didn't be added into objects' list." << std::endl;
+	}
+#endif
 	if(pos)
 	{
 		if((GetType() == LIST) && (env.heap.At(pos).count == 1))
@@ -256,4 +283,16 @@ bool Object::operator==(const Object& obj) const
 	}
 	return false;
 }
+
+#if _DEBUG_OBJECT_
+void Object::PrintObjects()
+{
+	std::cout << "All Objects:" << std::endl;
+	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
+	{
+		std::cout << "Object: 0x" << (*it) << std::endl;
+	}
+
+}
+#endif
 

@@ -3,6 +3,10 @@
 
 #include "environment.h"
 
+#if _DEBUG_OBJECT_
+#include <set>
+#endif
+
 namespace VM
 {
 	/// \brief LISP Objects.
@@ -87,6 +91,10 @@ namespace VM
 		/// \brief Get constant environment of object
 		/// \return Environment.
 		Environment& GetEnv() const {return const_cast<Environment&>(env);}
+#if _DEBUG_OBJECT_
+		/// \brief Print all exist objects.
+		static void PrintObjects();
+#endif
 	private:
 		/// \brief Create object by position.
 		/// \sa GetHead GetTail
@@ -97,6 +105,9 @@ namespace VM
 
 		Environment &env; ///< Current environment.
 		Heap::UInt pos; ///< Position in heap.
+#if _DEBUG_OBJECT_
+		static std::set<Object*> m_AllObjects;
+#endif
 	};
 }
 
