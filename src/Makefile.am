@@ -15,25 +15,27 @@ gfp_SOURCES = conf.cpp \
 	program.cpp \
 	stack.cpp
 gplisp_SOURCES = environment.cpp \
-	 errors.cpp \
-	 gplisp.cpp \
-	 heap.cpp \
-	 ioobject.cpp \
-	 logbuf.cpp \
-	 object.cpp \
-	 program.cpp \
-	 stack.cpp
-gptest_SOURCES = environment.cpp \
-	 errors.cpp \
-	 ga_utils.cpp \
-	 gptest.cpp \
-	 heap.cpp \
-	 ioobject.cpp \
-	 logbuf.cpp \
-	 object.cpp \
-	 program.cpp \
-	 stack.cpp
+	errors.cpp \
+	gplisp.cpp \
+	heap.cpp \
+	ioobject.cpp \
+	logbuf.cpp \
+	object.cpp \
+	program.cpp \
+	stack.cpp
+gptest_SOURCES = dot_dump.cpp \
+	environment.cpp \
+	errors.cpp \
+	ga_utils.cpp \
+	gptest.cpp \
+	heap.cpp \
+	ioobject.cpp \
+	logbuf.cpp \
+	object.cpp \
+	program.cpp \
+	stack.cpp
 noinst_HEADERS = conf.h \
+	dot_dump.h \
 	environment.h \
 	errors.h \
 	ga.h \

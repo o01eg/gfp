@@ -9,7 +9,9 @@
 
 int main(int argc, char **argv)
 {
-	srand(0);
+	time_t seed = time(NULL);
+	std::cout << "seed = " << seed << std::endl;
+	srand(seed);
 
 	try
 	{
@@ -25,12 +27,13 @@ int main(int argc, char **argv)
 
 			std::cout << "Generate program... " << std::endl;
 			VM::Program prg = GP::GenerateProg(env, 1);
-			env.heap.CheckLeaks();
-			VM::Object::PrintObjects(env);
-			std::cout << "-==-=-=-=-=-=-==-" << std::endl;
+			std::cout << prg.Save() << std::endl;
+			VM::Object param = GP::GenerateObj(env, funcs, 0);
+			std::cout << "param = " << param << std::endl;
+			env.program = &prg;
+			env.circle_count = 1000;
+			VM::Object res = env.Run(param);
 		}
-//		env.heap.CheckLeaks();
-//		VM::Object::PrintObjects(env);
 	}
 	catch(Glib::Error &e)
 	{

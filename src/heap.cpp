@@ -38,7 +38,7 @@ Heap::Heap()
 Heap::~Heap()
 {
 #if _DEBUG_HEAP_
-	CheckLeaks();
+	CheckLeaks(std::clog);
 #endif
 	for(Heap::UInt i = 0; i < blocks.size(); i ++)
 	{
@@ -50,24 +50,25 @@ Heap::~Heap()
 }
 
 #if _DEBUG_HEAP_
-void Heap::CheckLeaks() const
+void Heap::CheckLeaks(std::ostream &os) const
 {
 	Heap::UInt i, j;
 #if _DOT_MEMORY_
-	std::cout << "Dot:" << std::endl;
 	for(i = 0; i < blocks.size(); i ++)
 	{
 		for(j = 0 ; j < BLOCK_SIZE; j ++)
 		{
+			Heap::UInt pos = ((i << BLOCK_ADDRESS_OFFSET) | j);
 			if(blocks[i][j].hash && ((blocks[i][j].hash & 0xf) == 7))
 			{
+				os << pos << " [shape = record, label = \"" << pos << "|<head>|<tail>\"];" << std::endl;
 				if(blocks[i][j].value)
 				{
-					std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << " -> " << blocks[i][j].value << ";" << std::endl;
+					os << pos << ":head -> " << blocks[i][j].value << ";" << std::endl;
 				}
 				if(blocks[i][j].tail)
 				{
-					std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << " -> " << blocks[i][j].tail << ";" << std::endl;
+					os << pos << ":tail -> " << blocks[i][j].tail << ";" << std::endl;
 				}
 			}
 		}
@@ -76,14 +77,15 @@ void Heap::CheckLeaks() const
 	{
 		for(j = 0 ; j < BLOCK_SIZE; j ++)
 		{
+			Heap::UInt pos = ((i << BLOCK_ADDRESS_OFFSET) | j);
 			if(blocks[i][j].hash && ((blocks[i][j].hash & 0xf) != 7))
 			{
-				std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << ";" << std::endl;			}
+				os << pos << " [shape = record, label = \"" << pos << " " << type_str[blocks[i][j].hash & 0xf] << ":" << blocks[i][j].value << "\"];" << std::endl;
+			}
 		}
 	}
-	std::cout << "End dot." << std::endl;
 #else
-	std::clog << "Heap: " << this << ": Free pointer: " << blocks[0][0].tail << std::endl;
+	os << "Heap: " << this << ": Free pointer: " << blocks[0][0].tail << std::endl;
 	for(i = 0; i < blocks.size(); i ++)
 	{
 		for(j = 0 ; j < BLOCK_SIZE; j ++)
@@ -91,12 +93,12 @@ void Heap::CheckLeaks() const
 			if(blocks[i][j].hash)
 			{
 				/// \todo Add here call for logging leaks.
-				std::clog << "Heap " << this << ": Leak at position " << ((i << BLOCK_ADDRESS_OFFSET) | j);
-				std::clog << " type:" << type_str[blocks[i][j].hash & 0xf];
-				std::clog << " count:" << blocks[i][j].count;
-				std::clog << " value:" << blocks[i][j].value;
-				std::clog << " tail:" << blocks[i][j].tail;
-				std::clog << " " << blocks[i][j].at << std::endl;
+				os << "Heap " << this << ": Leak at position " << ((i << BLOCK_ADDRESS_OFFSET) | j);
+				os << " type:" << type_str[blocks[i][j].hash & 0xf];
+				os << " count:" << blocks[i][j].count;
+				os << " value:" << blocks[i][j].value;
+				os << " tail:" << blocks[i][j].tail;
+				os << " " << blocks[i][j].at << std::endl;
 			}
 		}
 	}

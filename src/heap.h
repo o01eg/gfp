@@ -56,7 +56,7 @@ namespace VM
 #if _DEBUG_HEAP_		
 		/// \brief Check heap for leaks.
 		/// \todo Show more information.
-		void CheckLeaks() const;
+		void CheckLeaks(std::ostream &os) const;
 #endif
 
 		/// \brief Allocator.

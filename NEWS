@@ -11,11 +11,11 @@ Snapshot ????-??-?? ToDo
  * Add first world.
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
- * Fix memory leak.
 
 Snapshot now
  * Fix bugs in allocation.
  * Fix bugs in reading streams into objects.
+ * Fix memory leak.
  * Add object's generation and mutation support.
  * Add inital generation.
 

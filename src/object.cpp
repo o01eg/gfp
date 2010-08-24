@@ -177,14 +177,22 @@ Object& Object::operator=(const Object& obj)
 			THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
 		}
 #endif
-		if(pos)
+		if(pos && GetType() == Object::LIST) // If LIST before then use recursive destroing at destructor
 		{
-			env.heap.Detach(pos);
+			this->~Object();
+			new (this) Object(obj);
 		}
-		pos = obj.pos;
-		if(pos)
+		else
 		{
-			env.heap.Attach(pos);
+			if(pos)
+			{
+				env.heap.Detach(pos);
+			}
+			pos = obj.pos;
+			if(pos)
+			{
+				env.heap.Attach(pos);
+			}
 		}
 	}
 	return *this;
@@ -285,25 +293,23 @@ bool Object::operator==(const Object& obj) const
 }
 
 #if _DEBUG_OBJECT_
-void Object::PrintObjects(Environment &env)
+void Object::PrintObjects(Environment &env, std::ostream &os)
 {
 #if _DOT_MEMORY_
-	std::cout << "Dot:" << std::endl;
 	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
 	{
 		if(&env == &((*it)->env) && (*it)->pos)
 		{
-			std::cout << "\"" << (*it) << "\" -> " << (*it)->pos << ";" << std::endl;
+			os << "\"" << (*it) << "\" -> " << (*it)->pos << ";" << std::endl;
 		}
 	}
-	std::cout << "End dot." << std::endl;
 #else
-	std::cout << "All Objects:" << std::endl;
+	os << "All Objects:" << std::endl;
 	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
 	{
 		if(&env == &((*it)->env))
 		{
-			std::cout << "Object: 0x" << (*it) << " pos:" << (*it)->pos << std::endl;
+			os << "Object: 0x" << (*it) << " pos:" << (*it)->pos << std::endl;
 		}
 	}
 #endif

@@ -98,7 +98,7 @@ namespace VM
 		Environment& GetEnv() const {return const_cast<Environment&>(env);}
 #if _DEBUG_OBJECT_
 		/// \brief Print all exist objects.
-		static void PrintObjects(Environment &env);
+		static void PrintObjects(Environment &env, std::ostream &os);
 #endif
 	private:
 		/// \brief Create object by position.
