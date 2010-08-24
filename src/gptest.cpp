@@ -26,9 +26,11 @@ int main(int argc, char **argv)
 			std::cout << "Generate program... " << std::endl;
 			VM::Program prg = GP::GenerateProg(env, 1);
 			env.heap.CheckLeaks();
+			VM::Object::PrintObjects(env);
+			std::cout << "-==-=-=-=-=-=-==-" << std::endl;
 		}
-		env.heap.CheckLeaks();
-		VM::Object::PrintObjects();
+//		env.heap.CheckLeaks();
+//		VM::Object::PrintObjects(env);
 	}
 	catch(Glib::Error &e)
 	{

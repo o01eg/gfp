@@ -116,7 +116,7 @@ Object::~Object()
 	}
 	else
 	{
-		std::cout << "Object 0x" << this << ": It didn't be added into objects' list." << std::endl;
+		std::cout << "Object 0x" << this << " It didn't be added into objects' list." << std::endl;
 	}
 #endif
 	if(pos)
@@ -285,14 +285,28 @@ bool Object::operator==(const Object& obj) const
 }
 
 #if _DEBUG_OBJECT_
-void Object::PrintObjects()
+void Object::PrintObjects(Environment &env)
 {
+#if _DOT_MEMORY_
+	std::cout << "Dot:" << std::endl;
+	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
+	{
+		if(&env == &((*it)->env) && (*it)->pos)
+		{
+			std::cout << "\"" << (*it) << "\" -> " << (*it)->pos << ";" << std::endl;
+		}
+	}
+	std::cout << "End dot." << std::endl;
+#else
 	std::cout << "All Objects:" << std::endl;
 	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
 	{
-		std::cout << "Object: 0x" << (*it) << std::endl;
+		if(&env == &((*it)->env))
+		{
+			std::cout << "Object: 0x" << (*it) << " pos:" << (*it)->pos << std::endl;
+		}
 	}
-
+#endif
 }
 #endif
 

@@ -52,9 +52,39 @@ Heap::~Heap()
 #if _DEBUG_HEAP_
 void Heap::CheckLeaks() const
 {
-	Heap::UInt j;
+	Heap::UInt i, j;
+#if _DOT_MEMORY_
+	std::cout << "Dot:" << std::endl;
+	for(i = 0; i < blocks.size(); i ++)
+	{
+		for(j = 0 ; j < BLOCK_SIZE; j ++)
+		{
+			if(blocks[i][j].hash && ((blocks[i][j].hash & 0xf) == 7))
+			{
+				if(blocks[i][j].value)
+				{
+					std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << " -> " << blocks[i][j].value << ";" << std::endl;
+				}
+				if(blocks[i][j].tail)
+				{
+					std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << " -> " << blocks[i][j].tail << ";" << std::endl;
+				}
+			}
+		}
+	}
+	for(i = 0; i < blocks.size(); i ++)
+	{
+		for(j = 0 ; j < BLOCK_SIZE; j ++)
+		{
+			if(blocks[i][j].hash && ((blocks[i][j].hash & 0xf) != 7))
+			{
+				std::cout << ((i << BLOCK_ADDRESS_OFFSET) | j) << ";" << std::endl;			}
+		}
+	}
+	std::cout << "End dot." << std::endl;
+#else
 	std::clog << "Heap: " << this << ": Free pointer: " << blocks[0][0].tail << std::endl;
-	for(Heap::UInt i = 0; i < blocks.size(); i ++)
+	for(i = 0; i < blocks.size(); i ++)
 	{
 		for(j = 0 ; j < BLOCK_SIZE; j ++)
 		{
@@ -70,6 +100,7 @@ void Heap::CheckLeaks() const
 			}
 		}
 	}
+#endif
 }
 #endif
 

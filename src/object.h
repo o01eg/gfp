@@ -33,7 +33,12 @@ namespace VM
 		/// \brief Create NIL object.
 		/// \param env_ Used environment.
 		explicit Object(Environment &env_)
-			:env(env_), pos(0) {}
+			:env(env_), pos(0)
+		{
+#if _DEBUG_OBJECT_
+			m_AllObjects.insert(this);
+#endif			
+		}
 
 		/// \brief Create parameterless object.
 		/// \param env_ Used environment.
@@ -93,7 +98,7 @@ namespace VM
 		Environment& GetEnv() const {return const_cast<Environment&>(env);}
 #if _DEBUG_OBJECT_
 		/// \brief Print all exist objects.
-		static void PrintObjects();
+		static void PrintObjects(Environment &env);
 #endif
 	private:
 		/// \brief Create object by position.
@@ -106,7 +111,8 @@ namespace VM
 		Environment &env; ///< Current environment.
 		Heap::UInt pos; ///< Position in heap.
 #if _DEBUG_OBJECT_
-		static std::set<Object*> m_AllObjects;
+		//Object *self; ///< Copy of this (for debugging).
+		static std::set<Object*> m_AllObjects; /// < List of all objects.
 #endif
 	};
 }
