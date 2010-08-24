@@ -42,6 +42,13 @@ namespace VM
 		/// \param num Number of ADF.
 		/// \param obj Source of ADF.
 		void SetADF(int num, const Object& obj);
+
+		/// \brief Get environment.
+		/// \return Environment.
+		Environment &GetEnv() const
+		{
+			return const_cast<Environment&>(m_Env);
+		}
 	private:
 		std::vector<Object> m_ADFs; ///< List of ADFs in program.
 		Environment &m_Env; ///< Environment.

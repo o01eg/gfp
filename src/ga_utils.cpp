@@ -194,3 +194,73 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 	return res;
 }
 
+VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
+{
+	VM::Environment& env = prog.GetEnv();
+	VM::Program res(env);
+	std::vector<std::pair<VM::Object, size_t> > funcs;
+	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	for(size_t i = 0 ; i < env.functions.size(); i ++)
+	{
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+	}
+	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	{
+		VM::Object adf = prog.GetADF(adf_index);
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::ADF, adf_index), 1));
+		if(adf.IsNIL())
+		{
+			do
+			{
+				adf = GP::GenerateExec(env, funcs, 0);
+			}
+			while(! GP::CheckForParam(adf));
+			res.SetADF(adf_index, adf);
+		}
+		else
+		{
+			adf = GP::Mutation(adf, true, funcs, 0);
+		}
+		res.SetADF(adf_index, adf);
+	}
+	return res;
+}
+
+VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, size_t max_funcs)
+{
+	VM::Environment &env = prog1.GetEnv();
+	if(&env != &prog2.GetEnv())
+	{
+		THROW("Different environments in crossovered programs");
+	}
+	VM::Program res(env);
+	std::vector<std::pair<VM::Object, size_t> > funcs;
+	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	for(size_t i = 0 ; i < env.functions.size(); i ++)
+	{
+		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+	}
+	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	{
+		VM::Object adf(env);
+		if(prog1.GetADF(adf_index).IsNIL())
+		{
+			adf = prog2.GetADF(adf_index);
+		}
+		else
+		{
+			if(prog2.GetADF(adf_index).IsNIL())
+			{
+				adf = prog1.GetADF(adf_index);
+			}
+			else
+			{
+				// both exist
+				adf = ((rand() % 2) ? prog1 : prog2).GetADF(adf_index);
+			}
+		}
+		res.SetADF(adf_index, adf);
+	}
+	return res;
+}
+

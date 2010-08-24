@@ -2,6 +2,7 @@
 #include "ga_utils.h"
 #include "ioobject.h"
 #include "program.h"
+#include "dot_dump.h"
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
@@ -26,13 +27,16 @@ int main(int argc, char **argv)
 			}
 
 			std::cout << "Generate program... " << std::endl;
-			VM::Program prg = GP::GenerateProg(env, 1);
-			std::cout << prg.Save() << std::endl;
-			VM::Object param = GP::GenerateObj(env, funcs, 0);
-			std::cout << "param = " << param << std::endl;
-			env.program = &prg;
-			env.circle_count = 1000;
-			VM::Object res = env.Run(param);
+			VM::Program prg1 = GP::GenerateProg(env, 6);
+			VM::Program prg2 = GP::GenerateProg(env, 6);
+			VM::Program mut = GP::MutateProg(prg1, 6);
+			VM::Program cross = GP::CrossoverProg(prg1, prg2, 6);
+
+			std::cout << "prog1 = " << prg1.Save() << std::endl;
+			std::cout << "muta1 = " << mut.Save() << std::endl;
+			std::cout << "prog2 = " << prg2.Save() << std::endl;
+			std::cout << "cross = " << cross.Save() << std::endl;
+			DotDump(env, "/tmp/1.dot");
 		}
 	}
 	catch(Glib::Error &e)

@@ -38,6 +38,19 @@ namespace GP
 	/// \param max_funcs Maximum number of functions.
 	/// \return Generated program.
 	VM::Program GenerateProg(VM::Environment &env, size_t max_funcs);
+
+	/// \brief Mutate program.
+	/// \param prog Program.
+	/// \param max_funcs Maximum number of function.
+	/// \return Generated program.
+	VM::Program MutateProg(const VM::Program &prog, size_t max_funcs);
+
+	/// \brief Crossover programs.
+	/// \param prog1 First program.
+	/// \param prog2 Second program.
+	/// \param max_funcs Maximum number of function.
+	/// \return Generated program.
+	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, size_t max_funcs);
 }
 
 #endif
