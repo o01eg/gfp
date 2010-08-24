@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2010 O01eg <o01eg@yandex.ru> 
+ *
+ *  This file is part of Genetic Function Programming.
+ *
+ *  Genetic Function Programming is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Genetic Function Programming is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <stack>
 #include <cstdlib>
 #include "ga_utils.h"
@@ -219,7 +238,13 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 		}
 		else
 		{
-			adf = GP::Mutation(adf, true, funcs, 0);
+			VM::Object new_adf(env);
+			do
+			{
+				new_adf = GP::Mutation(adf, true, funcs, 0);
+			}
+			while(! GP::CheckForParam(new_adf));
+			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
 	}

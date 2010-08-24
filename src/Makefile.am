@@ -1,8 +1,6 @@
 SUBDIRS = libfunctions ruby
 bin_PROGRAMS = gfp gplisp gptest
-gfp_SOURCES = conf.cpp \
-	environment.cpp \
-	errors.cpp \
+gfp_SOURCES = environment.cpp \
 	ga.cpp \
 	ga_utils.cpp \
 	heap.cpp \
@@ -12,28 +10,23 @@ gfp_SOURCES = conf.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object.cpp \
-	program.cpp \
-	stack.cpp
+	program.cpp 
 gplisp_SOURCES = environment.cpp \
-	errors.cpp \
 	gplisp.cpp \
 	heap.cpp \
 	ioobject.cpp \
 	logbuf.cpp \
 	object.cpp \
-	program.cpp \
-	stack.cpp
+	program.cpp
 gptest_SOURCES = dot_dump.cpp \
 	environment.cpp \
-	errors.cpp \
 	ga_utils.cpp \
 	gptest.cpp \
 	heap.cpp \
 	ioobject.cpp \
 	logbuf.cpp \
 	object.cpp \
-	program.cpp \
-	stack.cpp
+	program.cpp
 noinst_HEADERS = conf.h \
 	dot_dump.h \
 	environment.h \
@@ -52,5 +45,5 @@ noinst_HEADERS = conf.h \
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfp_LDADD = ruby/librubypp.a
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
-gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
+gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_
 

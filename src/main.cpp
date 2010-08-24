@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2010 O01eg <o01eg@yandex.ru> 
+ *
+ *  This file is part of Genetic Function Programming.
+ *
+ *  Genetic Function Programming is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Genetic Function Programming is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <iostream>
 #include <glibmm/thread.h>
 #include <csignal>
@@ -5,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 1;
+const size_t MAX_STEP_UNCHANGED = 1000;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -84,12 +103,14 @@ int main(int argc, char **argv)
 			{
 				std::clog << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
+				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
 			}
 			else
 			{
 				remain_steps --;
 			}
 		}
+		std::clog << "best = " << ga.GetBest().GetText() << std::endl;
 	}
 	catch(std::exception &e)
 	{

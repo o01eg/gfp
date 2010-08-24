@@ -1,10 +1,30 @@
+/*
+ * Copyright (C) 2010 O01eg <o01eg@yandex.ru> 
+ *
+ *  This file is part of Genetic Function Programming.
+ *
+ *  Genetic Function Programming is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Genetic Function Programming is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "individual.h"
 #include "ioobject.h"
 #include "ga_utils.h"
 
-const size_t MAX_FUNCTIONS = 256;
+const size_t MAX_FUNCTIONS = 4;
 
 Individual::Individual(const VM::Program &prog)
 {
@@ -43,8 +63,63 @@ Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, c
 
 std::vector<Individual::Result> Individual::Execute(const std::vector<Individual> &population)
 {
-	std::vector<Individual::Result> res;
-	/// \todo Write this.
-	return res;
+	std::vector<Individual::Result> results;
+	VM::Environment env;
+	for(size_t i = 0; i < population.size(); i ++)
+	{
+		VM::Program prog = population[i].GetProgram(env);
+		env.program = &prog;
+		env.circle_count = 1000;
+		VM::Object res = env.Run(VM::Object(env));
+		Result result(i);
+		result.m_Quality[Result::ST_NEG_CIRCLES] = env.circle_count;
+		if(res.IsNIL())
+		{
+			result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
+			result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
+			result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
+		}
+		else
+		{
+			if(res.GetType() == VM::Object::ERROR)
+			{
+				result.m_Quality[Result::ST_ANSW_NO_ERROR] = 0;
+				result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
+				result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
+			}
+			else
+			{
+				if(res.GetType() == VM::Object::INTEGER)
+				{
+					int val = static_cast<int>(res.GetValue());
+					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
+					result.m_Quality[Result::ST_ANSW_IS_INT] = 1;
+					result.m_Quality[Result::ST_NEG_ABS_NUM] = (val > 0) ? (-val) : val;
+				}
+				else
+				{
+					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
+					result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
+					result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
+				}
+			}
+		}
+		results.push_back(result);
+	}
+	std::sort(results.begin(), results.end());
+	std::cout << "====\n";
+	std::cout << results[0].m_Quality[0] << std::endl;
+	std::cout << results[0].m_Quality[1] << std::endl;
+	std::cout << results[0].m_Quality[2] << std::endl;
+	std::cout << results[0].m_Quality[3] << std::endl;
+	return results;
+}
+
+VM::Program Individual::GetProgram(VM::Environment &env) const
+{
+	std::stringstream ss(m_ProgramText);
+	VM::Object obj(env);
+	ss >> obj;
+	return VM::Program(obj);
 }
 

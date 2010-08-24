@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2010 O01eg <o01eg@yandex.ru> 
+ *
+ *  This file is part of Genetic Function Programming.
+ *
+ *  Genetic Function Programming is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Genetic Function Programming is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #if _DEBUG_ENV_
 #include <iostream>
 #include "ioobject.h"
@@ -373,6 +392,7 @@ Object Environment::Run(const Object& param)
 	return Eval(expr);
 }
 
+#if _DEBUG_EVAL_
 void Environment::DumpStack(const std::deque<Object> &stack)
 {
 	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); it ++)
@@ -380,4 +400,5 @@ void Environment::DumpStack(const std::deque<Object> &stack)
 		std::clog << (*it) << std::endl;
 	}
 }
+#endif
 

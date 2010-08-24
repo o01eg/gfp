@@ -8,9 +8,5 @@ noinst_HEADERS = error.h \
 noinst_LIBRARIES = librubypp.a
 
 librubypp_a_SOURCES = error.cpp \
-	protect.cpp \
-	r_string.cpp \
-	r_symbol.cpp \
-	rubypp.cpp \
-	value.cpp
+	rubypp.cpp
 

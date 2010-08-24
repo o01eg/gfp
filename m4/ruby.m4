@@ -47,12 +47,12 @@ dnl
   fi
   AC_MSG_RESULT([yes])
 
-  ruby_libdir=`$RUBY -r rbconfig -e "puts Config::CONFIG[['rubylibdir']]"`
-  ruby_archdir=`$RUBY -r rbconfig -e "puts Config::CONFIG[['archdir']]"`
-  ruby_hdrdir=`$RUBY -r rbconfig -e "puts Config::CONFIG[['rubyhdrdir']]"`
-  ruby_sitelibdir=`$RUBY -r rbconfig -e "puts Config::CONFIG[['sitelibdir']]"`
-  ruby_sitearchdir=`$RUBY -r rbconfig -e "puts Config::CONFIG[['sitearchdir']]"`
-  ruby_hdrarchdir=$ruby_hdrdir/`$RUBY -r rbconfig -e "puts Config::CONFIG[['arch']]"`
+  ruby_libdir=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['rubylibdir']]"`
+  ruby_archdir=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['archdir']]"`
+  ruby_hdrdir=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['rubyhdrdir']]"`
+  ruby_sitelibdir=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['sitelibdir']]"`
+  ruby_sitearchdir=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['sitearchdir']]"`
+  ruby_hdrarchdir=$ruby_hdrdir/`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['arch']]"`
 
   if test -e "$ruby_archdir/ruby.h"; then
     RUBY_CFLAGS="$RUBY_CFLAGS -I$ruby_archdir";
@@ -67,9 +67,9 @@ dnl
     RUBY_CFLAGS="$RUBY_CFLAGS -I$ruby_hdrarchdir"
   fi
 
-  ruby_ldflags=`$RUBY -r rbconfig -e "puts Config::CONFIG[['LDFLAGS']]"`
-  ruby_cfglibs=`$RUBY -r rbconfig -e "puts Config::CONFIG[['LIBS']]"`
-  ruby_libarg=`$RUBY -r rbconfig -e "puts Config::CONFIG[['LIBRUBYARG']]"`
+  ruby_ldflags=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['LDFLAGS']]"`
+  ruby_cfglibs=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['LIBS']]"`
+  ruby_libarg=`$RUBY -r rbconfig -e "puts RbConfig::CONFIG[['LIBRUBYARG']]"`
 
   RUBY_LIBS="$ruby_ldflags $ruby_cfglibs $ruby_libarg"
 

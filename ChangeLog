@@ -1,3 +1,13 @@
+Version 0.0.0.1 2010-08-24
+ * Fix bugs in allocation.
+ * Fix bugs in reading streams into objects.
+ * Fix memory leak.
+ * Add object's generation and mutation support.
+ * Add inital generation.
+ * Add crossover.
+ * Add mutation.
+ * Grow some program.
+
 Snapshot 2010-08-12
  * Make own binary for test interpreter.
  * Prepare for inital generation.

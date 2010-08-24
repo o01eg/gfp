@@ -1,16 +1,12 @@
 gfp
 ===
-
-Version 0.0.0.1 ????-??-??
- * Grow some program.
-
 Snapshot ????-??-?? ToDo
  * Add MS VC compilation.
  * Add first world.
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
 
-Snapshot now
+Version 0.0.0.1 2010-08-24
  * Fix bugs in allocation.
  * Fix bugs in reading streams into objects.
  * Fix memory leak.
@@ -18,6 +14,7 @@ Snapshot now
  * Add inital generation.
  * Add crossover.
  * Add mutation.
+ * Grow some program.
 
 Snapshot 2010-08-12
  * Make own binary for test interpreter.
