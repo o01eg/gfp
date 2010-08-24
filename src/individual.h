@@ -32,8 +32,8 @@ public:
 	};
 
 	Individual(const Individual& ind)
+		:m_ProgramText(ind.m_ProgramText)
 	{
-		/// \todo Write this.
 	}
 
 	/// \brief Desctructor.
@@ -43,7 +43,7 @@ public:
 
 	Individual& operator=(const Individual& ind)
 	{
-		/// \todo Write this.
+		m_ProgramText = ind.m_ProgramText;
 		return *this;
 	}
 

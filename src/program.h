@@ -36,7 +36,14 @@ namespace VM
 		/// \brief Get ADF.
 		/// \param num Number of ADF.
 		/// \return ADF.
-		Object GetADF(int num) const {return m_ADFs[num];}
+		Object GetADF(int num) const
+		{
+			if(num < m_ADFs.size())
+			{
+				return m_ADFs[num];
+			}
+			return Object(m_Env);
+		}
 
 		/// \brief Set ADF.
 		/// \param num Number of ADF.

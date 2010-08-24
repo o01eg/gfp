@@ -22,14 +22,23 @@ Individual Individual::GenerateRand(VM::Environment &env)
 
 Individual Individual::Mutation(VM::Environment &env, const Individual& ind)
 {
-	/// \todo Write this.
-	return Individual(ind);
+	std::stringstream ss(ind.m_ProgramText);
+	VM::Object obj(env);
+	ss >> obj;
+	VM::Program prog(obj);
+	return Individual(GP::MutateProg(prog, MAX_FUNCTIONS));
 }
 
 Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2)
 {
-	/// \todo Write this.
-	return Individual(ind1);
+	std::stringstream ss1(ind1.m_ProgramText);
+	VM::Object obj(env);
+	ss1 >> obj;
+	VM::Program prog1(obj);
+	std::stringstream ss2(ind2.m_ProgramText);
+	ss2 >> obj;
+	VM::Program prog2(obj);	
+	return Individual(GP::CrossoverProg(prog1, prog2, MAX_FUNCTIONS));
 }
 
 std::vector<Individual::Result> Individual::Execute(const std::vector<Individual> &population)
