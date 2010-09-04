@@ -34,12 +34,22 @@ PKG_CHECK_MODULES([GLIBMM],[glibmm-2.4],[LDFLAGS="$GLIBMM_LIBS $LDFLAGS";CXXFLAG
 # ToDo: delete it when Gentoo move into ruby 1.9
 PATH="/mnt/other/games/ruby/bin:$PATH"
 
-AM_CHECK_RUBY([1.9])
-CXXFLAGS="$CXXFLAGS $RUBY_CFLAGS"
-LDFLAGS="$LDFLAGS $RUBY_LIBS"
+AC_ARG_ENABLE([ruby],
+	[AS_HELP_STRING([--enable-ruby],
+		[support for ruby scripts @<:@default=no@:>@])],
+	[],
+	[enable_ruby=no])
 
-AC_CHECK_HEADERS([ruby.h],,AC_MSG_ERROR([ruby.h header not found]))
-AC_CHECK_LIB([ruby], [ruby_init],,AC_MSG_ERROR([ruby library not found]))
+AS_IF([test "x$enable_ruby" != xno],
+	[AM_CHECK_RUBY([1.9])
+	AC_SUBST(CXXFLAGS,"$CXXFLAGS $RUBY_CFLAGS")
+	AC_SUBST(LDFLAGS,"$LDFLAGS $RUBY_LIBS")
+	AC_CHECK_HEADERS([ruby.h],,AC_MSG_ERROR([ruby.h header not found]))
+	AC_CHECK_LIB([ruby], [ruby_init],,AC_MSG_ERROR([ruby library not found]))
+	],
+	[AC_SUBST(SRC_RUBY_DIR,"")])
+
+AM_CONDITIONAL(COMPILE_RUBY, test "x$enable_ruby" != xno)
 
 # == check for header files ==
 

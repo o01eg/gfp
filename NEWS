@@ -6,6 +6,9 @@ Snapshot ????-??-?? ToDo
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
 
+Snapshot new
+ * Make ruby's conditional support.
+
 Version 0.0.0.1 2010-08-24
  * Fix bugs in allocation.
  * Fix bugs in reading streams into objects.

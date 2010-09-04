@@ -7,8 +7,12 @@ README from 2010-02-21
 		$ ./configure --prefix=<where you want install into>
 		$ make
 		$ make install
-	For generate documantation use LaTeX or pdfLaTeX.
-
+	Use LaTeX or pdfLaTeX to generate documantation. (Not yet written)
+		
+		Dependencies.
+	- glibmm - for string manipulation and cross-platform library loading.
+	- gthreadmm - for cross-platform threads' support.
+	- ruby-1.9 - for scripts (can be disabled).
 
    Copyright (C) 2010, O01eg
 
