@@ -30,7 +30,7 @@ using namespace VM;
 /// \return Atomic object.
 Object str2atom(const std::string& str, Environment &env);
 
-std::ostream& operator<<(std::ostream& os, const Object& obj)
+std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
 {
 	/// \todo Use normal stack.
 	/// \todo Use non-attached Object.
@@ -39,38 +39,38 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 		//const Environment& env = obj.GetEnv();
 		switch(obj.GetType())
 		{
-			case Object::ERROR:
+			case ERROR:
 				os << "ERROR ";
 				break;
-			case Object::INTEGER:
+			case INTEGER:
 				os << static_cast<int>(obj.GetValue()) << " ";
 				break;
-			case Object::FUNC:
+			case FUNC:
 #if 0
 				os << "#" << obj.GetValue() << " ";
 #else
 				os << obj.GetEnv().functions[obj.GetValue()].name << " ";
 #endif
 				break;
-			case Object::ADF:
+			case ADF:
 				os << "%" << obj.GetValue() << " ";
 				break;
-			case Object::PARAM:
+			case PARAM:
 				os << "$ ";
 				break;
-			case Object::QUOTE:
+			case QUOTE:
 				os << "\' ";
 				break;
-			case Object::IF:
+			case IF:
 				os << "? ";
 				break;
-			case Object::LIST:
+			case LIST:
 				{
 					std::stack<bool> arrow_stack; // true - head, false - tail
-					std::stack<Object> stack;
+					std::stack<WeakObject> stack;
 					arrow_stack.push(true);
 					stack.push(obj);
-					Object object(obj);
+					WeakObject object(obj);
 					bool arrow = true;
 					//size_t level = 0;
 					while(! stack.empty())
@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 							}
 							else
 							{
-								if(object.GetType() == Object::LIST)
+								if(object.GetType() == LIST)
 								{
 									//os << std::endl;
 									/*for(size_t i = 0; i < level; i ++)
@@ -116,7 +116,7 @@ std::ostream& operator<<(std::ostream& os, const Object& obj)
 							}
 							else
 							{
-								if(object.GetType() == Object::LIST)
+								if(object.GetType() == LIST)
 								{
 									stack.push(object.GetTail());
 									arrow_stack.push(false);
@@ -224,7 +224,7 @@ Object str2atom(const std::string& str, Environment &env)
 	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), str);
 	if(ptr != env.functions.end())
 	{
-		return Object(env, Object::FUNC, ptr - env.functions.begin());
+		return Object(env, FUNC, ptr - env.functions.begin());
 	}
 	else
 	{
@@ -235,24 +235,24 @@ Object str2atom(const std::string& str, Environment &env)
 				//return Object(env, Object::ERROR);
 			case '#':
 				//value = atol(str.c_str() + 1);
-				return Object(env, Object::ERROR);
+				return Object(env, ERROR);
 			case '%':
 				value = atol(str.c_str() + 1);
-				return Object(env, Object::ADF, value);
+				return Object(env, ADF, value);
 			case '$':
-				return Object(env, Object::PARAM);
+				return Object(env, PARAM);
 			case '\'':
-				return Object(env, Object::QUOTE);
+				return Object(env, QUOTE);
 			case '?':
-				return Object(env, Object::IF);
+				return Object(env, IF);
 			case 'N':
 			case 'n':
 				return Object(env);
 			default: // INTEGER
 				value = atol(str.c_str());
-				return Object(env, Object::INTEGER, value);
+				return Object(env, INTEGER, value);
 		}
 	}
-	return Object(env, Object::ERROR);
+	return Object(env, ERROR);
 }
 

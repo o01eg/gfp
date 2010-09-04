@@ -90,7 +90,7 @@ Object Environment::Eval(const Object &arg1)
 		Object obj = obj_to_calc.back();
 		obj_to_calc.pop_back();
 
-		if(obj.IsNIL() || (obj.GetType() == Object::ERROR) || (obj.GetType() == Object::INTEGER))
+		if(obj.IsNIL() || (obj.GetType() == ERROR) || (obj.GetType() == INTEGER))
 		{
 			obj_from_calc.push_back(obj);
 		}
@@ -98,34 +98,34 @@ Object Environment::Eval(const Object &arg1)
 		{
 			switch(obj.GetType())
 			{
-				case Object::FUNC:
+				case FUNC:
 					// make arguments list and call
 					obj_from_calc.push_back(CallFunction(obj.GetValue(), &obj_from_calc));
 					break;
-				case Object::LIST:
+				case LIST:
 					{
 						Object head = obj.GetHead();
 						if(head.IsNIL())
 						{
-							obj_from_calc.push_back(Object(*this, Object::ERROR));
+							obj_from_calc.push_back(Object(*this, ERROR));
 						}
 						else
 						{
 							switch(head.GetType())
 							{
-								case Object::FUNC:
-								case Object::ADF:
-									while((! obj.IsNIL()) && (obj.GetType() == Object::LIST)) // while LIST isn't ended
+								case FUNC:
+								case ADF:
+									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
 										obj_to_calc.push_back(head);
 										obj = obj.GetTail();
 									}
 									break;
-								case Object::QUOTE:
+								case QUOTE:
 									obj_from_calc.push_back(obj.GetTail().GetHead());
 									break;
-								case Object::IF:
+								case IF:
 									{
 										Object cond = obj.GetTail().GetHead();
 										Object otrue = obj.GetTail().GetTail().GetHead();
@@ -137,13 +137,13 @@ Object Environment::Eval(const Object &arg1)
 									}
 									break;
 								default: // here get ERROR and INTEGER
-									obj_from_calc.push_back(Object(*this, Object::ERROR));
+									obj_from_calc.push_back(Object(*this, ERROR));
 									break;
 							}
 						}
 					}
 					break;
-				case Object::IF:
+				case IF:
 					{
 						Object cond = obj_from_calc.back();
 						obj_from_calc.pop_back();
@@ -163,7 +163,7 @@ Object Environment::Eval(const Object &arg1)
 						}
 					}
 					break;
-				case Object::ADF:
+				case ADF:
 					if(! is_in_adf)
 					{
 						is_in_adf = true;
@@ -176,19 +176,19 @@ Object Environment::Eval(const Object &arg1)
 #endif
 					obj_to_calc.push_back(program->GetADF(obj.GetValue()));
 					break;
-				case Object::PARAM:
+				case PARAM:
 					if(is_in_adf)
 					{
 						obj_from_calc.push_back(adf_params_obj.top());
 					}
 					else
 					{
-						obj_from_calc.push_back(Object(*this, Object::ERROR));
+						obj_from_calc.push_back(Object(*this, ERROR));
 					}
 					break;
-				case Object::QUOTE:
+				case QUOTE:
 				default:
-					obj_from_calc.push_back(Object(*this, Object::ERROR));
+					obj_from_calc.push_back(Object(*this, ERROR));
 					break;
 			}
 		}
@@ -207,7 +207,7 @@ Object Environment::Eval(const Object &arg1)
 #if _DEBUG_ENV_
 		std::clog << "Error in evalation" << std::endl;
 #endif
-		return Object(*this, Object::ERROR);
+		return Object(*this, ERROR);
 	}
 }
 
@@ -327,7 +327,7 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 #endif
 	if(args.IsNIL())
 	{
-		return Object(*this, Object::ERROR);
+		return Object(*this, ERROR);
 	}
 	Object result(*this);
 	function.func(args, &result);
@@ -345,7 +345,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 	//check number of parameters and ERROR
 	while(param_number)
 	{
-		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != Object::ERROR)))
+		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != ERROR)))
 		{
 #if _DEBUG_EVAL_
 			std::clog << "arg " << obj_from_calc.back() << std::endl;
@@ -387,8 +387,8 @@ Object Environment::Run(const Object& param)
 	{
 		THROW("Null pointer to program");
 	}
-	Object param_adf0(Object(*this, Object::QUOTE), Object(param, Object(*this)));
-	Object expr(Object(*this, Object::ADF, 0), Object(param_adf0, Object(*this)));
+	Object param_adf0(Object(*this, QUOTE), Object(param, Object(*this)));
+	Object expr(Object(*this, ADF, 0), Object(param_adf0, Object(*this)));
 	return Eval(expr);
 }
 

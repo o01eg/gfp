@@ -114,6 +114,7 @@ namespace VM
 		/// \param allow_free Allow access to free element.
 		/// \return Request element.
 		const Element& UnsafeAt(UInt position, bool allow_free) const;
+
 		std::vector<Element*> blocks; ///< Blocks of elements.
 
 		/// \brief Block for copy-constructor.

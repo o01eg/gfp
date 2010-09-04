@@ -20,7 +20,7 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-#include "environment.h"
+#include "weak_object.h"
 
 #if _DEBUG_OBJECT_
 #include <set>
@@ -29,30 +29,17 @@
 namespace VM
 {
 	/// \brief LISP Objects.
-	class Object
+	class Object : public WeakObject
 	{
 	public:
-		/// \brief Types of objects.
-		enum Types
-		{
-			ERROR = 0,
-			INTEGER,
-			FUNC,
-			ADF,
-			PARAM,
-			QUOTE,
-			IF,
-			LIST/*,
-			NIL = -1 */
-		};
 		/// \brief Copy constructor.
 		/// \param obj Object.
 		Object(const Object& obj);
 
 		/// \brief Create NIL object.
-		/// \param env_ Used environment.
-		explicit Object(Environment &env_)
-			:env(env_), pos(0)
+		/// \param env Used environment.
+		explicit Object(Environment &env)
+			:WeakObject(env)
 		{
 #if _DEBUG_OBJECT_
 			m_AllObjects.insert(this);
@@ -83,27 +70,6 @@ namespace VM
 		/// \return l-value object.
 		Object& operator=(const Object& obj);
 
-		/// \brief Compare.
-		/// \param[in] obj Right value.
-		/// \return result of comparsion.
-		bool operator==(const Object& obj) const;
-
-		/// \brief Check object for NIL.
-		/// \return Answer.
-		bool IsNIL() const {return (! pos);}
-
-		/// \brief Get type.
-		/// You must check object about NIL before call this function.
-		/// \sa IsNIL
-		/// \return type of object.
-		Types GetType() const {return static_cast<Types>(env.heap.At(pos).hash & 0xf);}
-
-		/// \brief Get value.
-		/// You must check object about NIL before call this function.
-		/// \sa IsNIL
-		/// \return Value of object.
-		Heap::UInt GetValue() const;
-
 		/// \brief Get head of LIST
 		/// \return head.
 		Object GetHead() const;
@@ -114,7 +80,7 @@ namespace VM
 
 		/// \brief Get constant environment of object
 		/// \return Environment.
-		Environment& GetEnv() const {return const_cast<Environment&>(env);}
+		Environment& GetEnv() const {return const_cast<Environment&>(WeakObject::GetEnv());}
 #if _DEBUG_OBJECT_
 		/// \brief Print all exist objects.
 		static void PrintObjects(Environment &env, std::ostream &os);
@@ -127,8 +93,6 @@ namespace VM
 		/// \return Generated object.
 		static Object GetObjectFrom(Environment &env, Heap::UInt pos);
 
-		Environment &env; ///< Current environment.
-		Heap::UInt pos; ///< Position in heap.
 #if _DEBUG_OBJECT_
 		//Object *self; ///< Copy of this (for debugging).
 		static std::set<Object*> m_AllObjects; /// < List of all objects.

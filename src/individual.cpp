@@ -81,7 +81,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		}
 		else
 		{
-			if(res.GetType() == VM::Object::ERROR)
+			if(res.GetType() == VM::ERROR)
 			{
 				result.m_Quality[Result::ST_ANSW_NO_ERROR] = 0;
 				result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
@@ -89,7 +89,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			}
 			else
 			{
-				if(res.GetType() == VM::Object::INTEGER)
+				if(res.GetType() == VM::INTEGER)
 				{
 					int val = static_cast<int>(res.GetValue());
 					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;

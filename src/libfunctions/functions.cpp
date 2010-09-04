@@ -78,13 +78,13 @@ void func_01_cons(const Object& args, Object *result)
 void func_02_car(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::LIST))
+	if((! arg1.IsNIL()) && (arg1.GetType() == LIST))
 	{
 		(*result) = arg1.GetHead();
 	}
 	else
 	{
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -94,13 +94,13 @@ void func_02_car(const Object& args, Object *result)
 void func_03_cdr(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::LIST))
+	if((! arg1.IsNIL()) && (arg1.GetType() == LIST))
 	{
 		(*result) = arg1.GetTail();
 	}
 	else
 	{
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -114,7 +114,7 @@ void func_04_is_nil(const Object& args, Object *result)
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -129,11 +129,11 @@ void func_04_is_nil(const Object& args, Object *result)
 void func_05_is_int(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (arg1.GetType() == INTEGER))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -148,11 +148,11 @@ void func_05_is_int(const Object& args, Object *result)
 void func_06_is_func(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::FUNC))
+	if((! arg1.IsNIL()) && (arg1.GetType() == FUNC))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -167,11 +167,11 @@ void func_06_is_func(const Object& args, Object *result)
 void func_07_is_adf(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::ADF))
+	if((! arg1.IsNIL()) && (arg1.GetType() == ADF))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -186,11 +186,11 @@ void func_07_is_adf(const Object& args, Object *result)
 void func_08_is_param(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::PARAM))
+	if((! arg1.IsNIL()) && (arg1.GetType() == PARAM))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -205,11 +205,11 @@ void func_08_is_param(const Object& args, Object *result)
 void func_09_is_quote(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::QUOTE))
+	if((! arg1.IsNIL()) && (arg1.GetType() == QUOTE))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -224,11 +224,11 @@ void func_09_is_quote(const Object& args, Object *result)
 void func_10_is_if(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::IF))
+	if((! arg1.IsNIL()) && (arg1.GetType() == IF))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -243,11 +243,11 @@ void func_10_is_if(const Object& args, Object *result)
 void func_11_is_list(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == Object::LIST))
+	if((! arg1.IsNIL()) && (arg1.GetType() == LIST))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -263,14 +263,14 @@ void func_12_int_plus(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), Object::INTEGER, arg1.GetValue() + arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() + arg2.GetValue());
 	}
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -281,14 +281,14 @@ void func_13_int_minus(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), Object::INTEGER, arg1.GetValue() - arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() - arg2.GetValue());
 	}
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -299,14 +299,14 @@ void func_14_int_mult(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), Object::INTEGER, arg1.GetValue() * arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() * arg2.GetValue());
 	}
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -317,14 +317,14 @@ void func_15_int_div(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER) && (arg2.GetValue() != 0))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER) && (arg2.GetValue() != 0))
 	{
-		(*result) = Object(args.GetEnv(), Object::INTEGER, arg1.GetValue() / arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() / arg2.GetValue());
 	}
 	else
 	{
 		// wrong types or division by zero
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -335,14 +335,14 @@ void func_16_int_mod(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER) && (arg2.GetValue() != 0))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER) && (arg2.GetValue() != 0))
 	{
-		(*result) = Object(args.GetEnv(), Object::INTEGER, arg1.GetValue() % arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() % arg2.GetValue());
 	}
 	else
 	{
 		// wrong types or division by zero
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 }
 
@@ -356,7 +356,7 @@ void func_17_equal(const Object& args, Object *result)
 	if(arg1 == arg2)
 	{
 		// equal
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 	else
 	{
@@ -379,7 +379,7 @@ void func_18_and(const Object& args, Object *result)
 	else
 	{
 		// true
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 }
 
@@ -398,7 +398,7 @@ void func_19_or(const Object& args, Object *result)
 	else
 	{
 		// true
-		(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+		(*result) = Object(args.GetEnv(), INTEGER, 0);
 	}
 }
 
@@ -409,12 +409,12 @@ void func_20_int_less(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
 		if(arg1.GetValue() < arg2.GetValue())
 		{
 			//true
-			(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+			(*result) = Object(args.GetEnv(), INTEGER, 0);
 		}
 		else
 		{
@@ -425,7 +425,7 @@ void func_20_int_less(const Object& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 
 }
@@ -437,12 +437,12 @@ void func_21_int_greater(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
 		if(arg1.GetValue() > arg2.GetValue())
 		{
 			//true
-			(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+			(*result) = Object(args.GetEnv(), INTEGER, 0);
 		}
 		else
 		{
@@ -453,7 +453,7 @@ void func_21_int_greater(const Object& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 
 }
@@ -465,12 +465,12 @@ void func_22_int_equal(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
-	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == Object::INTEGER) && (arg2.GetType() == Object::INTEGER))
+	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
 		if(arg1.GetValue() == arg2.GetValue())
 		{
 			//true
-			(*result) = Object(args.GetEnv(), Object::INTEGER, 0);
+			(*result) = Object(args.GetEnv(), INTEGER, 0);
 		}
 		else
 		{
@@ -481,7 +481,7 @@ void func_22_int_equal(const Object& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(args.GetEnv(), Object::ERROR);
+		(*result) = Object(args.GetEnv(), ERROR);
 	}
 
 }

@@ -24,32 +24,32 @@
 
 const size_t MAX_DEPTH = 16;
 
-bool GP::CheckForParam(const VM::Object &func)
+bool GP::CheckForParam(const VM::WeakObject &func)
 {
-	std::stack<VM::Object> stack;
+	std::stack<VM::WeakObject> stack;
 	bool result = false;
 	if(func.IsNIL())
 	{
 		return false;
 	}
-	if(func.GetType() != VM::Object::LIST)
+	if(func.GetType() != VM::LIST)
 	{
 		return false;
 	}
 	stack.push(func);
 	while(! stack.empty())
 	{
-		VM::Object obj = stack.top();
+		VM::WeakObject obj = stack.top();
 		stack.pop();
 
 		if(! obj.IsNIL())
 		{
-			if(obj.GetType() == VM::Object::LIST)
+			if(obj.GetType() == VM::LIST)
 			{
 				stack.push(obj.GetHead());
 				stack.push(obj.GetTail());
 			}
-			if(obj.GetType() == VM::Object::PARAM)
+			if(obj.GetType() == VM::PARAM)
 			{
 				return true;
 			}
@@ -65,7 +65,7 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	switch(choose)
 	{
 	case 0: // integer
-		res = VM::Object(env, VM::Object::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
+		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
 		break;
 	case 1: // callable objects
 		res = funcs[rand() % funcs.size()].first;
@@ -73,10 +73,10 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	case 2: // NIL
 		break;
 	case 3: // parameter
-		res = VM::Object(env, VM::Object::PARAM);
+		res = VM::Object(env, VM::PARAM);
 		break;
 	case 4: // quote
-		res = VM::Object(env, VM::Object::QUOTE);
+		res = VM::Object(env, VM::QUOTE);
 		break;
 	case 5: // list
 		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), GP::GenerateObj(env, funcs, depth + 1));
@@ -92,12 +92,12 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	switch(choose)
 	{
 	case 0: // integer
-		res = VM::Object(env, VM::Object::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
+		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
 		break;
 	case 1: // nil
 		break;
 	case 2: // parameter
-		res = VM::Object(env, VM::Object::PARAM);
+		res = VM::Object(env, VM::PARAM);
 		break;
 	case 3: // call
 		{
@@ -111,7 +111,7 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 		break;
 	case 4: // ( ' object )
 		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), res);
-		res = VM::Object(VM::Object(env, VM::Object::QUOTE), res);
+		res = VM::Object(VM::Object(env, VM::QUOTE), res);
 		break;
 
 	}
@@ -130,7 +130,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 		else
 		{
 			// no change or go deeper
-			if((! obj.IsNIL()) && (obj.GetType() == VM::Object::LIST))
+			if((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
 			{
 				// mutate arguments of function
 				VM::Object head(obj.GetHead());
@@ -138,7 +138,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 				{
 					THROW("Head of callable list cann't be NIL");
 				}
-				if(head.GetType() == VM::Object::QUOTE)
+				if(head.GetType() == VM::QUOTE)
 				{
 					// it's quote, make argument as non executable
 					res = GP::Mutation(obj.GetTail().GetHead(), false, funcs, depth + 1);
@@ -148,7 +148,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 				{
 					std::stack<VM::Object> stack;
 					VM::Object temp(obj.GetTail());
-					while((! temp.IsNIL()) && (temp.GetType() == VM::Object::LIST))
+					while((! temp.IsNIL()) && (temp.GetType() == VM::LIST))
 					{
 						stack.push(temp.GetHead());
 						temp = temp.GetTail();
@@ -177,7 +177,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 		else
 		{
 			// no change or go deeper
-			if((! obj.IsNIL()) && (obj.GetType() == VM::Object::LIST))
+			if((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
 			{
 				res = VM::Object(GP::Mutation(obj.GetHead(), false, funcs, depth + 1), GP::Mutation(obj.GetTail(), false, funcs, depth + 1));
 			}
@@ -194,15 +194,15 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 {
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 	}
 	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
 	{
 		VM::Object adf(env);
-		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::ADF, adf_index), 1));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		do
 		{
 			adf = GP::GenerateExec(env, funcs, 0);
@@ -218,15 +218,15 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 	VM::Environment& env = prog.GetEnv();
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 	}
 	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
 	{
 		VM::Object adf = prog.GetADF(adf_index);
-		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::ADF, adf_index), 1));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		if(adf.IsNIL())
 		{
 			do
@@ -260,10 +260,10 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 	}
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 	}
 	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
 	{

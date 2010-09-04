@@ -31,23 +31,22 @@ std::set<Object*> Object::m_AllObjects;
 #endif
 
 Object::Object(const Object &obj)
-	:env(obj.env)
+	:WeakObject(obj)
 {
 #if _DEBUG_OBJECT_
 	m_AllObjects.insert(this);
 #endif
-	pos = obj.pos;
-	if(pos)
+	if(m_Pos)
 	{
-		env.heap.Attach(pos);
+		GetEnv().heap.Attach(m_Pos);
 	}
 #if _DEBUG_OBJECT_
 	//std::clog << "Create object " << *this;
 #endif
 }
 
-Object::Object(Environment &env_, Types type)
-	:env(env_)
+Object::Object(Environment &env, Types type)
+	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_
 	m_AllObjects.insert(this);
@@ -58,9 +57,9 @@ Object::Object(Environment &env_, Types type)
 		THROW(Glib::ustring::compose("Object 0x%1: Non parameterless type %2.", this, type));
 	}
 #endif
-	pos = env.heap.Alloc(0x10 | (type & 0xf), 0);
+	m_Pos = GetEnv().heap.Alloc(0x10 | (type & 0xf), 0);
 #if _DEBUG_OBJECT_
-	if(! pos)
+	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
@@ -69,8 +68,8 @@ Object::Object(Environment &env_, Types type)
 
 }
 
-Object::Object(Environment &env_, Types type, Heap::UInt value)
-	:env(env_)
+Object::Object(Environment &env, Types type, Heap::UInt value)
+	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_
 	m_AllObjects.insert(this);
@@ -81,9 +80,9 @@ Object::Object(Environment &env_, Types type, Heap::UInt value)
 		THROW(Glib::ustring::compose("Object 0x%1: Non one-parameter type %2.", this, type));
 	}
 #endif
-	pos = env.heap.Alloc((value << 4) | 0x10 | (type & 0xf), value);
+	m_Pos = GetEnv().heap.Alloc((value << 4) | 0x10 | (type & 0xf), value);
 #if _DEBUG_OBJECT_
-	if(! pos)
+	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
@@ -93,31 +92,31 @@ Object::Object(Environment &env_, Types type, Heap::UInt value)
 }
 
 Object::Object(const Object& head, const Object& tail)
-	:env(head.env)
+	:WeakObject(head.GetEnv())
 {
 #if _DEBUG_OBJECT_
 	m_AllObjects.insert(this);
 #endif
 #if _DEBUG_OBJECT_
-	if(&env != &tail.env)
+	if(&GetEnv() != &tail.GetEnv())
 	{
 		THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environment.", &head, &tail));
 	}
 #endif
 	Heap::UInt hash = LIST;
-	if(head.pos)
+	if(head.m_Pos)
 	{
-		hash = hash | (head.env.heap.At(head.pos).hash << 4);
-		env.heap.Attach(head.pos);
+		hash = hash | (head.GetEnv().heap.At(head.m_Pos).hash << 4);
+		GetEnv().heap.Attach(head.m_Pos);
 	}
-	if(tail.pos)
+	if(tail.m_Pos)
 	{
-		hash = hash ^ (tail.env.heap.At(tail.pos).hash << 4);
-		env.heap.Attach(tail.pos);
+		hash = hash ^ (tail.GetEnv().heap.At(tail.m_Pos).hash << 4);
+		GetEnv().heap.Attach(tail.m_Pos);
 	}
-	pos = env.heap.Alloc(hash, head.pos, tail.pos);
+	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
 #if _DEBUG_OBJECT_
-	if(! pos)
+	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
@@ -138,50 +137,50 @@ Object::~Object()
 		std::cout << "Object 0x" << this << " It didn't be added into objects' list." << std::endl;
 	}
 #endif
-	if(pos)
+	if(m_Pos)
 	{
-		if((GetType() == LIST) && (env.heap.At(pos).count == 1))
+		if((GetType() == LIST) && (GetEnv().heap.At(m_Pos).count == 1))
 		{
 			/// \todo Use normal stack.
 			std::stack<Heap::UInt> stack;
-			stack.push(pos);
+			stack.push(m_Pos);
 			while(! stack.empty())
 			{
 				Heap::UInt elem_pos = stack.top();
 				stack.pop();
-				const Heap::Element &elem = env.heap.At(elem_pos);
+				const Heap::Element &elem = GetEnv().heap.At(elem_pos);
 				// add into stack only LIST objects with one link to them
 				if((elem.hash & 0xf) == LIST)
 				{
 					if(elem.value)
 					{
-						if(env.heap.At(elem.value).count == 1)
+						if(GetEnv().heap.At(elem.value).count == 1)
 						{
 							stack.push(elem.value);
 						}
 						else
 						{
-							env.heap.Detach(elem.value);
+							GetEnv().heap.Detach(elem.value);
 						}
 					}
 					if(elem.tail)
 					{
-						if(env.heap.At(elem.tail).count == 1)
+						if(GetEnv().heap.At(elem.tail).count == 1)
 						{
 							stack.push(elem.tail);
 						}
 						else
 						{
-							env.heap.Detach(elem.tail);
+							GetEnv().heap.Detach(elem.tail);
 						}
 					}
 				}
-				env.heap.Detach(elem_pos);
+				GetEnv().heap.Detach(elem_pos);
 			}
 		}
 		else
 		{
-			env.heap.Detach(pos);
+			GetEnv().heap.Detach(m_Pos);
 		}
 	}
 }
@@ -191,42 +190,30 @@ Object& Object::operator=(const Object& obj)
 	if(this != &obj)
 	{
 #if _DEBUG_OBJECT_
-		if(&env != &obj.env)
+		if(&GetEnv() != &obj.GetEnv())
 		{
 			THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
 		}
 #endif
-		if(pos && GetType() == Object::LIST) // If LIST before then use recursive destroing at destructor
+		if(m_Pos && GetType() == LIST) // If LIST before then use recursive destroing at destructor
 		{
 			this->~Object();
 			new (this) Object(obj);
 		}
 		else
 		{
-			if(pos)
+			if(m_Pos)
 			{
-				env.heap.Detach(pos);
+				GetEnv().heap.Detach(m_Pos);
 			}
-			pos = obj.pos;
-			if(pos)
+			m_Pos = obj.m_Pos;
+			if(m_Pos)
 			{
-				env.heap.Attach(pos);
+				GetEnv().heap.Attach(m_Pos);
 			}
 		}
 	}
 	return *this;
-}
-
-Heap::UInt Object::GetValue() const
-{
-#if _DEBUG_OBJECT_
-	Types type = GetType();
-	if((type != INTEGER) && (type != FUNC) && (type != ADF))
-	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non one-parameter type %2.", this, type));
-	}
-#endif
-	return env.heap.At(pos).value;
 }
 
 Object Object::GetObjectFrom(Environment &env, Heap::UInt pos)
@@ -234,7 +221,7 @@ Object Object::GetObjectFrom(Environment &env, Heap::UInt pos)
 	Object res(env); // create NIL object.
 	if(pos)
 	{
-		res.pos = pos;
+		res.m_Pos = pos;
 		env.heap.Attach(pos);
 	}
 	return res;
@@ -248,7 +235,7 @@ Object Object::GetHead() const
 		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
 	}
 #endif
-	return GetObjectFrom(env, env.heap.At(pos).value);
+	return GetObjectFrom(GetEnv(), GetEnv().heap.At(m_Pos).value);
 }
 
 Object Object::GetTail() const
@@ -259,56 +246,7 @@ Object Object::GetTail() const
 		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
 	}
 #endif
-	return GetObjectFrom(env, env.heap.At(pos).tail);
-}
-
-bool Object::operator==(const Object& obj) const
-{
-#if _DEBUG_OBJECT_
-	if(&env != &obj.env)
-	{
-		THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
-	}
-#endif
-	if(pos == obj.pos)
-	{
-		return true;
-	}
-	else
-	{
-		if(IsNIL() || obj.IsNIL())
-		{
-			// one is NIL but another isn't
-			return false;
-		}
-		else
-		{
-			if(GetType() == obj.GetType())
-			{
-				/// \todo Rewrite this into low-level work with heap data.
-				switch(GetType())
-				{
-					case ERROR:
-					case PARAM:
-					case QUOTE:
-					case IF:
-						return true;
-					case INTEGER:
-					case FUNC:
-					case ADF:
-						return GetValue() == obj.GetValue();
-					case LIST:
-						return (GetHead() == obj.GetHead()) && (GetTail() == obj.GetTail());
-				}
-			}
-			else
-			{
-				// different types
-				return false;
-			}
-		}
-	}
-	return false;
+	return GetObjectFrom(GetEnv(), GetEnv().heap.At(m_Pos).tail);
 }
 
 #if _DEBUG_OBJECT_
@@ -317,18 +255,18 @@ void Object::PrintObjects(Environment &env, std::ostream &os)
 #if _DOT_MEMORY_
 	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
 	{
-		if(&env == &((*it)->env) && (*it)->pos)
+		if(&env == &((*it)->GetEnv()) && (*it)->m_Pos)
 		{
-			os << "\"" << (*it) << "\" -> " << (*it)->pos << ";" << std::endl;
+			os << "\"" << (*it) << "\" -> " << (*it)->m_Pos << ";" << std::endl;
 		}
 	}
 #else
 	os << "All Objects:" << std::endl;
 	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
 	{
-		if(&env == &((*it)->env))
+		if(&env == &((*it)->GetEnv()))
 		{
-			os << "Object: 0x" << (*it) << " pos:" << (*it)->pos << std::endl;
+			os << "Object: 0x" << (*it) << " pos:" << (*it)->m_Pos << std::endl;
 		}
 	}
 #endif

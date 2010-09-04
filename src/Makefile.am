@@ -10,14 +10,16 @@ gfp_SOURCES = environment.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object.cpp \
-	program.cpp 
+	program.cpp \
+	weak_object.cpp
 gplisp_SOURCES = environment.cpp \
 	gplisp.cpp \
 	heap.cpp \
 	ioobject.cpp \
 	logbuf.cpp \
 	object.cpp \
-	program.cpp
+	program.cpp \
+	weak_object.cpp
 gptest_SOURCES = dot_dump.cpp \
 	environment.cpp \
 	ga_utils.cpp \
@@ -26,7 +28,8 @@ gptest_SOURCES = dot_dump.cpp \
 	ioobject.cpp \
 	logbuf.cpp \
 	object.cpp \
-	program.cpp
+	program.cpp \
+	weak_object.cpp
 noinst_HEADERS = conf.h \
 	dot_dump.h \
 	environment.h \
@@ -41,7 +44,8 @@ noinst_HEADERS = conf.h \
 	logger.h \
 	object.h \
 	program.h \
-	stack.h
+	stack.h \
+	weak_object.h
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 if COMPILE_RUBY
 gfp_LDADD = ruby/librubypp.a

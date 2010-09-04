@@ -28,7 +28,7 @@ namespace GP
 	/// \brief Check for using params in function.
 	/// \param func Function.
 	/// \return Is have any params.
-	bool CheckForParam(const VM::Object &func);
+	bool CheckForParam(const VM::WeakObject &func);
 
 	/// \brief Generate executable object.
 	/// \param env Environment.

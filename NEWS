@@ -8,6 +8,7 @@ Snapshot ????-??-?? ToDo
 
 Snapshot new
  * Make ruby's conditional support.
+ * Implement WeakObject for some speed up.
 
 Version 0.0.0.1 2010-08-24
  * Fix bugs in allocation.

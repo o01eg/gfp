@@ -32,7 +32,7 @@ Program::Program(const Object &obj)
 	Object ptr = obj.GetTail();
 	while(! ptr.IsNIL())
 	{
-		if((! ptr.GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetType() == Object::ADF))
+		if((! ptr.GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetType() == ADF))
 		{
 			Heap::UInt num = ptr.GetHead().GetHead().GetValue();
 			m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
@@ -66,11 +66,11 @@ Object Program::Save() const
 		if(! m_ADFs[index].IsNIL())
 		{
 			Object func_entry = Object(m_ADFs[index], Object(env));
-			func_entry = Object(Object(env, Object::ADF, index), func_entry);
+			func_entry = Object(Object(env, ADF, index), func_entry);
 			res = Object(func_entry, res);
 		}
 	}
-	return Object(Object(env, Object::INTEGER, m_ADFs.size()), res);
+	return Object(Object(env, INTEGER, m_ADFs.size()), res);
 }
 
 void Program::SetADF(int num, const Object& obj)

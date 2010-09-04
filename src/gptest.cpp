@@ -39,10 +39,10 @@ int main(int argc, char **argv)
 		{
 			env.LoadFunctions(DATA_DIR "functions.txt");
 			std::vector<std::pair<VM::Object, size_t> > funcs;
-			funcs.push_back(std::make_pair(VM::Object(env, VM::Object::IF), 3));
+			funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 			for(size_t i = 0 ; i < env.functions.size(); i ++)
 			{
-				funcs.push_back(std::make_pair(VM::Object(env, VM::Object::FUNC, i), env.functions[i].number_param));
+				funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 			}
 
 			std::cout << "Generate program... " << std::endl;
