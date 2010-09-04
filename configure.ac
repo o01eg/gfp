@@ -28,7 +28,17 @@ CXXFLAGS="-ggdb3 -Wall -Wextra -pedantic"
 
 # == check for libraries ==
 
-PKG_CHECK_MODULES([GTHREAD],[gthread-2.0],[LDFLAGS="$GTHREAD_LIBS $LDFLAGS";CXXFLAGS="$GTHREAD_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GThread library])])
+AC_ARG_ENABLE([multithread],
+	[AS_HELP_STRING([--enable-multithread],
+		[support for miltithreading, dependence on gthread @<:@default=no@:>@])],
+	[],
+	[enable_multithread=no])
+
+AS_IF([test "x$enable_multithread" != xno],
+	[PKG_CHECK_MODULES([GTHREAD],[gthread-2.0],[LDFLAGS="$GTHREAD_LIBS $LDFLAGS";CXXFLAGS="$GTHREAD_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GThread library])])
+	],
+	[])
+
 PKG_CHECK_MODULES([GLIBMM],[glibmm-2.4],[LDFLAGS="$GLIBMM_LIBS $LDFLAGS";CXXFLAGS="$GLIBMM_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GLibmm library])])
 
 # ToDo: delete it when Gentoo move into ruby 1.9
@@ -47,7 +57,7 @@ AS_IF([test "x$enable_ruby" != xno],
 	AC_CHECK_HEADERS([ruby.h],,AC_MSG_ERROR([ruby.h header not found]))
 	AC_CHECK_LIB([ruby], [ruby_init],,AC_MSG_ERROR([ruby library not found]))
 	],
-	[AC_SUBST(SRC_RUBY_DIR,"")])
+	[])
 
 AM_CONDITIONAL(COMPILE_RUBY, test "x$enable_ruby" != xno)
 
