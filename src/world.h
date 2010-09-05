@@ -17,18 +17,22 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <fstream>
-#include "dot_dump.h"
 #include "object.h"
 
-#ifdef _DEBUG_HEAP_
-void DotDump(VM::Environment &env, const char* filename)
+/// \brief Class is describing world for individuals.
+class World
 {
-	std::ofstream f(filename);
-	f << "digraph G {" << std::endl;
-	VM::Object::PrintObjects(env, f);
-	env.heap.CheckLeaks(f);
-	f << "}" << std::endl;
-}
-#endif
+public:
+	/// \brief Construct world from file.
+	/// \param[in] filename Name of file with world.
+	World(const char* filename);
+
+	/// \brief Desctruct world.
+	~World()
+	{
+	}
+private:
+	size_t m_Width; ///< Width of world.
+	size_t m_Height; ///< Height of world.
+};
 

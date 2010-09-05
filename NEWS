@@ -1,7 +1,6 @@
 gfp
 ===
 Snapshot ????-??-?? ToDo
- * Add MS VC compilation.
  * Add first world.
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
@@ -9,6 +8,7 @@ Snapshot ????-??-?? ToDo
 Snapshot new
  * Make ruby's conditional support.
  * Implement WeakObject for some speed up.
+ * Add MS VC compilation.
 
 Version 0.0.0.1 2010-08-24
  * Fix bugs in allocation.

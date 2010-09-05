@@ -55,7 +55,9 @@ int main(int argc, char **argv)
 			std::cout << "muta1 = " << mut.Save() << std::endl;
 			std::cout << "prog2 = " << prg2.Save() << std::endl;
 			std::cout << "cross = " << cross.Save() << std::endl;
+#ifdef _DEBUG_HEAP_
 			DotDump(env, "/tmp/1.dot");
+#endif
 		}
 	}
 	catch(Glib::Error &e)

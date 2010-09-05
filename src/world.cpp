@@ -18,17 +18,14 @@
  */
 
 #include <fstream>
-#include "dot_dump.h"
-#include "object.h"
+#include <iostream>
+#include "world.h"
 
-#ifdef _DEBUG_HEAP_
-void DotDump(VM::Environment &env, const char* filename)
+World::World(const char* filename)
 {
-	std::ofstream f(filename);
-	f << "digraph G {" << std::endl;
-	VM::Object::PrintObjects(env, f);
-	env.heap.CheckLeaks(f);
-	f << "}" << std::endl;
+	std::ifstream f(filename);
+	f >> m_Width;
+	f >> m_Height;
+	std::cout << "Width: " << m_Width << " Height: " << m_Height << std::endl;
 }
-#endif
 

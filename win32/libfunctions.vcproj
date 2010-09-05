@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBFUNCTIONS_EXPORTS;_DEBUG_ENV_;_DEBUG_HEAP_;_DEBUG_OBJECT_;LIB_DIR=\&quot;.\\\\\&quot;;DATA_DIR=\&quot;.\\\\\&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBFUNCTIONS_EXPORTS;_DEBUG_ENV_;_DEBUG_OBJECT_;LIB_DIR=\&quot;.\\\\\&quot;;DATA_DIR=\&quot;.\\\\\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -210,6 +210,10 @@
 			</File>
 			<File
 				RelativePath="..\src\object.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\weak_object.cpp"
 				>
 			</File>
 		</Filter>

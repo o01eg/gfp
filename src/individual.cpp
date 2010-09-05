@@ -23,6 +23,7 @@
 #include "individual.h"
 #include "ioobject.h"
 #include "ga_utils.h"
+#include "world.h"
 
 const size_t MAX_FUNCTIONS = 4;
 
@@ -65,6 +66,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 {
 	std::vector<Individual::Result> results;
 	VM::Environment env;
+	World world(DATA_DIR "labirint.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		VM::Program prog = population[i].GetProgram(env);
