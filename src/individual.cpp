@@ -68,11 +68,11 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		VM::Program prog = population[i].GetProgram(env);
-		env.program = &prog;
-		env.circle_count = 1000;
+		env.SetProgram(prog);
+		env.SetCircleCount(1000);
 		VM::Object res = env.Run(VM::Object(env));
 		Result result(i);
-		result.m_Quality[Result::ST_NEG_CIRCLES] = env.circle_count;
+		result.m_Quality[Result::ST_NEG_CIRCLES] = env.GetCircleCount();
 		if(res.IsNIL())
 		{
 			result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;

@@ -68,7 +68,7 @@ public:
 	/// \return best individual.
 	const Individual& GetBest() const
 	{
-		m_Population->at(0);
+		return m_Population->at(0);
 	}
 
 	/// \brief Mutation.

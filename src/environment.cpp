@@ -33,12 +33,12 @@
 using namespace VM;
 
 Environment::Environment()
-	:program(0)
+	:m_Program(0)
 {
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
 #endif
-	circle_count = 0;
+	m_CircleCount = 0;
 }
 
 Environment::~Environment()
@@ -61,7 +61,7 @@ Object Environment::Eval(const Object &arg1)
 
 	obj_to_calc.push_back(arg1);
 
-	while((! obj_to_calc.empty()) && (circle_count))
+	while((! obj_to_calc.empty()) && (m_CircleCount))
 	{
 #if _DEBUG_EVAL_
 		std::clog << "===" << std::endl;
@@ -174,7 +174,7 @@ Object Environment::Eval(const Object &arg1)
 #if _DEBUG_EVAL_
 					std::clog << "Enter " << adf_depth.top() << std::endl;
 #endif
-					obj_to_calc.push_back(program->GetADF(obj.GetValue()));
+					obj_to_calc.push_back(m_Program->GetADF(obj.GetValue()));
 					break;
 				case PARAM:
 					if(is_in_adf)
@@ -193,7 +193,7 @@ Object Environment::Eval(const Object &arg1)
 			}
 		}
 
-		circle_count --;
+		m_CircleCount --;
 	}
 	if(obj_from_calc.size() == 1)
 	{
@@ -383,7 +383,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 
 Object Environment::Run(const Object& param)
 {
-	if(! program)
+	if(! m_Program)
 	{
 		THROW("Null pointer to program");
 	}

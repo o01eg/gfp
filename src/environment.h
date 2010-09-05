@@ -56,9 +56,6 @@ namespace VM
 		Heap heap; ///< Heap of objects.
 		Stack stack; ///< Stack.
 		std::vector<Func> functions; ///< Functions' list.
-		Program *program; ///< Program executing in environment.
-
-		size_t circle_count; ///< Number of remain circles to prevent infinity loops.
 
 		Environment(); ///< Constructor of environment.
 		~Environment(); ///< Destructor of environment.
@@ -77,6 +74,27 @@ namespace VM
 		/// \param param Parameter.
 		/// \return Result.
 		Object Run(const Object& param);
+
+		/// \brief Get circle count.
+		/// \return Circle count.
+		size_t GetCircleCount() const
+		{
+			return m_CircleCount;
+		}
+
+		/// \brief Set circle count.
+		/// \param[in] circle_coutn Circle count.
+		void SetCircleCount(size_t circle_count)
+		{
+			m_CircleCount = circle_count;
+		}
+
+		/// \brief Set current program.
+		/// \param[in] prog Program.
+		void SetProgram(VM::Program &prog)
+		{
+			m_Program = &prog;
+		}
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -95,6 +113,8 @@ namespace VM
 		/// \param stack Stack of object.
 		void DumpStack(const std::deque<Object> &stack);
 #endif
+		Program *m_Program; ///< Program executing in environment.
+		size_t m_CircleCount; ///< Number of remain circles to prevent infinity loops.
 	};
 }
 
