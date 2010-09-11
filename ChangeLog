@@ -1,3 +1,9 @@
+Version 0.0.0.2 2010-09-11
+ * Make ruby's conditional support.
+ * Implement WeakObject for some speed up.
+ * Add MS VC compilation.
+ * Add removing unused functions.
+
 Version 0.0.0.1 2010-08-24
  * Fix bugs in allocation.
  * Fix bugs in reading streams into objects.

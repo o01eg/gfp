@@ -5,7 +5,7 @@ Snapshot ????-??-?? ToDo
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
 
-Snapshot new
+Version 0.0.0.2 2010-09-11
  * Make ruby's conditional support.
  * Implement WeakObject for some speed up.
  * Add MS VC compilation.
