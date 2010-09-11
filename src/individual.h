@@ -74,6 +74,7 @@ public:
 			return m_Index;
 		}
 		int m_Quality[STATUS_VARIABLES];
+		std::string m_Result;
 	private:
 		size_t m_Index;
 		

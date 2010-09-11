@@ -24,8 +24,9 @@ class World
 {
 public:
 	/// \brief Construct world from file.
+	/// \param[in] env Environment.
 	/// \param[in] filename Name of file with world.
-	World(const char* filename);
+	World(VM::Environment &env, const char* filename);
 
 	/// \brief Desctruct world.
 	~World()

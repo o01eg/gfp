@@ -52,6 +52,9 @@ namespace VM
 		/// \return Object.
 		Object Save() const;
 
+		/// \brief Remove unused ADFs.
+		void Minimize();
+
 		/// \brief Get ADF.
 		/// \param num Number of ADF.
 		/// \return ADF.
@@ -68,6 +71,10 @@ namespace VM
 		/// \param num Number of ADF.
 		/// \param obj Source of ADF.
 		void SetADF(int num, const Object& obj);
+
+		/// \brief Get number of not-NIL ADFs.
+		/// \return Number of ADFs.
+		size_t GetSettedADFs() const;
 
 		/// \brief Get environment.
 		/// \return Environment.

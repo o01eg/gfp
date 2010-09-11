@@ -21,11 +21,12 @@
 #include <iostream>
 #include "world.h"
 
-World::World(const char* filename)
+World::World(VM::Environment &env, const char* filename)
 {
 	std::ifstream f(filename);
 	f >> m_Width;
 	f >> m_Height;
 	std::cout << "Width: " << m_Width << " Height: " << m_Height << std::endl;
+
 }
 

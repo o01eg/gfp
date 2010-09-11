@@ -66,7 +66,8 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 {
 	std::vector<Individual::Result> results;
 	VM::Environment env;
-	World world(DATA_DIR "labirint.txt");
+	env.LoadFunctions(DATA_DIR "functions.txt");
+//	World world(env, DATA_DIR "labirint.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		VM::Program prog = population[i].GetProgram(env);
@@ -74,6 +75,9 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		env.SetCircleCount(1000);
 		VM::Object res = env.Run(VM::Object(env));
 		Result result(i);
+		std::stringstream ss;
+		ss << res;
+		result.m_Result = ss.str();
 		result.m_Quality[Result::ST_NEG_CIRCLES] = env.GetCircleCount();
 		if(res.IsNIL())
 		{
@@ -93,6 +97,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			{
 				if(res.GetType() == VM::INTEGER)
 				{
+					//std::cout << "res is integer " << res << std::endl;
 					int val = static_cast<int>(res.GetValue());
 					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
 					result.m_Quality[Result::ST_ANSW_IS_INT] = 1;
@@ -109,11 +114,14 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		results.push_back(result);
 	}
 	std::sort(results.begin(), results.end());
+#if 0	
 	std::cout << "====\n";
 	std::cout << results[0].m_Quality[0] << std::endl;
 	std::cout << results[0].m_Quality[1] << std::endl;
 	std::cout << results[0].m_Quality[2] << std::endl;
 	std::cout << results[0].m_Quality[3] << std::endl;
+	std::cout << results[0].m_Result << std::endl;
+#endif
 	return results;
 }
 

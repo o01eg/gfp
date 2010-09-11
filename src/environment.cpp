@@ -168,13 +168,21 @@ Object Environment::Eval(const Object &arg1)
 					{
 						is_in_adf = true;
 					}
-					adf_params_obj.push(obj_from_calc.back());
-					obj_from_calc.pop_back();
-					adf_depth.push(obj_to_calc.size());
+					if(obj_from_calc.empty())
+					{
+						// got ERROR
+						obj_from_calc.push_back(Object(*this, ERROR));
+					}
+					else
+					{
+						adf_params_obj.push(obj_from_calc.back());
+						obj_from_calc.pop_back();
+						adf_depth.push(obj_to_calc.size());
 #if _DEBUG_EVAL_
-					std::clog << "Enter " << adf_depth.top() << std::endl;
+						std::clog << "Enter " << adf_depth.top() << std::endl;
 #endif
-					obj_to_calc.push_back(m_Program->GetADF(obj.GetValue()));
+						obj_to_calc.push_back(m_Program->GetADF(obj.GetValue()));
+					}
 					break;
 				case PARAM:
 					if(is_in_adf)

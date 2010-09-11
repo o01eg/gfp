@@ -82,3 +82,67 @@ void Program::SetADF(int num, const Object& obj)
 	m_ADFs[num] = obj;
 }
 
+void Program::Minimize()
+{
+	std::vector<bool> adf_calls(m_ADFs.size() * m_ADFs.size(), false);
+	std::stack<VM::WeakObject> stack;
+	size_t adf_index;
+	for(adf_index = 0; adf_index < m_ADFs.size(); adf_index ++)
+	{
+		stack.push(m_ADFs[adf_index]);
+		while(! stack.empty())
+		{
+			WeakObject temp = stack.top();
+			stack.pop();
+			if(! temp.IsNIL())
+			{
+				if((temp.GetType() == ADF) && (temp.GetValue() < m_ADFs.size()))
+				{
+					adf_calls[adf_index * m_ADFs.size() + temp.GetValue()] = true;
+				}
+				if(temp.GetType() == LIST)
+				{
+					stack.push(temp.GetHead());
+					stack.push(temp.GetTail());
+				}
+			}
+		}
+	}
+
+	for(adf_index = 1; adf_index < m_ADFs.size(); adf_index ++)
+	{
+		// check each function to calls from above ADF
+		bool called = false;
+		for(size_t adf_above_index = 0; adf_above_index < adf_index; adf_above_index ++)
+		{
+			if(adf_calls[adf_above_index * m_ADFs.size() + adf_index])
+			{
+				called = true;
+				break;
+			}
+		}
+		if(! called)
+		{
+			// remove ADF
+			m_ADFs[adf_index] = Object(m_Env);
+			for(size_t adf_above_index = 0; adf_above_index <= adf_index; adf_above_index ++)
+			{
+				adf_calls[adf_above_index * m_ADFs.size() + adf_index] = false;
+			}
+		}
+	}
+}
+
+size_t Program::GetSettedADFs() const
+{
+	size_t res = 0;
+	for(size_t adf_index = 0; adf_index < m_ADFs.size(); adf_index ++)
+	{
+		if(! m_ADFs[adf_index].IsNIL())
+		{
+			res ++;
+		}
+	}
+	return res;
+}
+

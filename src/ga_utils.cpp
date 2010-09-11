@@ -123,7 +123,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	VM::Object res(obj.GetEnv());
 	if(is_exec)
 	{
-		if((rand() % 100) > 90)
+		if((rand() % 100) > 80)
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
 		}
@@ -170,7 +170,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if((rand() % 100) > 90)
+		if((rand() % 100) > 80)
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
 		}
@@ -210,6 +210,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
 	}
+	res.Minimize();
 	return res;
 }
 
@@ -248,6 +249,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 		}
 		res.SetADF(adf_index, adf);
 	}
+	res.Minimize();
 	return res;
 }
 
@@ -268,6 +270,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
 	{
 		VM::Object adf(env);
+		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		if(prog1.GetADF(adf_index).IsNIL())
 		{
 			adf = prog2.GetADF(adf_index);
@@ -281,11 +284,25 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 			else
 			{
 				// both exist
-				adf = ((rand() % 2) ? prog1 : prog2).GetADF(adf_index);
+				if(prog1.GetADF(adf_index) == prog2.GetADF(adf_index))
+				{
+					//if equal then mutate them
+					do
+					{
+						adf = GP::Mutation(prog1.GetADF(adf_index), true, funcs, 0);
+					}
+					while(! GP::CheckForParam(adf));
+
+				}
+				else
+				{
+					adf = ((rand() % 2) ? prog1 : prog2).GetADF(adf_index);
+				}
 			}
 		}
 		res.SetADF(adf_index, adf);
 	}
+	res.Minimize();
 	return res;
 }
 
