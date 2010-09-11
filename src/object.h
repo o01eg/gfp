@@ -38,7 +38,7 @@ namespace VM
 
 		/// \brief Create NIL object.
 		/// \param env Used environment.
-		explicit Object(Environment &env)
+		explicit Object(const Environment &env)
 			:WeakObject(env)
 		{
 #if _DEBUG_OBJECT_
@@ -49,13 +49,13 @@ namespace VM
 		/// \brief Create parameterless object.
 		/// \param env_ Used environment.
 		/// \param type Type of object, may be ERROR, PARAM, QUOTE, IF.
-		Object(Environment &env_, Types type);
+		Object(const Environment &env_, Types type);
 
 		/// \brief Create object with one object.
 		/// \param env_ Used environment.
 		/// \param type Type of object, may be INTEGER, FUNC, ADF.
 		/// \param value Value.
-		Object(Environment &env_, Types type, Heap::UInt value);
+		Object(const Environment &env_, Types type, Heap::UInt value);
 
 		/// \brief Create LIST object.
 		/// \param head Head object.

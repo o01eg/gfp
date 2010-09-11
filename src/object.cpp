@@ -45,7 +45,7 @@ Object::Object(const Object &obj)
 #endif
 }
 
-Object::Object(Environment &env, Types type)
+Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_
@@ -68,7 +68,7 @@ Object::Object(Environment &env, Types type)
 
 }
 
-Object::Object(Environment &env, Types type, Heap::UInt value)
+Object::Object(const Environment &env, Types type, Heap::UInt value)
 	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_

@@ -48,7 +48,7 @@ Environment::~Environment()
 #endif
 }
 
-Object Environment::Eval(const Object &arg1)
+Object Environment::Eval(const Object &arg1) const
 {
 #if _DEBUG_ENV_
 	std::clog << "Evalation object " << arg1 << " in " << this << std::endl;
@@ -61,7 +61,9 @@ Object Environment::Eval(const Object &arg1)
 
 	obj_to_calc.push_back(arg1);
 
-	while((! obj_to_calc.empty()) && (m_CircleCount))
+	size_t circle_count = m_CircleCount;
+
+	while((! obj_to_calc.empty()) && (circle_count))
 	{
 #if _DEBUG_EVAL_
 		std::clog << "===" << std::endl;
@@ -201,8 +203,12 @@ Object Environment::Eval(const Object &arg1)
 			}
 		}
 
-		m_CircleCount --;
+		circle_count --;
 	}
+
+	/// \todo Change circle count code to anything which not require non-const Environment.
+	const_cast<Environment*>(this)->m_CircleCount = circle_count;
+
 	if(obj_from_calc.size() == 1)
 	{
 #if _DEBUG_ENV_
@@ -323,7 +329,7 @@ void Environment::LoadFunctions(const char* filename)
 	}
 }
 
-Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc)
+Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const
 {
 	const Func &function = functions[func_number];
 #if _DEBUG_EVAL_
@@ -345,7 +351,7 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 	return result;
 }
 
-Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc)
+Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc) const
 {
 	std::deque<Object> &obj_from_calc = *ptr_obj_from_calc;
 	Object args(*this);
@@ -389,7 +395,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 	return args;
 }
 
-Object Environment::Run(const Object& param)
+Object Environment::Run(const Object& param) const
 {
 	if(! m_Program)
 	{
@@ -401,7 +407,7 @@ Object Environment::Run(const Object& param)
 }
 
 #if _DEBUG_EVAL_
-void Environment::DumpStack(const std::deque<Object> &stack)
+void Environment::DumpStack(const std::deque<Object> &stack) const
 {
 	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); it ++)
 	{

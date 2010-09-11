@@ -63,7 +63,7 @@ namespace VM
 		/// \brief Evalation of Object.
 		/// \param arg1 Argument.
 		/// \return Result of evalation or ERROR.
-		Object Eval(const Object &arg1);
+		Object Eval(const Object &arg1) const;
 
 		/// \brief Load Functions, described in filename.
 		/// \todo Add upcasing of function's names.
@@ -73,7 +73,7 @@ namespace VM
 		/// \brief Run program with parameter.
 		/// \param param Parameter.
 		/// \return Result.
-		Object Run(const Object& param);
+		Object Run(const Object& param) const;
 
 		/// \brief Get circle count.
 		/// \return Circle count.
@@ -100,18 +100,18 @@ namespace VM
 		/// \param func_number Number of function in functions.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return Result of execution.
-		Object CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc);
+		Object CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const;
 
 		/// \brief Generate list of arguments.
 		/// \param param_number Nuber of parameters.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return List of arguments or NIL if error.
-		Object GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc);
+		Object GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc) const;
 
 #if _DEBUG_EVAL_
 		/// \brief Dump content of stack.
 		/// \param stack Stack of object.
-		void DumpStack(const std::deque<Object> &stack);
+		void DumpStack(const std::deque<Object> &stack) const;
 #endif
 		Program *m_Program; ///< Program executing in environment.
 		size_t m_CircleCount; ///< Number of remain circles to prevent infinity loops.
