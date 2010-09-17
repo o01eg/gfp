@@ -83,7 +83,7 @@ namespace VM
 		}
 
 		/// \brief Set circle count.
-		/// \param[in] circle_coutn Circle count.
+		/// \param[in] circle_count Circle count.
 		void SetCircleCount(size_t circle_count)
 		{
 			m_CircleCount = circle_count;
