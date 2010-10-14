@@ -17,4 +17,5 @@ src/gfp
 src/gplisp
 src/gptest
 src/libfunctions/libfunctions.so
+stamp-h1
 tags
