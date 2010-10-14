@@ -38,7 +38,6 @@ Environment::Environment()
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
 #endif
-	m_CircleCount = 0;
 }
 
 Environment::~Environment()
@@ -48,7 +47,7 @@ Environment::~Environment()
 #endif
 }
 
-Object Environment::Eval(const Object &arg1) const
+Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 {
 #if _DEBUG_ENV_
 	std::clog << "Evalation object " << arg1 << " in " << this << std::endl;
@@ -61,7 +60,7 @@ Object Environment::Eval(const Object &arg1) const
 
 	obj_to_calc.push_back(arg1);
 
-	size_t circle_count = m_CircleCount;
+	size_t circle_count = *p_circle_counter;
 
 	while((! obj_to_calc.empty()) && (circle_count))
 	{
@@ -206,8 +205,7 @@ Object Environment::Eval(const Object &arg1) const
 		circle_count --;
 	}
 
-	/// \todo Change circle count code to anything which not require non-const Environment.
-	const_cast<Environment*>(this)->m_CircleCount = circle_count;
+	(*p_circle_counter) = circle_count;
 
 	if(obj_from_calc.size() == 1)
 	{
@@ -395,7 +393,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 	return args;
 }
 
-Object Environment::Run(const Object& param) const
+Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 {
 	if(! m_Program)
 	{
@@ -403,7 +401,7 @@ Object Environment::Run(const Object& param) const
 	}
 	Object param_adf0(Object(*this, QUOTE), Object(param, Object(*this)));
 	Object expr(Object(*this, ADF, 0), Object(param_adf0, Object(*this)));
-	return Eval(expr);
+	return Eval(expr, p_circle_counter);
 }
 
 #if _DEBUG_EVAL_

@@ -4,6 +4,10 @@ Snapshot ????-??-?? ToDo
  * Add first world.
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
+ * Move functions info into library instead text file.
+ * Make EVAL as built-in function.
+ * Add LISP quotation.
+ * Use own tokenizer.
 
 Version 0.0.0.2 2010-09-11
  * Make ruby's conditional support.

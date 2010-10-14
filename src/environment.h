@@ -61,9 +61,10 @@ namespace VM
 		~Environment(); ///< Destructor of environment.
 		
 		/// \brief Evalation of Object.
-		/// \param arg1 Argument.
+		/// \param[in] arg1 Argument.
+		/// \param[in,out] p_circle_counter Circle counter.
 		/// \return Result of evalation or ERROR.
-		Object Eval(const Object &arg1) const;
+		Object Eval(const Object &arg1, size_t *p_circle_counter) const;
 
 		/// \brief Load Functions, described in filename.
 		/// \todo Add upcasing of function's names.
@@ -71,23 +72,10 @@ namespace VM
 		void LoadFunctions(const char* filename);
 
 		/// \brief Run program with parameter.
-		/// \param param Parameter.
+		/// \param[in] param Parameter.
+		/// \oaram[in,out] p_circle_counter Circle counter.
 		/// \return Result.
-		Object Run(const Object& param) const;
-
-		/// \brief Get circle count.
-		/// \return Circle count.
-		size_t GetCircleCount() const
-		{
-			return m_CircleCount;
-		}
-
-		/// \brief Set circle count.
-		/// \param[in] circle_count Circle count.
-		void SetCircleCount(size_t circle_count)
-		{
-			m_CircleCount = circle_count;
-		}
+		Object Run(const Object& param, size_t *p_circle_counter) const;
 
 		/// \brief Set current program.
 		/// \param[in] prog Program.
@@ -114,7 +102,6 @@ namespace VM
 		void DumpStack(const std::deque<Object> &stack) const;
 #endif
 		Program *m_Program; ///< Program executing in environment.
-		size_t m_CircleCount; ///< Number of remain circles to prevent infinity loops.
 	};
 }
 

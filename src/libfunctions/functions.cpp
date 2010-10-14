@@ -31,7 +31,6 @@ using namespace VM;
 
 extern "C"
 {
-	void DLLEXPORT func_00_eval(const Object& args, Object *result);
 	void DLLEXPORT func_01_cons(const Object& args, Object *result);
 	void DLLEXPORT func_02_car(const Object& args, Object *result);
 	void DLLEXPORT func_03_cdr(const Object& args, Object *result);
@@ -54,14 +53,6 @@ extern "C"
 	void DLLEXPORT func_20_int_less(const Object& args, Object *result);
 	void DLLEXPORT func_21_int_greater(const Object& args, Object *result);
 	void DLLEXPORT func_22_int_equal(const Object& args, Object *result);
-}
-
-/// \brief EVAL - Calculate value of expression in arg1.
-/// \param args List of arguments.
-/// \param result Pointer to result.
-void func_00_eval(const Object& args, Object *result)
-{
-	(*result) = args.GetEnv().Eval(args.GetHead());
 }
 
 /// \brief CONS - Construct list.

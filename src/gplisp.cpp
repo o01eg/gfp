@@ -42,11 +42,11 @@ int main(int argc, char **argv)
 			VM::Program prog(env, argv[1]);
 			env.SetProgram(prog);
 			const size_t MAX_CIRCLES = 1000;
+			size_t max_circles = MAX_CIRCLES;
 			VM::Object a(env);
 			std::cin >> a;
-			env.SetCircleCount(MAX_CIRCLES);
-			std::cout << "result = " << env.Run(a) << std::endl;
-			std::cout << "use " << (MAX_CIRCLES - env.GetCircleCount()) << " circles" << std::endl;
+			std::cout << "result = " << env.Run(a, &max_circles) << std::endl;
+			std::cout << "use " << (MAX_CIRCLES - max_circles) << " circles" << std::endl;
 		}
 		catch(Glib::Error &e)
 		{
