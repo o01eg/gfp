@@ -1,5 +1,4 @@
 [functions]
-func_00_eval:1:EVAL
 func_01_cons:2:CONS
 func_02_car:1:CAR
 func_03_cdr:1:CDR
