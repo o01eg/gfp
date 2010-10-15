@@ -5,11 +5,11 @@ Snapshot ????-??-?? ToDo
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
  * Move functions info into library instead text file.
- * Make EVAL as built-in function.
  * Add LISP quotation.
  * Use own tokenizer.
 
 Now
+ * Make EVAL as built-in function.
  * Speed up VM::Environment::Eval
  * Remove circle counter from VM::Environment
  * Use IF and QUOTE as in LISP.

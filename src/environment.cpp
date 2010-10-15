@@ -137,6 +137,14 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 										obj_to_calc.push_back(cond);
 									}
 									break;
+								case EVAL:
+									{
+										// move arg into to-calc stack.
+										Object arg = obj.GetTail().GetHead();
+										obj_to_calc.push_back(head);
+										obj_to_calc.push_back(arg);
+									}
+									break;
 								default: // here get ERROR and INTEGER
 									return Object(*this, ERROR);
 									break;
@@ -162,6 +170,13 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 							// true
 							obj_to_calc.push_back(otrue);
 						}
+					}
+					break;
+				case EVAL:
+					{
+						Object arg = obj_from_calc.back();
+						obj_from_calc.pop_back();
+						obj_to_calc.push_back(arg);
 					}
 					break;
 				case ADF:
