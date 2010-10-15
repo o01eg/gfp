@@ -9,6 +9,11 @@ Snapshot ????-??-?? ToDo
  * Add LISP quotation.
  * Use own tokenizer.
 
+Now
+ * Speed up VM::Environment::Eval
+ * Remove circle counter from VM::Environment
+ * Use IF and QUOTE as in LISP.
+
 Version 0.0.0.2 2010-09-11
  * Make ruby's conditional support.
  * Implement WeakObject for some speed up.
