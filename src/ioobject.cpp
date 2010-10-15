@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
+#include <locale>
 #include "ioobject.h"
 
 using namespace VM;
@@ -134,7 +135,7 @@ std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
 				}
 				break;
 			default:
-				os << "unknown ";
+				os << "ERROR ";
 				break;
 		}
 	}
@@ -221,6 +222,12 @@ std::istream& operator>>(std::istream& is, Object& obj)
 Object str2atom(const std::string& str, Environment &env)
 {
 	Heap::UInt value;
+	std::locale loc;
+	std::string strup;
+	for(std::string::const_iterator it = str.begin(); it != str.end(); it ++)
+	{
+		strup += std::toupper(*it, loc);
+	}
 	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), str);
 	if(ptr != env.functions.end())
 	{
