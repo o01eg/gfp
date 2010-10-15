@@ -59,10 +59,10 @@ std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
 				os << "$ ";
 				break;
 			case QUOTE:
-				os << "\' ";
+				os << "QUOTE ";
 				break;
 			case IF:
-				os << "? ";
+				os << "IF ";
 				break;
 			case LIST:
 				{
@@ -242,7 +242,11 @@ Object str2atom(const std::string& str, Environment &env)
 			case '$':
 				return Object(env, PARAM);
 			case '\'':
+			case 'Q':
+			case 'q':
 				return Object(env, QUOTE);
+			case 'I':
+			case 'i':
 			case '?':
 				return Object(env, IF);
 			case 'N':
