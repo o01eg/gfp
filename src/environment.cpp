@@ -108,7 +108,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 						Object head = obj.GetHead();
 						if(head.IsNIL())
 						{
-							obj_from_calc.push_back(Object(*this, ERROR));
+							return Object(*this, ERROR);
 						}
 						else
 						{
@@ -138,7 +138,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									break;
 								default: // here get ERROR and INTEGER
-									obj_from_calc.push_back(Object(*this, ERROR));
+									return Object(*this, ERROR);
 									break;
 							}
 						}
@@ -172,7 +172,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					if(obj_from_calc.empty())
 					{
 						// got ERROR
-						obj_from_calc.push_back(Object(*this, ERROR));
+						return Object(*this, ERROR);
 					}
 					else
 					{
@@ -182,6 +182,10 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #if _DEBUG_EVAL_
 						std::clog << "Enter " << adf_depth.top() << std::endl;
 #endif
+						if(m_Program->GetADF(obj.GetValue()).IsNIL())
+						{
+							return Object(*this, ERROR);
+						}
 						obj_to_calc.push_back(m_Program->GetADF(obj.GetValue()));
 					}
 					break;
@@ -192,12 +196,12 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						obj_from_calc.push_back(Object(*this, ERROR));
+						return Object(*this, ERROR);
 					}
 					break;
 				case QUOTE:
 				default:
-					obj_from_calc.push_back(Object(*this, ERROR));
+					return Object(*this, ERROR);
 					break;
 			}
 		}

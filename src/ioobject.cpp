@@ -252,9 +252,16 @@ Object str2atom(const std::string& str, Environment &env)
 			case 'N':
 			case 'n':
 				return Object(env);
-			default: // INTEGER
-				value = atol(str.c_str());
-				return Object(env, INTEGER, value);
+			default: // INTEGER or ERROR
+				if((str[0] == '-') || ((str[0] >= '0') && (str[0] <= '9')))
+				{
+					value = atol(str.c_str());
+					return Object(env, INTEGER, value);
+				}
+				else
+				{
+					return Object(env, ERROR);
+				}
 		}
 	}
 	return Object(env, ERROR);
