@@ -8,7 +8,8 @@ Snapshot ????-??-?? ToDo
  * Add LISP quotation.
  * Use own tokenizer.
 
-Now
+Version 0.0.0.3 2010-10-16
+ * Add map loader.
  * Make EVAL as built-in function.
  * Speed up VM::Environment::Eval
  * Remove circle counter from VM::Environment
