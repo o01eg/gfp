@@ -105,6 +105,7 @@ bool WeakObject::operator==(const WeakObject& obj) const
 					case PARAM:
 					case QUOTE:
 					case IF:
+					case EVAL:
 						return true;
 					case INTEGER:
 					case FUNC:

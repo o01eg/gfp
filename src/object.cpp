@@ -52,7 +52,7 @@ Object::Object(const Environment &env, Types type)
 	m_AllObjects.insert(this);
 #endif
 #if _DEBUG_OBJECT_
-	if((type != ERROR) && (type != PARAM) && (type != QUOTE) && (type != IF))
+	if((type != ERROR) && (type != PARAM) && (type != QUOTE) && (type != IF) && (type != EVAL))
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Non parameterless type %2.", this, type));
 	}

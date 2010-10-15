@@ -48,7 +48,7 @@ namespace VM
 
 		/// \brief Create parameterless object.
 		/// \param env_ Used environment.
-		/// \param type Type of object, may be ERROR, PARAM, QUOTE, IF.
+		/// \param type Type of object, may be ERROR, PARAM, QUOTE, IF, EVAL.
 		Object(const Environment &env_, Types type);
 
 		/// \brief Create object with one object.

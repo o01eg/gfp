@@ -65,6 +65,9 @@ std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
 			case IF:
 				os << "IF ";
 				break;
+			case EVAL:
+				os << "EVAL ";
+				break;
 			case LIST:
 				{
 					std::stack<bool> arrow_stack; // true - head, false - tail
@@ -228,41 +231,36 @@ Object str2atom(const std::string& str, Environment &env)
 	{
 		strup += std::toupper(*it, loc);
 	}
-	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), str);
+	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), strup);
 	if(ptr != env.functions.end())
 	{
 		return Object(env, FUNC, ptr - env.functions.begin());
 	}
 	else
 	{
-		switch(str[0])
+		switch(strup[0])
 		{
 			case 'E':
-			case 'e':
-				//return Object(env, Object::ERROR);
-			case '#':
-				//value = atol(str.c_str() + 1);
+				if(strup == "EVAL")
+				{
+					return Object(env, EVAL);
+				}
 				return Object(env, ERROR);
 			case '%':
-				value = atol(str.c_str() + 1);
+				value = atol(strup.c_str() + 1);
 				return Object(env, ADF, value);
 			case '$':
 				return Object(env, PARAM);
-			case '\'':
 			case 'Q':
-			case 'q':
 				return Object(env, QUOTE);
 			case 'I':
-			case 'i':
-			case '?':
 				return Object(env, IF);
 			case 'N':
-			case 'n':
 				return Object(env);
 			default: // INTEGER or ERROR
-				if((str[0] == '-') || ((str[0] >= '0') && (str[0] <= '9')))
+				if((strup[0] == '-') || ((strup[0] >= '0') && (strup[0] <= '9')))
 				{
-					value = atol(str.c_str());
+					value = atol(strup.c_str());
 					return Object(env, INTEGER, value);
 				}
 				else
