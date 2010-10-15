@@ -39,8 +39,6 @@ extern "C"
 	void DLLEXPORT func_06_is_func(const Object& args, Object *result);
 	void DLLEXPORT func_07_is_adf(const Object& args, Object *result);
 	void DLLEXPORT func_08_is_param(const Object& args, Object *result);
-	void DLLEXPORT func_09_is_quote(const Object& args, Object *result);
-	void DLLEXPORT func_10_is_if(const Object& args, Object *result);
 	void DLLEXPORT func_11_is_list(const Object& args, Object *result);
 	void DLLEXPORT func_12_int_plus(const Object& args, Object *result);
 	void DLLEXPORT func_13_int_minus(const Object& args, Object *result);
@@ -178,44 +176,6 @@ void func_08_is_param(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	if((! arg1.IsNIL()) && (arg1.GetType() == PARAM))
-	{
-		// return true
-		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), INTEGER, 0);
-	}
-	else
-	{
-		// return false
-		(*result) = Object(args.GetEnv());
-	}
-}
-
-/// \brief QUOTE - Predicate: true if arg1 has type Object::QUOTE.
-/// \param args List of arguments.
-/// \param result Pointer to result.
-void func_09_is_quote(const Object& args, Object *result)
-{
-	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == QUOTE))
-	{
-		// return true
-		// ! 0 is true because it isn't NIL
-		(*result) = Object(args.GetEnv(), INTEGER, 0);
-	}
-	else
-	{
-		// return false
-		(*result) = Object(args.GetEnv());
-	}
-}
-
-/// \brief IF - Predicate: true if arg1 has type Object::IF.
-/// \param args List of arguments.
-/// \param result Pointer to result.
-void func_10_is_if(const Object& args, Object *result)
-{
-	const Object& arg1 = args.GetHead();
-	if((! arg1.IsNIL()) && (arg1.GetType() == IF))
 	{
 		// return true
 		// ! 0 is true because it isn't NIL

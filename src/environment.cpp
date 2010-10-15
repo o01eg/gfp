@@ -17,7 +17,7 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if _DEBUG_ENV_
+#if _DEBUG_ENV_ || _DEBUG_EVAL_
 #include <iostream>
 #include "ioobject.h"
 #endif
