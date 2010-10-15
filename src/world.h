@@ -29,11 +29,10 @@ public:
 	World(VM::Environment &env, const char* filename);
 
 	/// \brief Desctruct world.
-	~World()
-	{
-	}
+	~World();
 private:
 	size_t m_Width; ///< Width of world.
 	size_t m_Height; ///< Height of world.
+	char **m_Map;
 };
 

@@ -67,7 +67,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	std::vector<Individual::Result> results;
 	VM::Environment env;
 	env.LoadFunctions(DATA_DIR "functions.txt");
-//	World world(env, DATA_DIR "labirint.txt");
+	World world(env, DATA_DIR "labirint.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		VM::Program prog = population[i].GetProgram(env);
