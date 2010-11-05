@@ -1,3 +1,10 @@
+Version 0.0.0.3 2010-10-16
+ * Add map loader.
+ * Make EVAL as built-in function.
+ * Speed up VM::Environment::Eval
+ * Remove circle counter from VM::Environment
+ * Use IF and QUOTE as in LISP.
+
 Version 0.0.0.2 2010-09-11
  * Make ruby's conditional support.
  * Implement WeakObject for some speed up.
