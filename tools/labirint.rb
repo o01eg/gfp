@@ -42,10 +42,10 @@ class Point
 end
 
 class Array2D < Array
-	def initialize(width, height, value = nil)
+	def initialize(width, height, value = nil, nilvalue = value)
 		@width = width
 		@height = height
-		@nilvalue = value
+		@nilvalue = nilvalue
 		super(width * height, value)
 	end
 
@@ -103,12 +103,7 @@ class Map
 			@array = array.clone
 			return
 		end
-		@array = Array2D.new(width, height, false)
-#		width.times do |x|
-#			height.times do |y|
-#				@array[Point.new(x, y)] = false
-#			end
-#		end
+		@array = Array2D.new(width, height, false, true)
 
 		#make list cells
 		cells = Array.new
@@ -150,27 +145,27 @@ class Map
 			ok = true
 			neighbours_range = Range.new(0, 2)
 
-			if in_center(point)
+			if in_center(point) #reserve cell for individual
 				ok = false
-			elsif xfree[point.x] <= 1
+			elsif xfree[point.x] <= 1 # each row must have at least one free cell
 				ok = false
-			elsif yfree[point.y] <= 1
+			elsif yfree[point.y] <= 1 # each column must have at least one free cell
 				ok = false
-			elsif @array[point.up] && @array[point.right] && @array[point.right.up]
+			elsif @array[point.up] && @array[point.right] && @array[point.right.up] # check for 2x2 blocks
 				ok = false
-			elsif @array[point.right] && @array[point.down] && @array[point.down.right]
+			elsif @array[point.right] && @array[point.down] && @array[point.down.right] # check for 2x2 blocks
 				ok = false
-			elsif @array[point.down] && @array[point.left] && @array[point.left.down]
+			elsif @array[point.down] && @array[point.left] && @array[point.left.down] # check for 2x2 blocks
 				ok = false
-			elsif @array[point.left] && @array[point.up] && @array[point.up.left]
+			elsif @array[point.left] && @array[point.up] && @array[point.up.left] # check for 2x2 blocks
 				ok = false
-			elsif neighbours_range === neighbours[point.up]
+			elsif neighbours_range === neighbours[point.up] # check for deadend from up
 				ok = false
-			elsif neighbours_range === neighbours[point.right]
+			elsif neighbours_range === neighbours[point.right] # check for deadend from right
 				ok = false
-			elsif neighbours_range === neighbours[point.down]
+			elsif neighbours_range === neighbours[point.down] # check for deadend from down
 				ok = false
-			elsif neighbours_range === neighbours[point.left]
+			elsif neighbours_range === neighbours[point.left] # check for deadend from left
 				ok = false
 			else
 				temp_map = @array.clone
@@ -202,6 +197,7 @@ class Map
 		check_map(@array)
 	end
 
+	# check accessible for each cell by wave algorithm
 	def check_map(map)
 		ways = Array2D.new(@width, @height, -1)
 		@width.times do |x|
@@ -251,16 +247,9 @@ class Map
 			end
 		end
 		true
-
-#		puts(ways.print { |cell|
-#			if cell < 0
-#				" "
-#			else
-#				cell.to_s(32)[0]
-#			end
-#		})
 	end
 
+	# get center cell to place individual
 	def in_center(point)
 		if @center.nil?
 			if
@@ -294,7 +283,9 @@ class Map
 		str = String.new
 		str += "Width: " + @width.to_s + "\n"
 		str += "Height: " + @height.to_s + "\n"
+		str += "#" * (@width + 2) + "\n"
 		@height.times do |y|
+			str += "#"
 			@width.times do |x|
 				if (x == @center.x) && (y == @center.y)
 					str += "@"
@@ -306,8 +297,9 @@ class Map
 					end
 				end
 			end
-			str += "\n"
+			str += "#\n"
 		end
+		str += "#" * (@width + 2) + "\n"
 		str
 	end
 
