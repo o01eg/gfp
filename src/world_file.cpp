@@ -17,37 +17,46 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "world.h"
-#include "ioobject.h"
+#include <fstream>
+#include "world_file.h"
 
-WorldFile World::s_File;
-
-World::World(VM::Environment &env, const char *filename)
+void WorldFile::SetFile(const char* filename)
 {
-	s_File.SetFile(filename);
-	VM::Object map(env);
-	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	if(m_FileName == filename)
 	{
-		VM::Object line(env);
-		for(int wm = s_File.GetWidth() - 1; wm >= 0; wm --)
-		{
-			VM::Object obj(env);
-			switch(s_File.GetMap()[hm][wm])
-			{
-			case '#':
-				obj = VM::Object(VM::Object(env, VM::INTEGER, 0), VM::Object(env));
-				break;
-			case '@':
-				m_PosX = wm;
-				m_PosY = hm;
-				break;
-			}
-			line = VM::Object(obj, line);
-		}
-		map = VM::Object(line, map);
+		return;
 	}
-	std::cout << "map: " << map << std::endl;
-	std::cout << "x: " << m_PosX << std::endl;
-	std::cout << "y: " << m_PosY << std::endl;
+	m_FileName = filename;
+	if(m_Map)
+	{
+		this->~WorldFile();
+	}
+	std::ifstream f(filename);
+	f >> m_Width;
+	f >> m_Height;
+	m_Map = new char*[m_Height];
+	for(size_t h = 0; h < m_Height; h ++)
+	{
+		m_Map[h] = new char[m_Width];
+		for(size_t w = 0; w < m_Width; w ++)
+		{
+			f >> m_Map[h][w];
+		}
+	}
+}
+
+WorldFile::~WorldFile()
+{
+	if(m_Map)
+	{
+		for(size_t h = 0; h < m_Height; h ++)
+		{
+			if(m_Map[h])
+			{
+				delete[] m_Map[h];
+			}
+		}
+		delete[] m_Map;
+	}
 }
 

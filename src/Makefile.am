@@ -12,7 +12,8 @@ gfp_SOURCES = environment.cpp \
 	object.cpp \
 	program.cpp \
 	weak_object.cpp \
-	world.cpp
+	world.cpp \
+	world_file.cpp
 gplisp_SOURCES = environment.cpp \
 	gplisp.cpp \
 	heap.cpp \
@@ -47,7 +48,8 @@ noinst_HEADERS = conf.h \
 	program.h \
 	stack.h \
 	weak_object.h \
-	world.h
+	world.h \
+	world_file.h
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 if COMPILE_RUBY
 gfp_LDADD = ruby/librubypp.a

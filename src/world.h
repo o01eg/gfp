@@ -18,6 +18,7 @@
  */
 
 #include "object.h"
+#include "world_file.h"
 
 /// \brief Class is describing world for individuals.
 class World
@@ -29,13 +30,12 @@ public:
 	World(VM::Environment &env, const char* filename);
 
 	/// \brief Desctruct world.
-	~World();
+	~World()
+	{
+	}
 private:
 	int m_PosX; ///< Current X position of individual.
 	int m_PosY; ///< Current Y position of individual.
-
-	static char **s_Map; ///< Map of world.
-	static size_t s_Width; ///< Width of world.
-	static size_t s_Height; ///< Height of world.
+	static WorldFile s_File; ///< Context of world file.
 };
 
