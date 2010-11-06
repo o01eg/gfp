@@ -45,6 +45,18 @@ Object::Object(const Object &obj)
 #endif
 }
 
+Object::Object(const WeakObject& obj)
+	:WeakObject(obj)
+{
+#if _DEBUG_OBJECT_
+	m_AllObjects.insert(this);
+#endif
+	if(m_Pos)
+	{
+		GetEnv().heap.Attach(m_Pos);
+	}
+}
+
 Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
 {

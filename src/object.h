@@ -36,6 +36,10 @@ namespace VM
 		/// \param obj Object.
 		Object(const Object& obj);
 
+		/// \brief Get Object from WeakObject
+		/// \param[in] obj Weak Object.
+		Object(const WeakObject& obj);
+
 		/// \brief Create NIL object.
 		/// \param env Used environment.
 		explicit Object(const Environment &env)

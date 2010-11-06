@@ -11,6 +11,7 @@ Snapshot ????-??-?? ToDo
 Now
  * Move map loader into static member of World.
  * Add moving in world.
+ * Add updating world.
 
 Version 0.0.0.3 2010-10-16
  * Add map loader.

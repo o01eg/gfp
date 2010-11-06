@@ -45,10 +45,14 @@ public:
 	/// \return Is wall here.
 	bool CheckCell(int x, int y) const;
 private:
+	/// \brief Update current map.
+	void UpdateCurrentMap();
+
 	int m_PosX; ///< Current X position of individual.
 	int m_PosY; ///< Current Y position of individual.
 	static WorldFile s_File; ///< Context of world file.
 	VM::Object m_Map; ///< Static map;
 	VM::Object m_CurrentMap; ///< Cureent map with individual.
+	VM::Object m_IndObject; ///< Individual as object.
 };
 

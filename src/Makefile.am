@@ -10,6 +10,7 @@ gfp_SOURCES = environment.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object.cpp \
+	object_utils.cpp \
 	program.cpp \
 	weak_object.cpp \
 	world.cpp \
@@ -45,6 +46,7 @@ noinst_HEADERS = conf.h \
 	logbuf.h \
 	logger.h \
 	object.h \
+	object_utils.h \
 	program.h \
 	stack.h \
 	weak_object.h \
