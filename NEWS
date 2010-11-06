@@ -8,6 +8,10 @@ Snapshot ????-??-?? ToDo
  * Add LISP quotation.
  * Use own tokenizer.
 
+Now
+ * Move map loader into static member of World.
+ * Add moving in world.
+
 Version 0.0.0.3 2010-10-16
  * Add map loader.
  * Make EVAL as built-in function.

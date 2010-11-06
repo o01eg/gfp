@@ -23,9 +23,9 @@
 WorldFile World::s_File;
 
 World::World(VM::Environment &env, const char *filename)
+	:m_Map(env)
 {
 	s_File.SetFile(filename);
-	VM::Object map(env);
 	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
 	{
 		VM::Object line(env);
@@ -38,16 +38,59 @@ World::World(VM::Environment &env, const char *filename)
 				obj = VM::Object(VM::Object(env, VM::INTEGER, 0), VM::Object(env));
 				break;
 			case '@':
+				// Get initial position.
 				m_PosX = wm;
 				m_PosY = hm;
 				break;
 			}
 			line = VM::Object(obj, line);
 		}
-		map = VM::Object(line, map);
+		m_Map = VM::Object(line, m_Map);
 	}
-	std::cout << "map: " << map << std::endl;
+	std::cout << "map: " << m_Map << std::endl;
 	std::cout << "x: " << m_PosX << std::endl;
 	std::cout << "y: " << m_PosY << std::endl;
+}
+
+bool CheckCell(int x, int y) const
+{
+	if((x < 0) || (x >= s_File.GetWidth()) || (y < 0) || (y >= s_File.GetHeight()))
+	{
+		return true;
+	}
+	if(s_File.GetMap()[y][x] == '#')
+	{
+		return true;
+	}
+	return false;
+}
+
+bool World::Move(int dir)
+{
+	int dX = 0;
+	int dY = 0;
+	switch(dir)
+	{
+	case 1: // up
+		dY = -1;
+		break;
+	case 2: // right
+		dX = +1;
+		break;
+	case 3: // down
+		dY = +1;
+		break;
+	case 4: //left
+		dX = -1;
+		break;
+	default:
+		return false;
+	}
+	if(CheckCell(m_PosX + dX, m_PosY + dY))
+	{
+		return false;
+	}
+	m_PosX += dX;
+	m_PosY += dY;
 }
 

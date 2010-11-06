@@ -33,9 +33,22 @@ public:
 	~World()
 	{
 	}
+
+	/// \brief Move individual in world.
+	/// \param[in] dir Direction.
+	/// \return true if success.
+	bool Move(int dir);
+
+	/// \brief Is wall in cell?
+	/// \param[in] x X coordinate.
+	/// \param[in] y Y coordiante.
+	/// \return Is wall here.
+	bool CheckCell(int x, int y) const;
 private:
 	int m_PosX; ///< Current X position of individual.
 	int m_PosY; ///< Current Y position of individual.
 	static WorldFile s_File; ///< Context of world file.
+	VM::Object m_Map; ///< Static map;
+	VM::Object m_CurrentMap; ///< Cureent map with individual.
 };
 
