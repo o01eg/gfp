@@ -41,6 +41,10 @@ bool GA::Step(const std::vector<Operation> &operations)
 	{
 		THROW("Different sizes between population and results of individuals.");
 	}
+	for(size_t i = 0; i < m_PopulationSize; i++)
+	{
+		(*m_Population)[i].SetResult(results[i]);
+	}
 	std::sort(results.begin(), results.end());
 	
 	std::vector<Operation>::const_iterator operation;

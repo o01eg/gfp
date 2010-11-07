@@ -33,7 +33,11 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_NEG_CIRCLES = 0,
+			ST_GOOD_MOVES = 0, ///< Number of moves without collisions with walls.
+			ST_BAD_MOVES, ///< Number of moves with collisions with walls.
+			ST_ANSWER_QUALITY, ///< Level of answer quality.
+			ST_STATE_CHANGES, ///< Number when memory or world changes.
+			ST_NEG_CIRCLES,
 			STATUS_VARIABLES
 		};
 
@@ -82,7 +86,8 @@ public:
 	};
 
 	Individual(const Individual& ind)
-		:m_ProgramText(ind.m_ProgramText)
+		:m_ProgramText(ind.m_ProgramText),
+		m_Result(ind.m_Result)
 	{
 	}
 
@@ -94,11 +99,24 @@ public:
 	Individual& operator=(const Individual& ind)
 	{
 		m_ProgramText = ind.m_ProgramText;
+		m_Result = ind.m_Result;
 		return *this;
 	}
 
 	VM::Program GetProgram(VM::Environment &env) const;
-	const std::string& GetText() const {return m_ProgramText;}
+	const std::string& GetText() const
+	{
+		return m_ProgramText;
+	}
+	const Result& GetResult() const
+	{
+		return m_Result;
+	}
+
+	void SetResult(const Result& res)
+	{
+		m_Result = res;
+	}
 
 	static Individual GenerateRand(VM::Environment &env);
 
@@ -115,6 +133,7 @@ private:
 	Individual(); ///< Block for contsructor.
 
 	std::string m_ProgramText; ///< Text of program.
+	Result m_Result; ///< Result of last testing.
 };
 
 #endif

@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 100;
+const size_t MAX_STEP_UNCHANGED = 128;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(12);
+		GA ga(16);
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		std::vector<GA::Operation> operations;
@@ -107,6 +107,12 @@ int main(int argc, char **argv)
 				std::clog << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
 				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
+				std::clog << "result = " << ga.GetBest().GetResult().m_Result;
+				std::clog << "result[GOOD_MOVES] =" << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
+				std::clog << "result[BAD_MOVES] =" << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_BAD_MOVES] << std::endl;
+				std::clog << "result[ANSWER_QUALITY] =" << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
+				std::clog << "result[STATE_CHANGES] =" << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
+				std::clog << "result[NEG_CIRCLES] =" << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 			}
 			else
 			{

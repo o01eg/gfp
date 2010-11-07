@@ -6,13 +6,14 @@ Snapshot ????-??-?? ToDo
  * Move functions info into library instead text file.
  * Add LISP quotation.
  * Use own tokenizer.
+ * Add program optimization.
 
-Now
+Version 0.0.0.4 2010-11-08
  * Move map loader into static member of World.
  * Add moving in world.
  * Add updating world.
  * Add first world.
- * Add some evolution.
+ * Add evolution.
 
 Version 0.0.0.3 2010-10-16
  * Add map loader.

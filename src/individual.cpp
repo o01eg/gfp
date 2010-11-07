@@ -26,9 +26,10 @@
 #include "world.h"
 
 const size_t MAX_FUNCTIONS = 16;
-const size_t MAX_STOPS = 100; ///< Maximum of stop moves
+const size_t MAX_STOPS = 10; ///< Maximum of stop moves
 
 Individual::Individual(const VM::Program &prog)
+	:m_Result(0)
 {
 	std::stringstream ss;
 	ss << prog.Save();
@@ -116,17 +117,40 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 											{
 												changes = true;
 												max_stops = MAX_STOPS;
-												std::cout << "Success move: " << res << std::endl;
+												result.m_Quality[Result::ST_GOOD_MOVES] ++;
 											}
+											result.m_Quality[Result::ST_BAD_MOVES] ++;
+										}
+										else
+										{
+											result.m_Quality[Result::ST_ANSWER_QUALITY] = 6;
 										}
 									}
+									else
+									{
+										result.m_Quality[Result::ST_ANSWER_QUALITY] = 5;
+									}
+								}
+								else
+								{
+									result.m_Quality[Result::ST_ANSWER_QUALITY] = 4;
 								}
 							}
+							else
+							{
+								result.m_Quality[Result::ST_ANSWER_QUALITY] = 3;
+							}
+						}
+						else
+						{
+							result.m_Quality[Result::ST_ANSWER_QUALITY] = 2;
 						}
 						break;
 					}
 				case VM::ERROR:
+					break;
 				default:
+					result.m_Quality[Result::ST_ANSWER_QUALITY] = 1;
 					break;
 				}
 			}
@@ -141,6 +165,10 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				{
 					memory = VM::Object(env);
 				}
+			}
+			else
+			{
+				result.m_Quality[Result::ST_STATE_CHANGES]++;
 			}
 			max_stops --;
 		}
