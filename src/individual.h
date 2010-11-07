@@ -33,16 +33,17 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_ANSW_NO_ERROR = 0,
-			ST_ANSW_IS_INT,
-			ST_NEG_ABS_NUM,
-			ST_NEG_CIRCLES,
+			ST_NEG_CIRCLES = 0,
 			STATUS_VARIABLES
 		};
 
 		Result(size_t index)
 			:m_Index(index)
 		{
+			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
+			{
+				m_Quality[i] = 0;
+			}
 		}
 		~Result()
 		{

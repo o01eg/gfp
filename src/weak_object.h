@@ -70,8 +70,16 @@ namespace VM
 
 		/// \brief Compare.
 		/// \param[in] obj Right value.
-		/// \return result of comparsion.
+		/// \return Result of comparsion.
 		bool operator==(const WeakObject& obj) const;
+
+		/// \brief Compare.
+		/// \param[in] obj Right value.
+		/// \return Result of comparsion.
+		bool operator!=(const WeakObject& obj) const
+		{
+			return (! operator==(obj));
+		}
 
 		/// \brief Check object for NIL.
 		/// \return Answer.		

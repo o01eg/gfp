@@ -25,7 +25,8 @@
 #include "ga_utils.h"
 #include "world.h"
 
-const size_t MAX_FUNCTIONS = 4;
+const size_t MAX_FUNCTIONS = 16;
+const size_t MAX_STOPS = 100; ///< Maximum of stop moves
 
 Individual::Individual(const VM::Program &prog)
 {
@@ -37,7 +38,7 @@ Individual::Individual(const VM::Program &prog)
 Individual Individual::GenerateRand(VM::Environment &env)
 {
 	VM::Program prog = GP::GenerateProg(env, MAX_FUNCTIONS);
-	std::clog << "Individual random program created." << std::endl;
+	//std::clog << "Individual random program created." << std::endl;
 	return Individual(prog);
 }
 
@@ -67,50 +68,84 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	std::vector<Individual::Result> results;
 	VM::Environment env;
 	env.LoadFunctions(DATA_DIR "functions.txt");
-	World world(env, DATA_DIR "labirint.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
+		World world(env, DATA_DIR "labirint.txt");
 		VM::Program prog = population[i].GetProgram(env);
 		env.SetProgram(prog);
-		size_t circle_count = 1000;
-		VM::Object res = env.Run(VM::Object(env), &circle_count);
+		VM::Object memory(env);
+		bool active = true;
 		Result result(i);
 		std::stringstream ss;
-		ss << res;
-		result.m_Result = ss.str();
-		result.m_Quality[Result::ST_NEG_CIRCLES] = circle_count;
-		if(res.IsNIL())
+		size_t max_stops = MAX_STOPS;
+
+		// moving in labirint
+		while(active && max_stops)
 		{
-			result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
-			result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
-			result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
-		}
-		else
-		{
-			if(res.GetType() == VM::ERROR)
+			size_t circle_count = 1000;
+			bool changes = false;
+			VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
+			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
+			ss << res << std::endl;
+			if(! res.IsNIL())
 			{
-				result.m_Quality[Result::ST_ANSW_NO_ERROR] = 0;
-				result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
-				result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
-			}
-			else
-			{
-				if(res.GetType() == VM::INTEGER)
+				switch(res.GetType())
 				{
-					//std::cout << "res is integer " << res << std::endl;
-					int val = static_cast<int>(res.GetValue());
-					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
-					result.m_Quality[Result::ST_ANSW_IS_INT] = 1;
-					result.m_Quality[Result::ST_NEG_ABS_NUM] = (val > 0) ? (-val) : val;
+				case VM::LIST:
+					{
+						VM::WeakObject new_mem = res.GetTail();
+						if(new_mem != memory)
+						{
+							changes = true;
+							memory = new_mem;
+						}
+						VM::WeakObject move = res.GetHead();
+						if((! move.IsNIL()) && (move.GetType() == VM::LIST))
+						{
+							if((! move.IsNIL()) && (move.GetHead().GetType() == VM::INTEGER) && (move.GetHead().GetValue() == 0))
+							{
+								if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
+								{
+									VM::WeakObject dir_obj = move.GetTail().GetHead();
+									if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
+									{
+										size_t dir = dir_obj.GetValue();
+										if((dir > 0) && (dir <= 4))
+										{
+											if(world.Move(dir))
+											{
+												changes = true;
+												max_stops = MAX_STOPS;
+												std::cout << "Success move: " << res << std::endl;
+											}
+										}
+									}
+								}
+							}
+						}
+						break;
+					}
+				case VM::ERROR:
+				default:
+					break;
+				}
+			}
+
+			if(! changes)
+			{
+				if(memory.IsNIL())
+				{
+					active = false;
 				}
 				else
 				{
-					result.m_Quality[Result::ST_ANSW_NO_ERROR] = 1;
-					result.m_Quality[Result::ST_ANSW_IS_INT] = 0;
-					result.m_Quality[Result::ST_NEG_ABS_NUM] = 0;
+					memory = VM::Object(env);
 				}
 			}
+			max_stops --;
 		}
+
+		result.m_Result = ss.str();
 		results.push_back(result);
 	}
 	std::sort(results.begin(), results.end());

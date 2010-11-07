@@ -1,7 +1,6 @@
 gfp
 ===
 Snapshot ????-??-?? ToDo
- * Add first world.
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
  * Move functions info into library instead text file.
@@ -12,6 +11,8 @@ Now
  * Move map loader into static member of World.
  * Add moving in world.
  * Add updating world.
+ * Add first world.
+ * Add some evolution.
 
 Version 0.0.0.3 2010-10-16
  * Add map loader.

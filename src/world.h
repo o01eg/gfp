@@ -44,6 +44,13 @@ public:
 	/// \param[in] y Y coordiante.
 	/// \return Is wall here.
 	bool CheckCell(int x, int y) const;
+
+	/// \brief Get current world.
+	/// \return Current world.
+	VM::WeakObject GetCurrentWorld() const
+	{
+		return m_CurrentMap;
+	}
 private:
 	/// \brief Update current map.
 	void UpdateCurrentMap();

@@ -28,9 +28,9 @@ GA::GA(size_t population_size_)
 	m_Population = new Population;
 	for(size_t i = 0; i < m_PopulationSize; i ++)
 	{
-		std::clog << "Generating " << i << " individual..." << std::endl;
+		//std::clog << "Generating " << i << " individual..." << std::endl;
 		m_Population->push_back(Individual::GenerateRand(env));
-		std::clog << "Generated " << i << " individual..." << std::endl;
+		//std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
 
