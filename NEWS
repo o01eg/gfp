@@ -7,6 +7,8 @@ Snapshot ????-??-?? ToDo
  * Add LISP quotation.
  * Use own tokenizer.
  * Add program optimization.
+ * Fix bugs with choosing best when next can be worst.
+ * Fix bugs with removing unused functions from program.
 
 Version 0.0.0.4 2010-11-08
  * Move map loader into static member of World.

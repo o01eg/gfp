@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 128;
+const size_t MAX_STEP_UNCHANGED = 256;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(16);
+		GA ga(20);
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		std::vector<GA::Operation> operations;
@@ -96,10 +96,18 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(2));
 		operations.push_back(GA::Mutation(3));
+		operations.push_back(GA::Mutation(4));
+		operations.push_back(GA::Crossover(0, 1));
 		operations.push_back(GA::Crossover(0, 1));
 		operations.push_back(GA::Crossover(0, 2));
 		operations.push_back(GA::Crossover(0, 3));
+		operations.push_back(GA::Crossover(0, 4));
 		operations.push_back(GA::Crossover(1, 2));
+		operations.push_back(GA::Crossover(1, 3));
+		operations.push_back(GA::Crossover(1, 4));
+		operations.push_back(GA::Crossover(2, 3));
+		operations.push_back(GA::Crossover(2, 4));
+		operations.push_back(GA::Crossover(3, 4));
 		while(remain_steps > 0)
 		{
 			if(ga.Step(operations))
