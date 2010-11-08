@@ -75,6 +75,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		VM::Program prog = population[i].GetProgram(env);
 		env.SetProgram(prog);
 		VM::Object memory(env);
+		VM::Object prev_res(env);
 		bool active = true;
 		Result result(i);
 		std::stringstream ss;
@@ -86,6 +87,14 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			size_t circle_count = 1000;
 			bool changes = false;
 			VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
+			if(! prev_res.IsNIL())
+			{
+				if(res != prev_res)
+				{
+					result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
+				}
+			}
+			prev_res = res;
 			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
 			ss << res << std::endl;
 			if(! res.IsNIL())
@@ -103,23 +112,30 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 						VM::WeakObject move = res.GetHead();
 						if((! move.IsNIL()) && (move.GetType() == VM::LIST))
 						{
-							if((! move.IsNIL()) && (move.GetHead().GetType() == VM::INTEGER) && (move.GetHead().GetValue() == 0))
+							if((! move.IsNIL()) && (move.GetHead().GetType() == VM::INTEGER))
 							{
-								if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
+								if(move.GetHead().GetValue() == 0)
 								{
-									VM::WeakObject dir_obj = move.GetTail().GetHead();
-									if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
+									if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
 									{
-										size_t dir = dir_obj.GetValue();
-										if((dir > 0) && (dir <= 4))
+										VM::WeakObject dir_obj = move.GetTail().GetHead();
+										if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
 										{
-											if(world.Move(dir))
+											size_t dir = dir_obj.GetValue();
+											if((dir > 0) && (dir <= 4))
 											{
-												changes = true;
-												max_stops = MAX_STOPS;
-												result.m_Quality[Result::ST_GOOD_MOVES] ++;
+												if(world.Move(dir))
+												{
+													changes = true;
+													max_stops = MAX_STOPS;
+													result.m_Quality[Result::ST_GOOD_MOVES] ++;
+												}
+												result.m_Quality[Result::ST_BAD_MOVES] ++;
 											}
-											result.m_Quality[Result::ST_BAD_MOVES] ++;
+											else
+											{
+												result.m_Quality[Result::ST_ANSWER_QUALITY] = 7;
+											}
 										}
 										else
 										{
@@ -134,6 +150,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 								else
 								{
 									result.m_Quality[Result::ST_ANSWER_QUALITY] = 4;
+									result.m_Quality[Result::ST_MOVE_DIFF] = -abs(move.GetHead().GetValue());
 								}
 							}
 							else
