@@ -38,23 +38,20 @@ int main(int argc, char **argv)
 		VM::Environment env;
 		{
 			env.LoadFunctions(DATA_DIR "functions.txt");
+#if 0
 			std::vector<std::pair<VM::Object, size_t> > funcs;
 			funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 			for(size_t i = 0 ; i < env.functions.size(); i ++)
 			{
 				funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 			}
-
+#endif
 			std::cout << "Generate program... " << std::endl;
-			VM::Program prg1 = GP::GenerateProg(env, 6);
-			VM::Program prg2 = GP::GenerateProg(env, 6);
-			VM::Program mut = GP::MutateProg(prg1, 6);
-			VM::Program cross = GP::CrossoverProg(prg1, prg2, 6);
+			VM::Program prg1 = GP::GenerateProg(env, 17);
 
 			std::cout << "prog1 = " << prg1.Save() << std::endl;
-			std::cout << "muta1 = " << mut.Save() << std::endl;
-			std::cout << "prog2 = " << prg2.Save() << std::endl;
-			std::cout << "cross = " << cross.Save() << std::endl;
+			prg1.Minimize();
+			std::cout << "prog2 = " << prg1.Save() << std::endl;
 #ifdef _DEBUG_HEAP_
 			DotDump(env, "/tmp/1.dot");
 #endif

@@ -210,7 +210,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
 	}
-	res.Minimize();
+	//res.Minimize();
 	return res;
 }
 

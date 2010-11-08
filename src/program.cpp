@@ -18,6 +18,7 @@
  */
 
 #include <fstream>
+#include <iomanip>
 #include "program.h"
 #include "ioobject.h"
 
@@ -109,6 +110,22 @@ void Program::Minimize()
 		}
 	}
 
+#if 0
+	// dump adf_calls
+	for(adf_index = 0; adf_index < m_ADFs.size(); adf_index ++)
+	{
+		std::cout << std::setw(2) << adf_index << ":";
+		for(size_t j = 0; j < m_ADFs.size(); j++)
+		{
+			if(adf_calls[adf_index * m_ADFs.size() + j])
+			{
+				std::cout << j << " ";
+			}
+		}
+		std::cout << std::endl;
+	}
+#endif
+
 	for(adf_index = 1; adf_index < m_ADFs.size(); adf_index ++)
 	{
 		// check each function to calls from above ADF
@@ -125,9 +142,9 @@ void Program::Minimize()
 		{
 			// remove ADF
 			m_ADFs[adf_index] = Object(m_Env);
-			for(size_t adf_above_index = 0; adf_above_index <= adf_index; adf_above_index ++)
+			for(size_t adf_below_index = adf_index; adf_below_index < m_ADFs.size(); adf_below_index ++)
 			{
-				adf_calls[adf_above_index * m_ADFs.size() + adf_index] = false;
+				adf_calls[adf_index * m_ADFs.size() + adf_below_index] = false;
 			}
 		}
 	}
