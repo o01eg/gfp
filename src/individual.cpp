@@ -20,6 +20,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 #include "individual.h"
 #include "ioobject.h"
 #include "ga_utils.h"
@@ -96,7 +97,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			}
 			prev_res = res;
 			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
-			ss << res << std::endl;
+			ss << std::setw(35) << res << std::endl;
 			if(! res.IsNIL())
 			{
 				switch(res.GetType())

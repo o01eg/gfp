@@ -21,6 +21,8 @@
 #include <string>
 #include <algorithm>
 #include <locale>
+#include <sstream>
+#include <iomanip>
 #include "ioobject.h"
 
 using namespace VM;
@@ -31,10 +33,12 @@ using namespace VM;
 /// \return Atomic object.
 Object str2atom(const std::string& str, Environment &env);
 
-std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
+std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 {
+	std::streamsize width = ostr.width();
+	ostr.width(0);
+	std::stringstream os;
 	/// \todo Use normal stack.
-	/// \todo Use non-attached Object.
 	if(! obj.IsNIL())
 	{
 		//const Environment& env = obj.GetEnv();
@@ -146,7 +150,16 @@ std::ostream& operator<<(std::ostream& os, const WeakObject& obj)
 	{
 		os << "NIL ";
 	}
-	return os;
+	if(width)
+	{
+		//ostr << "{" << width << "}";
+		ostr.write(os.str().c_str(), width);
+	}
+	else
+	{
+		ostr << os.str();
+	}
+	return ostr;
 }
 
 std::istream& operator>>(std::istream& is, Object& obj)

@@ -23,7 +23,7 @@
 #include <iostream>
 #include "object.h"
 
-std::ostream& operator<<(std::ostream& os, const VM::WeakObject& obj);
+std::ostream& operator<<(std::ostream& ostr, const VM::WeakObject& obj);
 std::istream& operator>>(std::istream& is, VM::Object& obj);
 
 #endif
