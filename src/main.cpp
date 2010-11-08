@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(20);
+		GA ga(18);
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		std::vector<GA::Operation> operations;
@@ -104,10 +104,7 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Crossover(0, 4));
 		operations.push_back(GA::Crossover(1, 2));
 		operations.push_back(GA::Crossover(1, 3));
-		operations.push_back(GA::Crossover(1, 4));
 		operations.push_back(GA::Crossover(2, 3));
-		operations.push_back(GA::Crossover(2, 4));
-		operations.push_back(GA::Crossover(3, 4));
 		while(remain_steps > 0)
 		{
 			if(ga.Step(operations))
@@ -125,7 +122,7 @@ int main(int argc, char **argv)
 			else
 			{
 				remain_steps --;
-				std::cout << "steps: " << remain_steps << std::endl;
+				//std::cout << "steps: " << remain_steps << std::endl;
 			}
 		}
 		std::clog << "best = " << ga.GetBest().GetText() << std::endl;

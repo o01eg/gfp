@@ -21,6 +21,8 @@
 #define _INDIVIDUAL_H_
 
 #include <vector>
+#include <iomanip>
+#include <iostream>
 #include "program.h"
 
 class Individual
@@ -74,9 +76,28 @@ public:
 			}
 			return false;
 		}
+		Result& operator=(const Result& result)
+		{
+			m_Index = result.m_Index;
+			m_Result = result.m_Result;
+			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
+			{
+				m_Quality[i] = result.m_Quality[i];
+			}
+			return *this;
+		}
 		size_t GetIndex() const
 		{
 			return m_Index;
+		}
+		void Dump(std::ostream &os) const
+		{
+			os << std::setw(2) << m_Index << "[" << m_Quality[0];
+			for(size_t j = 1; j < Individual::Result::STATUS_VARIABLES; j ++)
+			{
+				os << "," << m_Quality[j];
+			}
+			os << "]" << std::endl;
 		}
 		int m_Quality[STATUS_VARIABLES];
 		std::string m_Result;

@@ -18,6 +18,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include "ga.h"
 
 GA::GA(size_t population_size_)
@@ -45,7 +46,10 @@ bool GA::Step(const std::vector<Operation> &operations)
 	{
 		(*m_Population)[i].SetResult(results[i]);
 	}
-	std::sort(results.begin(), results.end());
+	std::stringstream ss;
+	ss << "before:" << std::endl;
+	DumpResults(*m_Population, ss);
+	std::stable_sort(results.begin(), results.end());
 	
 	std::vector<Operation>::const_iterator operation;
 	Results::iterator result;
@@ -61,10 +65,13 @@ bool GA::Step(const std::vector<Operation> &operations)
 		for(result = results.begin(); index; index --, result++)
 		{
 			new_population->push_back(m_Population->at(result->GetIndex()));
-			if(result->GetIndex() >= num_best)
-			{
-				updated = true;
-			}
+		}
+		if(results[0].GetIndex() != 0)
+		{
+			ss << "after:" << std::endl;
+			DumpResults(*new_population, ss);
+			updated = true;
+			std::cout << ss.str();
 		}
 		// Make genetic operations.
 		for(operation = operations.begin(); operation < operations.end();
@@ -90,5 +97,13 @@ bool GA::Step(const std::vector<Operation> &operations)
 	delete m_Population;
 	m_Population = new_population;
 	return updated;
+}
+
+void GA::DumpResults(const Population &population, std::ostream& os)
+{
+	for(size_t i = 0; i < population.size(); i ++)
+	{
+		population[i].GetResult().Dump(os);
+	}
 }
 

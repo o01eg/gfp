@@ -176,7 +176,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		result.m_Result = ss.str();
 		results.push_back(result);
 	}
-	std::sort(results.begin(), results.end());
+	//std::sort(results.begin(), results.end());
 #if 0	
 	std::cout << "====\n";
 	std::cout << results[0].m_Quality[0] << std::endl;

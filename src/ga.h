@@ -36,7 +36,6 @@ public:
 	/// Numbers mean index of parent.
 	typedef std::pair<int, int> Operation;
 	
-	
 	/// \brief GA constructor.
 	/// \param population_size_ Size of population.
 	GA(size_t population_size_);
@@ -87,6 +86,11 @@ public:
 	{
 		return Operation(i, j);
 	}
+
+	/// \brief Dump results.
+	/// \param[in] population Array of individuals.
+	/// \param[in] os Output stream.
+	static void DumpResults(const Population& population, std::ostream& os);
 private:
 	size_t m_PopulationSize; ///< Size of population.
 	Population *m_Population; ///< Auto pointer to population.
