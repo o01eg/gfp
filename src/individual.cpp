@@ -115,7 +115,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 						{
 							if((! move.IsNIL()) && (move.GetHead().GetType() == VM::INTEGER))
 							{
-								if(move.GetHead().GetValue() == 0)
+								if(move.GetHead().GetValue() == 1)
 								{
 									if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
 									{
@@ -151,7 +151,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 								else
 								{
 									result.m_Quality[Result::ST_ANSWER_QUALITY] = 4;
-									result.m_Quality[Result::ST_MOVE_DIFF] = -abs(move.GetHead().GetValue());
+									result.m_Quality[Result::ST_MOVE_DIFF] = -abs(static_cast<signed long>(move.GetHead().GetValue()) - 1);
 								}
 							}
 							else
