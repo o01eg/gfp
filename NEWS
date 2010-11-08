@@ -4,15 +4,15 @@ Snapshot ????-??-?? ToDo
  * Add scripting for individual testing and comparsion.
  * Add multithread support.
  * Move functions info into library instead text file.
- * Add LISP quotation.
  * Use own tokenizer.
  * Add program optimization.
 
-Now
+Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.
  * Support for ios_base::width field for outputting Objects (don't use for store them).
  * Set code for moving into 1 to avoid using world as part of answer.
  * Fix bugs with removing unused functions from program.
+ * Add LISP quotation.
 
 Version 0.0.0.4 2010-11-08
  * Move map loader into static member of World.

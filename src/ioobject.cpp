@@ -170,9 +170,11 @@ std::istream& operator>>(std::istream& is, Object& obj)
 	std::stack<Object> obj_stack;
 	std::stack<size_t> stack;
 	std::stack<bool> point_stack;
+	std::stack<bool> quote_stack;
 	Object obj_temp(env);
 	bool reading = true;
 	bool point_pair = false;
+	bool quote = false;
 	std::string str;
 	size_t level = 0;
 	while(reading)
@@ -184,6 +186,8 @@ std::istream& operator>>(std::istream& is, Object& obj)
 				level ++;
 				point_stack.push(point_pair);
 				point_pair = false;
+				quote_stack.push(quote);
+				quote = false;
 				break;
 			case ')':
 				if(point_pair)
@@ -216,15 +220,36 @@ std::istream& operator>>(std::istream& is, Object& obj)
 				level --;
 				point_pair = point_stack.top();
 				point_stack.pop();
-				obj_stack.push(obj_temp);
+				quote = quote_stack.top();
+				quote_stack.pop();
+				if(quote)
+				{
+					obj_stack.push(Object(Object(env, QUOTE), Object(obj_temp, Object(env))));
+					quote = false;
+				}
+				else
+				{
+					obj_stack.push(obj_temp);
+				}
 				stack.push(level);
 				break;
 			case '.':
 				point_pair = true;
 				break;
+			case '\'':
+				quote = true;
+				break;
 			default:
 				obj_temp = str2atom(str, env);
-				obj_stack.push(obj_temp);
+				if(quote)
+				{
+					obj_stack.push(Object(Object(env, QUOTE), Object(obj_temp, Object(env))));
+					quote = false;
+				}
+				else
+				{
+					obj_stack.push(obj_temp);
+				}
 				stack.push(level);
 				break;
 
