@@ -78,7 +78,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		env.SetProgram(prog);
 		VM::Object memory(env);
 		VM::Object prev_res(env);
-		VM::Object prev_move(env);
+		size_t prev_dir = 0;
 		bool active = true;
 		Result result(i);
 		std::stringstream ss;
@@ -124,16 +124,16 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 										VM::WeakObject dir_obj = move.GetTail().GetHead();
 										if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
 										{
-											if(! prev_move.IsNIL())
+											signed long dir = static_cast<signed long>(dir_obj.GetValue());
+											if(prev_dir)
 											{
-												if(move != prev_move)
+												if((dir % 4 + 1) != prev_dir)
 												{
 													result.m_Quality[Result::ST_MOVE_CHANGES] ++;
 												}
 											}
-											prev_move = move;
+											prev_dir = dir % 4 + 1;
 	
-											signed long dir = static_cast<signed long>(dir_obj.GetValue());
 											if((move.GetHead().GetValue() == 1) && (dir > 0) && (dir <= 4))
 											{
 												result.m_Quality[Result::ST_ANSWER_QUALITY] = 7;
@@ -145,7 +145,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 												result.m_Quality[Result::ST_MOVE_DIFF] = -abs(static_cast<signed long>(move.GetHead().GetValue()) - 1);
 											}
 	
-											if(world.Move((dir % 4) + 1))
+											if(world.Move(dir % 4 + 1))
 											{
 												changes = true;
 												max_stops = MAX_STOPS;

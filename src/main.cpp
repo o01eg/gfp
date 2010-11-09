@@ -134,8 +134,8 @@ int main(int argc, char **argv)
 				remain_steps = MAX_STEP_UNCHANGED;
 				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
 				std::clog << "result = " << ga.GetBest().GetResult().m_Result;
-				std::clog << "result[GOOD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
 				std::clog << "result[MOVE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
+				std::clog << "result[GOOD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
 				std::clog << "result[BAD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_BAD_MOVES] << std::endl;
 				std::clog << "result[ANSWER_QUALITY] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
 				std::clog << "result[ANSWER_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;

@@ -35,8 +35,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_GOOD_MOVES = 0, ///< Number of moves without collisions with walls.
-			ST_MOVE_CHANGES, ///< Number of changes moves.
+			ST_MOVE_CHANGES = 0, ///< Number of changes moves.
+			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_BAD_MOVES, ///< Number of moves with collisions with walls.
 			ST_ANSWER_QUALITY, ///< Level of answer quality.
 			ST_ANSWER_CHANGES, ///< Numbers of different answers.
