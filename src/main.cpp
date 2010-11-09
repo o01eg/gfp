@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 500;
+const size_t MAX_STEP_UNCHANGED = 1000;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -115,10 +115,12 @@ int main(int argc, char **argv)
 				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
 				std::clog << "result = " << ga.GetBest().GetResult().m_Result;
 				std::clog << "result[GOOD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
-				std::clog << "result[ST_ANSWER_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
+				std::clog << "result[MOVE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 				std::clog << "result[BAD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_BAD_MOVES] << std::endl;
 				std::clog << "result[ANSWER_QUALITY] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
+				std::clog << "result[ANSWER_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
 				std::clog << "result[MOVE_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
+				std::clog << "result[DIR_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
 				std::clog << "result[STATE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
 				std::clog << "result[NEG_CIRCLES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 			}
