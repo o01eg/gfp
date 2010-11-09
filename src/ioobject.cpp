@@ -151,7 +151,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 	{
 		os << "NIL ";
 	}
-	if(width)
+	if(width < os.str().size())
 	{
 		//ostr << "{" << width << "}";
 		ostr.write(os.str().c_str(), std::min(static_cast<size_t>(width), os.str().size()));
