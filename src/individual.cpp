@@ -118,37 +118,44 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							{
 								if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
 								{
-									VM::WeakObject dir_obj = move.GetTail().GetHead();
-									if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
+									if(move.GetTail().GetTail().IsNIL())
 									{
-										if(! prev_move.IsNIL())
+										VM::WeakObject dir_obj = move.GetTail().GetHead();
+										if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
 										{
-											if(move != prev_move)
+											if(! prev_move.IsNIL())
 											{
-												result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+												if(move != prev_move)
+												{
+													result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+												}
 											}
-										}
-										prev_move = move;
-
-										signed long dir = static_cast<signed long>(dir_obj.GetValue());
-										if((move.GetHead().GetValue() == 1) && (dir > 0) && (dir <= 4))
-										{
-											result.m_Quality[Result::ST_ANSWER_QUALITY] = 7;
+											prev_move = move;
+	
+											signed long dir = static_cast<signed long>(dir_obj.GetValue());
+											if((move.GetHead().GetValue() == 1) && (dir > 0) && (dir <= 4))
+											{
+												result.m_Quality[Result::ST_ANSWER_QUALITY] = 7;
+											}
+											else
+											{
+												result.m_Quality[Result::ST_ANSWER_QUALITY] = 6;
+												result.m_Quality[Result::ST_DIR_DIFF] = ( dir <= 0 ) ? (dir - 1) : (4 - dir);
+												result.m_Quality[Result::ST_MOVE_DIFF] = -abs(static_cast<signed long>(move.GetHead().GetValue()) - 1);
+											}
+	
+											if(world.Move((dir % 4) + 1))
+											{
+												changes = true;
+												max_stops = MAX_STOPS;
+												result.m_Quality[Result::ST_GOOD_MOVES] ++;
+											}
+											result.m_Quality[Result::ST_BAD_MOVES] ++;
 										}
 										else
 										{
 											result.m_Quality[Result::ST_ANSWER_QUALITY] = 6;
-											result.m_Quality[Result::ST_DIR_DIFF] = ( dir <= 0 ) ? (dir - 1) : (4 - dir);
-											result.m_Quality[Result::ST_MOVE_DIFF] = -abs(static_cast<signed long>(move.GetHead().GetValue()) - 1);
 										}
-
-										if(world.Move((dir % 4) + 1))
-										{
-											changes = true;
-											max_stops = MAX_STOPS;
-											result.m_Quality[Result::ST_GOOD_MOVES] ++;
-										}
-										result.m_Quality[Result::ST_BAD_MOVES] ++;
 									}
 									else
 									{
