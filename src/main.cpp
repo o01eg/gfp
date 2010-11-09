@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 1000;
+const size_t MAX_STEP_UNCHANGED = 2000;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 		GA ga(20);
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
+		size_t generation = 0;
 		std::vector<GA::Operation> operations;
 		operations.push_back(GA::Mutation(0));
 		operations.push_back(GA::Mutation(1));
@@ -128,6 +129,11 @@ int main(int argc, char **argv)
 			{
 				remain_steps --;
 				//std::cout << "steps: " << remain_steps << std::endl;
+			}
+			generation ++;
+			if(generation % 100 == 0)
+			{
+				std::cout << "generation = " << generation << std::endl;
 			}
 		}
 		std::clog << "best = " << ga.GetBest().GetText() << std::endl;
