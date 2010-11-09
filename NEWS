@@ -6,6 +6,10 @@ Snapshot ????-??-?? ToDo
  * Move functions info into library instead text file.
  * Use own tokenizer.
  * Add program optimization.
+ * Move VM into library.
+
+Now
+ * Fix wrong symbols in reduced output object.
 
 Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.

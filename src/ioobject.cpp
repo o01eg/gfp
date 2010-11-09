@@ -23,6 +23,7 @@
 #include <locale>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include "ioobject.h"
 
 using namespace VM;
@@ -153,7 +154,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 	if(width)
 	{
 		//ostr << "{" << width << "}";
-		ostr.write(os.str().c_str(), width);
+		ostr.write(os.str().c_str(), std::min(static_cast<size_t>(width), os.str().size()));
 	}
 	else
 	{
