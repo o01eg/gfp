@@ -8,6 +8,12 @@ README from 2010-02-21
 		$ make
 		$ make install
 	Use LaTeX or pdfLaTeX to generate documantation. (Not yet written)
+	Using:
+		$ gfp [file]
+		 Evolve agent for moving in labyrinth.
+		 - file use for store best individual
+		$ gplisp [program]
+		 Execute program and get argument in stdin.
 		
 		Dependencies.
 	- glibmm - for string manipulation and cross-platform library loading.

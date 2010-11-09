@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 2500;
+const size_t MAX_STEP_UNCHANGED = 4000;
 
 bool app_is_run = true; ///< Application's state variable.
 

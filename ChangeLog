@@ -1,3 +1,7 @@
+Version 0.0.0.6 2010-11-10
+ * Fix wrong symbols in reduced output object.
+ * Support for saving and loading best individual.
+
 Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.
  * Support for ios_base::width field for outputting Objects (don't use for store them).
