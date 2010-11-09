@@ -150,6 +150,11 @@ public:
 	static Individual Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2);
 	static std::vector<Result> Execute(const std::vector<Individual> &population);
 
+	/// \brief Load from file.
+	/// \param[in] filename File name.
+	/// \return Loaded individual.
+	static Individual Load(const char* filename);
+
 private:
 	/// \brief Create individual from program.
 	/// \param prog LISP-program.

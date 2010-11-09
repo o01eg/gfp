@@ -51,15 +51,14 @@ public:
 	bool Step(const std::vector<Operation> &operations);
 	
 	/// \brief Save population
-	void Save()
-	{
-		/// \todo Write this.
-	}
+	/// \param[in] filename File for saving individual.
+	void Save(const char *filename);
 	
 	/// \brief Load population
-	void Load()
+	/// \param[in] filename File with saved individual.
+	void Load(const char *filename)
 	{
-		/// \todo Write this.
+		m_Population->at(m_PopulationSize - 1) = Individual::Load(filename);
 	}
 
 	/// \brief Get best individual.

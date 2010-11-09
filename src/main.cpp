@@ -24,7 +24,7 @@
 #include "ga.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 2000;
+const size_t MAX_STEP_UNCHANGED = 2500;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -52,7 +52,7 @@ void interrupt_handler(int signum)
 /// \return Exit code.
 int main(int argc, char **argv)
 {
-#if 0
+#if 1
 	signal(SIGINT, interrupt_handler);
 #endif
 
@@ -61,7 +61,15 @@ int main(int argc, char **argv)
 	Glib::Thread::create(sigc::ptr_fun(close_handler), false);
 #endif
 
-	srand(time(0));
+	time_t seed = time(NULL);
+	std::cout << "seed = " << seed << std::endl;
+	srand(seed);
+
+	char *filename = NULL;
+	if(argc == 2)
+	{
+		filename = argv[1];
+	}
 	
 	// Start application.
 	std::clog << "Start application" << std::endl;
@@ -89,6 +97,17 @@ int main(int argc, char **argv)
 #endif
 		// Genetic programming
 		GA ga(20);
+		if(filename)
+		{
+			try
+			{
+				ga.Load(filename);
+			}
+			catch(...)
+			{
+				//do nothing.
+			}
+		}
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		size_t generation = 0;
@@ -107,7 +126,7 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Crossover(1, 2));
 		operations.push_back(GA::Crossover(1, 3));
 		operations.push_back(GA::Crossover(2, 3));
-		while(remain_steps > 0)
+		while((remain_steps > 0) && app_is_run)
 		{
 			if(ga.Step(operations))
 			{
@@ -137,6 +156,11 @@ int main(int argc, char **argv)
 			}
 		}
 		std::clog << "best = " << ga.GetBest().GetText() << std::endl;
+		if(filename)
+		{
+			ga.Save(filename);
+		}
+
 	}
 	catch(std::exception &e)
 	{

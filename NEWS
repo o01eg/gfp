@@ -10,6 +10,7 @@ Snapshot ????-??-?? ToDo
 
 Now
  * Fix wrong symbols in reduced output object.
+ * Support for saving and loading best individual.
 
 Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.

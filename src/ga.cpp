@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "ga.h"
 
 GA::GA(size_t population_size_)
@@ -105,5 +106,11 @@ void GA::DumpResults(const Population &population, std::ostream& os)
 	{
 		population[i].GetResult().Dump(os);
 	}
+}
+
+void GA::Save(const char *filename)
+{
+	std::ofstream f(filename);
+	f << GetBest().GetText();
 }
 

@@ -21,6 +21,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <fstream>
 #include "individual.h"
 #include "ioobject.h"
 #include "ga_utils.h"
@@ -225,5 +226,14 @@ VM::Program Individual::GetProgram(VM::Environment &env) const
 	VM::Object obj(env);
 	ss >> obj;
 	return VM::Program(obj);
+}
+
+Individual Individual::Load(const char* filename)
+{
+	std::ifstream f(filename);
+	VM::Environment env;
+	VM::Object obj(env);
+	f >> obj;
+	return Individual(VM::Program(obj));
 }
 
