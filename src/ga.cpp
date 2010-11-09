@@ -46,9 +46,9 @@ bool GA::Step(const std::vector<Operation> &operations)
 	{
 		(*m_Population)[i].SetResult(results[i]);
 	}
-	std::stringstream ss;
-	ss << "before:" << std::endl;
-	DumpResults(*m_Population, ss);
+//	std::stringstream ss;
+//	ss << "before:" << std::endl;
+//	DumpResults(*m_Population, ss);
 	std::stable_sort(results.begin(), results.end());
 	
 	std::vector<Operation>::const_iterator operation;
@@ -68,10 +68,10 @@ bool GA::Step(const std::vector<Operation> &operations)
 		}
 		if(results[0].GetIndex() != 0)
 		{
-			ss << "after:" << std::endl;
-			DumpResults(*new_population, ss);
+//			ss << "after:" << std::endl;
+//			DumpResults(*new_population, ss);
 			updated = true;
-			std::cout << ss.str();
+//			std::cout << ss.str();
 		}
 		// Make genetic operations.
 		for(operation = operations.begin(); operation < operations.end();

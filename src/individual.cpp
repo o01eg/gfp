@@ -27,7 +27,7 @@
 #include "world.h"
 
 const size_t MAX_FUNCTIONS = 16;
-const size_t MAX_STOPS = 10; ///< Maximum of stop moves
+const size_t MAX_STOPS = 5; ///< Maximum of stop moves
 
 Individual::Individual(const VM::Program &prog)
 	:m_Result(0)
