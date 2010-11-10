@@ -156,6 +156,13 @@ public:
 	static Individual Load(const char* filename);
 
 private:
+	/// \brief Check move.
+	/// \param[in] result Returned res for move.
+	/// \param[out] code Code of move.
+	/// \param[out] direction Direction of move.
+	/// \return Quality of move.
+	static size_t CheckMove(const VM::WeakObject &result, signed long *code, signed long *direction);
+
 	/// \brief Create individual from program.
 	/// \param prog LISP-program.
 	Individual(const VM::Program &prog);

@@ -113,72 +113,38 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							memory = new_mem;
 						}
 						VM::WeakObject move = res.GetHead();
-						if((! move.IsNIL()) && (move.GetType() == VM::LIST))
+						signed long code = 0, direction = 0;
+						result.m_Quality[Result::ST_ANSWER_QUALITY] = CheckMove(move, &code, &direction);
+						if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 6) // got code
 						{
-							if((! move.IsNIL()) && (move.GetHead().GetType() == VM::INTEGER))
+							result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - 1);
+							if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 10) // got direction
 							{
-								if((! move.GetTail().IsNIL()) && (move.GetTail().GetType() == VM::LIST))
+								result.m_Quality[Result::ST_DIR_DIFF] = ( direction <= 0 ) ? (direction - 1) : (4 - direction);
+								if(prev_dir)
 								{
-									if(move.GetTail().GetTail().IsNIL())
+									if((direction % 4 + 1) != prev_dir)
 									{
-										VM::WeakObject dir_obj = move.GetTail().GetHead();
-										if((! dir_obj.IsNIL()) && (dir_obj.GetType() == VM::INTEGER))
-										{
-											signed long dir = static_cast<signed long>(dir_obj.GetValue());
-											if(prev_dir)
-											{
-												if((dir % 4 + 1) != prev_dir)
-												{
-													result.m_Quality[Result::ST_MOVE_CHANGES] ++;
-												}
-											}
-											prev_dir = dir % 4 + 1;
-	
-											if((move.GetHead().GetValue() == 1) && (dir > 0) && (dir <= 4))
-											{
-												result.m_Quality[Result::ST_ANSWER_QUALITY] = 7;
-											}
-											else
-											{
-												result.m_Quality[Result::ST_ANSWER_QUALITY] = 6;
-												result.m_Quality[Result::ST_DIR_DIFF] = ( dir <= 0 ) ? (dir - 1) : (4 - dir);
-												result.m_Quality[Result::ST_MOVE_DIFF] = -abs(static_cast<signed long>(move.GetHead().GetValue()) - 1);
-											}
-	
-											if(world.Move(dir % 4 + 1))
-											{
-												changes = true;
-												max_stops = MAX_STOPS;
-												result.m_Quality[Result::ST_GOOD_MOVES] ++;
-											}
-											result.m_Quality[Result::ST_BAD_MOVES] ++;
-										}
-										else
-										{
-											result.m_Quality[Result::ST_ANSWER_QUALITY] = 6;
-										}
-									}
-									else
-									{
-										result.m_Quality[Result::ST_ANSWER_QUALITY] = 5;
+										result.m_Quality[Result::ST_MOVE_CHANGES] ++;
 									}
 								}
-								else
+								prev_dir = direction % 4 + 1;
+
+								if((code == 1) && (direction > 0) && (direction <= 4))
 								{
-									result.m_Quality[Result::ST_ANSWER_QUALITY] = 4;
+									result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
 								}
-							}
-							else
-							{
-								result.m_Quality[Result::ST_ANSWER_QUALITY] = 3;
+								if(world.Move(direction % 4 + 1))
+								{
+									changes = true;
+									max_stops = MAX_STOPS;
+									result.m_Quality[Result::ST_GOOD_MOVES] ++;
+								}
+								result.m_Quality[Result::ST_BAD_MOVES] ++;
 							}
 						}
-						else
-						{
-							result.m_Quality[Result::ST_ANSWER_QUALITY] = 2;
-						}
-						break;
 					}
+					break;
 				case VM::ERROR:
 					break;
 				default:
@@ -218,6 +184,59 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	std::cout << results[0].m_Result << std::endl;
 #endif
 	return results;
+}
+
+size_t Individual::CheckMove(const VM::WeakObject &move, signed long *code, signed long *direction)
+{
+	if(move.IsNIL())
+	{
+		return 2;
+	}
+	if(move.GetType() != VM::LIST)
+	{
+		return 3;
+	}
+	// move is LIST
+	VM::WeakObject code_obj = move.GetHead();
+	if(code_obj.IsNIL())
+	{
+		return 4;
+	}
+	if(code_obj.GetType() != VM::INTEGER)
+	{
+		return 5;
+	}
+	if(code)
+	{
+		(*code) = static_cast<signed long>(code_obj.GetValue());
+	}
+	if(move.GetTail().IsNIL())
+	{
+		return 6;
+	}
+	if(move.GetTail().GetType() != VM::LIST)
+	{
+		return 7;
+	}
+	// move.GetTail() is LIST
+	VM::WeakObject dir_obj = move.GetTail().GetHead();
+	if(dir_obj.IsNIL())
+	{
+		return 8;
+	}
+	if(dir_obj.GetType() != VM::INTEGER)
+	{
+		return 9;
+	}
+	if(direction)
+	{
+		(*direction) = static_cast<signed long>(dir_obj.GetValue());
+	}
+	if(! move.GetTail().GetTail().IsNIL())
+	{
+		return 10;
+	}
+	return 100;
 }
 
 VM::Program Individual::GetProgram(VM::Environment &env) const

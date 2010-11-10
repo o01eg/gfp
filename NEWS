@@ -11,6 +11,8 @@ Snapshot ????-??-?? ToDo
 Version 0.0.0.6 2010-11-10
  * Fix wrong symbols in reduced output object.
  * Support for saving and loading best individual.
+ * Add IF and EVAL type checking as FUNC.
+ * Add QUOTE? for QUOTE type ckecking.
 
 Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.
