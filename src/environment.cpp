@@ -125,9 +125,17 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									break;
 								case QUOTE:
-									obj_from_calc.push_back(obj.GetTail().GetHead());
+									if((! obj.GetTail().IsNIL()) && (obj.GetTail().GetType() == LIST))
+									{
+										obj_from_calc.push_back(obj.GetTail().GetHead());
+									}
+									else
+									{
+										return Object(*this, ERROR);
+									}
 									break;
 								case IF:
+									if((! obj.GetTail().IsNIL()) && (obj.GetTail().GetType() == LIST) && (! obj.GetTail().GetTail().IsNIL()) && (obj.GetTail().GetTail().GetType() == LIST) && (! obj.GetTail().GetTail().GetTail().IsNIL()) && (obj.GetTail().GetTail().GetTail().GetType() == LIST))
 									{
 										Object cond = obj.GetTail().GetHead();
 										Object otrue = obj.GetTail().GetTail().GetHead();
@@ -139,11 +147,16 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									break;
 								case EVAL:
+									if((! obj.GetTail().IsNIL()) && (obj.GetTail().GetType() == LIST))
 									{
 										// move arg into to-calc stack.
 										Object arg = obj.GetTail().GetHead();
 										obj_to_calc.push_back(head);
 										obj_to_calc.push_back(arg);
+									}
+									else
+									{
+										return Object(*this, ERROR);
 									}
 									break;
 								default: // here get ERROR and INTEGER
@@ -154,6 +167,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					break;
 				case IF:
+					if((! obj_from_calc.empty()) && (obj_to_calc.size() >= 2))
 					{
 						Object cond = obj_from_calc.back();
 						obj_from_calc.pop_back();
@@ -172,12 +186,21 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 							obj_to_calc.push_back(otrue);
 						}
 					}
+					else
+					{
+						return Object(*this, ERROR);
+					}
 					break;
 				case EVAL:
+					if(! obj_from_calc.empty())
 					{
 						Object arg = obj_from_calc.back();
 						obj_from_calc.pop_back();
 						obj_to_calc.push_back(arg);
+					}
+					else
+					{
+						return Object(*this, ERROR);
 					}
 					break;
 				case ADF:

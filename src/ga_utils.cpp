@@ -22,7 +22,7 @@
 #include "ga_utils.h"
 #include "program.h"
 
-const size_t MAX_DEPTH = 16;
+const size_t MAX_DEPTH = 24;
 
 bool GP::CheckForParam(const VM::WeakObject &func)
 {
@@ -65,7 +65,7 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	switch(choose)
 	{
 	case 0: // integer
-		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
+		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x10001 - 0x8000));
 		break;
 	case 1: // callable objects
 		res = funcs[rand() % funcs.size()].first;
@@ -87,19 +87,23 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 
 VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth)
 {
-	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 3 : 5); // don't choose LIST on more depth.
+	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 3 : 8); // don't choose LIST on more depth.
 	VM::Object res(env);
 	switch(choose)
 	{
 	case 0: // integer
-		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x100001 - 0x80000));
+		res = VM::Object(env, VM::INTEGER, static_cast<size_t>(rand() % 0x10001 - 0x8000));
 		break;
 	case 1: // nil
 		break;
 	case 2: // parameter
 		res = VM::Object(env, VM::PARAM);
 		break;
-	case 3: // call
+	case 3: // ( ' object )
+		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), res);
+		res = VM::Object(VM::Object(env, VM::QUOTE), res);
+		break;
+	default: // call
 		{
 			size_t func_num = rand() % funcs.size();
 			for(size_t param = 0; param < funcs[func_num].second; param ++)
@@ -109,11 +113,6 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 			res = VM::Object(funcs[func_num].first, res);
 		}
 		break;
-	case 4: // ( ' object )
-		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), res);
-		res = VM::Object(VM::Object(env, VM::QUOTE), res);
-		break;
-
 	}
 	return res;
 }
@@ -123,7 +122,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	VM::Object res(obj.GetEnv());
 	if(is_exec)
 	{
-		if((rand() % 100) > 80)
+		if((rand() % 100) > 70)
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
 		}
@@ -170,7 +169,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if((rand() % 100) > 80)
+		if((rand() % 100) > 70)
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
 		}
@@ -195,6 +194,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
 		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
@@ -220,6 +220,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
 		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
@@ -263,6 +264,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 	VM::Program res(env);
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
+	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
 	for(size_t i = 0 ; i < env.functions.size(); i ++)
 	{
 		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
