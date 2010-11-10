@@ -31,7 +31,7 @@ const size_t MAX_FUNCTIONS = 32;
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves
 
 Individual::Individual(const VM::Program &prog)
-	:m_Result(0)
+	:m_Result(-1) // new, not yet tested
 {
 	std::stringstream ss;
 	ss << prog.Save();
@@ -73,6 +73,11 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
+		if(population[i].GetResult().IsTested())
+		{
+			results.push_back(population[i].GetResult(i));
+			continue;
+		}
 		World world(env, DATA_DIR "labirint.txt");
 		VM::Program prog = population[i].GetProgram(env);
 		env.SetProgram(prog);

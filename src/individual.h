@@ -47,7 +47,7 @@ public:
 			STATUS_VARIABLES
 		};
 
-		Result(size_t index)
+		Result(int index)
 			:m_Index(index)
 		{
 			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
@@ -103,10 +103,14 @@ public:
 			}
 			os << "]" << std::endl;
 		}
+		bool IsTested() const
+		{
+			return (m_Index != -1);
+		}
 		int m_Quality[STATUS_VARIABLES];
 		std::string m_Result;
 	private:
-		size_t m_Index;
+		int m_Index;
 		
 	};
 
@@ -136,6 +140,16 @@ public:
 	const Result& GetResult() const
 	{
 		return m_Result;
+	}
+	Result GetResult(int i) const
+	{
+		Result res(i);
+		for(size_t j = 0; j < Result::STATUS_VARIABLES; j ++)
+		{
+			res.m_Quality[j] = m_Result.m_Quality[j];
+		}
+		res.m_Result = m_Result.m_Result;
+		return res;
 	}
 
 	void SetResult(const Result& res)
