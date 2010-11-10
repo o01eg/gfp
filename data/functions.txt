@@ -7,6 +7,7 @@ func_05_is_int:1:INT
 func_06_is_func:1:FUNC
 func_07_is_adf:1:ADF
 func_08_is_param:1:PARAM
+func_09_is_quote:1:QUOTE?
 func_11_is_list:1:LIST
 func_12_int_plus:2:+
 func_13_int_minus:2:-
