@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <stack>
 #include <deque>
+#include <algorithm>
 #include <glibmm/module.h>
 #include "environment.h"
 #include "object.h"
@@ -242,7 +243,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	}
 }
 
-void Environment::LoadFunctions(const char* filename)
+void Environment::LoadFunctionsFromFile(const char* filename)
 {
 #if _DEBUG_ENV_
 	std::clog << "Load functions from " << filename << std::endl;
@@ -283,7 +284,7 @@ void Environment::LoadFunctions(const char* filename)
 				if(module)
 				{
 					//function "func_00_eval:1:EVAL"
-					Environment::Func function;
+					//Environment::Func function;
 					std::string symbol;
 					void* func_ptr;
 					size_t i;
@@ -294,20 +295,21 @@ void Environment::LoadFunctions(const char* filename)
 					if(module->get_symbol(symbol, func_ptr))
 					{
 						i++;
-						function.func = reinterpret_cast<FunctionPtr>(func_ptr);
-						function.number_param = atoi(line.c_str() + i);
+						FunctionPtr func = reinterpret_cast<FunctionPtr>(func_ptr);
+						size_t number_param = atoi(line.c_str() + i);
 						for(; (i < line.size()) && (line[i] != ':'); i ++);
 						i++;
+						std::string name;
 						for(; i < line.size(); i ++)
 						{
-							function.name += line[i];
+							name += line[i];
 						}
-						if(function.name.size())
+						if(name.size())
 						{
 #if _DEBUG_ENV_
-							std::clog << "Load function " << function.name << " with " << static_cast<int>(function.number_param) << " parameters" << std::endl;
+							std::clog << "Load function " << name << " with " << static_cast<int>(number_param) << " parameters" << std::endl;
 #endif
-							functions.push_back(function);
+							LoadFunction(name, number_param, func);
 						}
 #if _DEBUG_ENV_
 						else
@@ -344,6 +346,40 @@ void Environment::LoadFunctions(const char* filename)
 	{
 		delete module;
 	}
+}
+
+FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
+{
+	std::vector<Func>::iterator it = std::find(functions.begin(), functions.end(), name);
+	if(it == functions.end())
+	{
+		// not exist.
+		if(ptr)
+		{
+			Environment::Func function;
+			function.func = ptr;
+			function.name = name;
+			function.number_param = argc;
+		}
+		return NULL;
+	}
+	else
+	{
+		FunctionPtr old_ptr = it->func;
+		// exist
+		if(ptr)
+		{
+			// replace
+			it->func = ptr;
+			it->number_param = argc;
+		}
+		else
+		{
+			functions.erase(it);
+		}
+		return old_ptr;
+	}
+	return NULL;
 }
 
 Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const

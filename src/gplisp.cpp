@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 	try
 	{
 		VM::Environment env;
-		env.LoadFunctions(DATA_DIR "functions.txt");
+		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 		try
 		{
 			VM::Program prog(env, argv[1]);

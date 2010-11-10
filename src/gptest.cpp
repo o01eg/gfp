@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	{
 		VM::Environment env;
 		{
-			env.LoadFunctions(DATA_DIR "functions.txt");
+			env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 #if 0
 			std::vector<std::pair<VM::Object, size_t> > funcs;
 			funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 			}
 #endif
 			std::cout << "Generate program... " << std::endl;
-			VM::Program prg1 = GP::GenerateProg(env, 17);
+			VM::Program prg1 = GP::GenerateProg(env, 32);
 
 			std::cout << "prog1 = " << prg1.Save() << std::endl;
 			prg1.Minimize();

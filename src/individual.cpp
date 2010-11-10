@@ -70,7 +70,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 {
 	std::vector<Individual::Result> results;
 	VM::Environment env;
-	env.LoadFunctions(DATA_DIR "functions.txt");
+	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		World world(env, DATA_DIR "labirint.txt");

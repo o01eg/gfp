@@ -69,7 +69,14 @@ namespace VM
 		/// \brief Load Functions, described in filename.
 		/// \todo Add upcasing of function's names.
 		/// \param filename Path to file with functions.
-		void LoadFunctions(const char* filename);
+		void LoadFunctionsFromFile(const char* filename);
+
+		/// \brief Load or replace function.
+		/// \param[in] name Function name
+		/// \param[in] argc Number of agruments.
+		/// \param[in] ptr Pointer tofunction.
+		/// \return Old pointer or NULL.
+		FunctionPtr LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
 
 		/// \brief Run program with parameter.
 		/// \param[in] param Parameter.
