@@ -1,6 +1,18 @@
+Version 0.0.0.7 2010-12-01
+ * Make GP::CheckForParam more strict.
+ * Add static check with ERROR in memory and world.
+ * Fix IF with ERROR condition.
+ * Fix bug with loading functions.
+ * Fix bug with loading individual.
+ * Change memory in static check from ERROR to NIL to test analize of world.
+
 Version 0.0.0.6 2010-11-10
  * Fix wrong symbols in reduced output object.
  * Support for saving and loading best individual.
+ * Add IF and EVAL type checking as FUNC.
+ * Add QUOTE? for QUOTE type ckecking.
+ * Change probability of any FUNC choosing.
+ * Fix error in VM::Environment::Eval with LIST type checking.
 
 Version 0.0.0.5 2010-11-09
  * Fix bugs with choosing best when next can be worst.
