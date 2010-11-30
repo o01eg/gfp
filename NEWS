@@ -8,6 +8,9 @@ Snapshot ????-??-?? ToDo
  * Add program optimization.
  * Move VM into library.
 
+Now
+ * Make GP::CheckForParam more strict.
+
 Version 0.0.0.6 2010-11-10
  * Fix wrong symbols in reduced output object.
  * Support for saving and loading best individual.
