@@ -93,7 +93,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		bool first_move = true;
 
 		// static check
-		VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env, VM::ERROR));
+		VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env));
 		VM::Object output = env.Run(input, &circle_count);
 		if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
 		{
@@ -101,7 +101,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		}
 		else
 		{
-			input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env, VM::ERROR));
+			input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env));
 			circle_count = MAX_CIRCLES;
 			output = env.Run(input, &circle_count);
 			if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
@@ -110,7 +110,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			}
 			else
 			{
-				input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env, VM::ERROR));
+				input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env));
 				circle_count = MAX_CIRCLES;
 				output = env.Run(input, &circle_count);
 				if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)

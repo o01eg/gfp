@@ -14,6 +14,7 @@ Now
  * Fix IF with ERROR condition.
  * Fix bug with loading functions.
  * Fix bug with loading individual.
+ * Change memory in static check from ERROR to NIL to test analize of world.
 
 Version 0.0.0.6 2010-11-10
  * Fix wrong symbols in reduced output object.
