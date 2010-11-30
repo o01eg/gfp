@@ -182,6 +182,10 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 						}
 						else
 						{
+							if(cond.GetType() == ERROR)
+							{
+								return cond;
+							}
 							// true
 							obj_to_calc.push_back(otrue);
 						}
