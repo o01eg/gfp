@@ -22,7 +22,7 @@
 #include "ga_utils.h"
 #include "program.h"
 
-const size_t MAX_DEPTH = 24;
+const size_t MAX_DEPTH = 32;
 
 bool GP::CheckForParam(const VM::WeakObject &func)
 {
@@ -36,6 +36,16 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 	{
 		return false;
 	}
+	if(func.GetHead().IsNIL() || func.GetTail().IsNIL())
+	{
+		return false;
+	}
+	//check for bad "( FUNC $ )" pattern
+	VM::WeakObject func_tail = func.GetTail();
+	if((! func_tail.GetHead().IsNIL()) && (func_tail.GetHead().GetType() == VM::PARAM) && func_tail.GetTail().IsNIL())
+	{
+		return false;
+	}
 	stack.push(func);
 	while(! stack.empty())
 	{
@@ -46,8 +56,24 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 		{
 			if(obj.GetType() == VM::LIST)
 			{
-				stack.push(obj.GetHead());
-				stack.push(obj.GetTail());
+				VM::WeakObject head = obj.GetHead();
+				if(! head.IsNIL())
+				{
+					switch(head.GetType())
+					{
+					case VM::QUOTE: // skip all
+						continue;
+					case VM::IF: // check only condition
+						stack.push(obj.GetTail().GetHead());
+						continue;
+					}
+				}
+				while((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
+				{
+					stack.push(obj.GetHead());
+					obj = obj.GetTail();
+				}
+				stack.push(obj); // here obj is not LIST
 			}
 			if(obj.GetType() == VM::PARAM)
 			{
@@ -275,6 +301,15 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		if(prog1.GetADF(adf_index).IsNIL())
 		{
+			if(prog2.GetADF(adf_index).IsNIL())
+			{
+				// both NIL
+				do
+				{
+					adf = GP::GenerateExec(env, funcs, 0);
+				}
+				while(! GP::CheckForParam(adf));
+			}
 			adf = prog2.GetADF(adf_index);
 		}
 		else
