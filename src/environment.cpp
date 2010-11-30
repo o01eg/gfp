@@ -387,6 +387,7 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			function.func = ptr;
 			function.name = name;
 			function.number_param = argc;
+			functions.push_back(function);
 		}
 		return NULL;
 	}
