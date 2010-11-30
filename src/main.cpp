@@ -103,9 +103,13 @@ int main(int argc, char **argv)
 			{
 				ga.Load(filename);
 			}
-			catch(...)
+			catch(std::exception &e)
 			{
-				//do nothing.
+				std::clog << "Catch std::exception: " << e.what() << std::endl;
+			}
+			catch(Glib::Error &e)
+			{
+				std::clog << "Catch Glib::Error: " << e.what() << std::endl;
 			}
 		}
 		std::cout << "Start evolution" << std::endl;

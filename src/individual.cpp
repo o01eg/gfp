@@ -303,7 +303,12 @@ VM::Program Individual::GetProgram(VM::Environment &env) const
 Individual Individual::Load(const char* filename)
 {
 	std::ifstream f(filename);
+	if(f.fail())
+	{
+		throw Glib::Error(1, 0, Glib::ustring::compose("Cann't open file %1", filename));
+	}
 	VM::Environment env;
+	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 	VM::Object obj(env);
 	f >> obj;
 	return Individual(VM::Program(obj));

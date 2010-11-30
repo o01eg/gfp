@@ -17,6 +17,8 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <glibmm/error.h>
+
 #include <cstdlib>
 #include <string>
 #include <algorithm>
@@ -284,27 +286,43 @@ Object str2atom(const std::string& str, Environment &env)
 				{
 					return Object(env, EVAL);
 				}
-				return Object(env, ERROR);
+				if(strup == "ERROR")
+				{
+					return Object(env, ERROR);
+				}
+				throw Glib::Error(1, 0, Glib::ustring::compose("Unknown symbol %1", strup));
 			case '%':
 				value = atol(strup.c_str() + 1);
 				return Object(env, ADF, value);
 			case '$':
 				return Object(env, PARAM);
 			case 'Q':
-				return Object(env, QUOTE);
+				if(strup == "QUOTE")
+				{
+					return Object(env, QUOTE);
+				}
+				throw Glib::Error(1, 0, Glib::ustring::compose("Unknown symbol %1", strup));
 			case 'I':
-				return Object(env, IF);
+				if(strup == "IF")
+				{
+					return Object(env, IF);
+				}
+				throw Glib::Error(1, 0, Glib::ustring::compose("Unknown symbol %1", strup));
 			case 'N':
-				return Object(env);
-			default: // INTEGER or ERROR
+				if(strup == "NIL")
+				{
+					return Object(env);
+				}
+				throw Glib::Error(1, 0, Glib::ustring::compose("Unknown symbol %1", strup));
+			default: // INTEGER
 				if((strup[0] == '-') || ((strup[0] >= '0') && (strup[0] <= '9')))
 				{
 					value = atol(strup.c_str());
 					return Object(env, INTEGER, value);
 				}
-				else
+				else // something strange
 				{
-					return Object(env, ERROR);
+					throw Glib::Error(1, 0, Glib::ustring::compose("Unknown symbol %1", strup));
 				}
 		}
 	}
