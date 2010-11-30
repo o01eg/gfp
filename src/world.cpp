@@ -118,3 +118,28 @@ void World::UpdateCurrentMap()
 	}
 }
 
+VM::Object World::GetErrorWorld(VM::Environment& env) const
+{
+	VM::Object res(env);
+	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	{
+		VM::Object line(env);
+		for(int wm = s_File.GetWidth() - 1; wm >= 0; wm --)
+		{
+			line = VM::Object(VM::Object(env, VM::ERROR), line);
+		}
+		res = VM::Object(line, res);
+	}
+	return res;
+}
+
+VM::Object World::GetErrorWorldLines(VM::Environment &env) const
+{
+	VM::Object res(env);
+	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	{
+		res = VM::Object(VM::Object(env, VM::ERROR), res);
+	}
+	return res;
+}
+

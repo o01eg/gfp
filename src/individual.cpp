@@ -27,8 +27,9 @@
 #include "ga_utils.h"
 #include "world.h"
 
-const size_t MAX_FUNCTIONS = 32;
-const size_t MAX_STOPS = 4; ///< Maximum of stop moves
+const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
+const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
+const size_t MAX_CIRCLES = 1000; ///< Maximum of eval circles.
 
 Individual::Individual(const VM::Program &prog)
 	:m_Result(-1) // new, not yet tested
@@ -85,14 +86,52 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		VM::Object prev_res(env);
 		size_t prev_dir = 0;
 		bool active = true;
+		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
+		bool first_move = true;
+
+		// static check
+		VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env, VM::ERROR));
+		VM::Object output = env.Run(input, &circle_count);
+		if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
+		{
+			result.m_Quality[Result::ST_STATIC_CHECK] = 3;
+		}
+		else
+		{
+			input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env, VM::ERROR));
+			circle_count = MAX_CIRCLES;
+			output = env.Run(input, &circle_count);
+			if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
+			{
+				result.m_Quality[Result::ST_STATIC_CHECK] = 2;
+			}
+			else
+			{
+				input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env, VM::ERROR));
+				circle_count = MAX_CIRCLES;
+				output = env.Run(input, &circle_count);
+				if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
+				{
+					result.m_Quality[Result::ST_STATIC_CHECK] = 1;
+				}
+				else
+				{
+					// program don't access to memory or world cell.
+					ss << std::setw(35) << output << std::endl;
+					result.m_Result = ss.str();
+					results.push_back(result);
+					continue;
+				}
+			}
+		}
 
 		// moving in labirint
 		while(active && max_stops)
 		{
-			size_t circle_count = 1000;
+			circle_count = MAX_CIRCLES;
 			bool changes = false;
 			VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
 			if(! prev_res.IsNIL())
@@ -100,6 +139,15 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				if(res != prev_res)
 				{
 					result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
+				}
+			}
+			if(first_move)
+			{
+				if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
+				{
+					// it's simply bugged program
+					result.m_Quality[Result::ST_STATIC_CHECK] = 0;
+					active = false;
 				}
 			}
 			prev_res = res;

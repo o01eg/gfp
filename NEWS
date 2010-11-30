@@ -10,6 +10,7 @@ Snapshot ????-??-?? ToDo
 
 Now
  * Make GP::CheckForParam more strict.
+ * Add static check with ERROR in memory and world.
 
 Version 0.0.0.6 2010-11-10
  * Fix wrong symbols in reduced output object.

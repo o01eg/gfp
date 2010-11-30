@@ -51,6 +51,16 @@ public:
 	{
 		return m_CurrentMap;
 	}
+
+	/// \brief Get world from ERROR for static check.
+	/// \param[in] env Environment.
+	/// \return World object.
+	VM::Object GetErrorWorld(VM::Environment &env) const;
+
+	/// \brief Get world's lines from ERROR for static check.
+	/// \param[in] env Environment.
+	/// \return World object.
+	VM::Object GetErrorWorldLines(VM::Environment &env) const;
 private:
 	/// \brief Update current map.
 	void UpdateCurrentMap();
