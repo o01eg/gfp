@@ -45,6 +45,7 @@ Object::Object(const Object &obj)
 #endif
 }
 
+#if 0
 Object::Object(const WeakObject& obj)
 	:WeakObject(obj)
 {
@@ -56,6 +57,7 @@ Object::Object(const WeakObject& obj)
 		GetEnv().heap.Attach(m_Pos);
 	}
 }
+#endif
 
 Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
@@ -70,13 +72,13 @@ Object::Object(const Environment &env, Types type)
 	}
 #endif
 	m_Pos = GetEnv().heap.Alloc(0x10 | (type & 0xf), 0);
-#if _DEBUG_OBJECT_
+//#if _DEBUG_OBJECT_
 	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
 	//std::clog << "Create object " << *this;
-#endif
+//#endif
 
 }
 
@@ -93,13 +95,13 @@ Object::Object(const Environment &env, Types type, Heap::UInt value)
 	}
 #endif
 	m_Pos = GetEnv().heap.Alloc((value << 4) | 0x10 | (type & 0xf), value);
-#if _DEBUG_OBJECT_
+//#if _DEBUG_OBJECT_
 	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
 	//std::clog << "Create object " << *this;
-#endif
+//#endif
 
 }
 
@@ -127,13 +129,13 @@ Object::Object(const Object& head, const Object& tail)
 		GetEnv().heap.Attach(tail.m_Pos);
 	}
 	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
-#if _DEBUG_OBJECT_
+//#if _DEBUG_OBJECT_
 	if(! m_Pos)
 	{
 		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
 	}
 	//std::clog << "Create object " << *this;
-#endif
+//#endif
 }
 
 Object::~Object()

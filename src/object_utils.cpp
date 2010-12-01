@@ -20,10 +20,10 @@
 #include <stack>
 #include "object_utils.h"
 
-VM::Object EditList(const VM::WeakObject& list, size_t pos, VM::WeakObject& obj)
+VM::Object EditList(const VM::Object& list, size_t pos, const VM::Object& obj)
 {
-	std::stack<VM::WeakObject> obj_stack;
-	VM::WeakObject p(list);
+	std::stack<VM::Object> obj_stack;
+	VM::Object p(list);
 	while((pos > 0) && (! p.IsNIL()))
 	{
 		obj_stack.push(p.GetHead());

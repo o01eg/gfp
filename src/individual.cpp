@@ -165,7 +165,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				{
 				case VM::LIST:
 					{
-						VM::WeakObject new_mem = res.GetTail();
+						VM::Object new_mem = res.GetTail();
 						if(new_mem != memory)
 						{
 							changes = true;

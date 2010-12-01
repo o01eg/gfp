@@ -102,8 +102,8 @@ bool World::Move(int dir)
 void World::UpdateCurrentMap()
 {
 	int y = m_PosY;
-	std::stack<VM::WeakObject> obj_stack;
-	VM::WeakObject p(m_Map);
+	std::stack<VM::Object> obj_stack;
+	VM::Object p(m_Map);
 	while((y > 0) && (! p.IsNIL()))
 	{
 		obj_stack.push(p.GetHead());

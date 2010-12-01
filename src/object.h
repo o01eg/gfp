@@ -38,7 +38,7 @@ namespace VM
 
 		/// \brief Get Object from WeakObject
 		/// \param[in] obj Weak Object.
-		Object(const WeakObject& obj);
+		//Object(const WeakObject& obj);
 
 		/// \brief Create NIL object.
 		/// \param env Used environment.

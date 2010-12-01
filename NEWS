@@ -12,6 +12,7 @@ Now
  * Add support for current state.
  * Fix for better individuals.
  * Set maximum heap size to 64 MB.
+ * Refuse get Object from WeakObject.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.

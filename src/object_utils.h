@@ -27,7 +27,7 @@
 /// \param[in] pos Position.
 /// \param[in] obj New object.
 /// \return New list.
-VM::Object EditList(const VM::WeakObject& list, size_t pos, VM::WeakObject& obj);
+VM::Object EditList(const VM::Object& list, size_t pos, const VM::Object& obj);
 
 #endif
 

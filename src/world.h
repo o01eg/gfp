@@ -47,7 +47,7 @@ public:
 
 	/// \brief Get current world.
 	/// \return Current world.
-	VM::WeakObject GetCurrentWorld() const
+	VM::Object GetCurrentWorld() const
 	{
 		return m_CurrentMap;
 	}
