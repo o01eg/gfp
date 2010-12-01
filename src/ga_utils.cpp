@@ -75,9 +75,12 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 				}
 				stack.push(obj); // here obj is not LIST
 			}
-			if(obj.GetType() == VM::PARAM)
+			else
 			{
-				return true;
+				if(obj.GetType() == VM::PARAM)
+				{
+					return true;
+				}
 			}
 		}
 	}
