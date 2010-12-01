@@ -126,7 +126,15 @@ VM::Object World::GetErrorWorld(VM::Environment& env) const
 		VM::Object line(env);
 		for(int wm = s_File.GetWidth() - 1; wm >= 0; wm --)
 		{
-			line = VM::Object(VM::Object(env, VM::ERROR), line);
+			if(hm || wm)
+			{
+				line = VM::Object(VM::Object(env, VM::ERROR), line);
+			}
+			else
+			{
+				// avoid simple "(CAR (CAR (CAR $)))" solve.
+				line = VM::Object(VM::Object(env), line);
+			}
 		}
 		res = VM::Object(line, res);
 	}

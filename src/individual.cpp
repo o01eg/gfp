@@ -30,7 +30,7 @@
 
 const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
-const size_t MAX_CIRCLES = 1000; ///< Maximum of eval circles.
+const size_t MAX_CIRCLES = 10000; ///< Maximum of eval circles.
 
 Individual::Individual(const VM::Program &prog)
 	:m_Result(-1) // new, not yet tested
@@ -153,6 +153,10 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				}
 			}
 			prev_res = res;
+			if(circle_count >= MAX_CIRCLES - 1000)
+			{
+				circle_count = MAX_CIRCLES;
+			}
 			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
 			ss << std::setw(35) << res << std::endl;
 			if(! res.IsNIL())

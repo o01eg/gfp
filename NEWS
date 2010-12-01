@@ -10,6 +10,7 @@ Snapshot ????-??-?? ToDo
 
 Now
  * Add support for current state.
+ * Fix for better individuals.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.

@@ -35,8 +35,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_STATIC_CHECK = 0, ///< Result of static check.
-			ST_MOVE_CHANGES, ///< Number of changes moves.
+			ST_MOVE_CHANGES = 0, ///< Number of changes moves.
+			ST_STATIC_CHECK, ///< Result of static check.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_BAD_MOVES, ///< Number of moves with collisions with walls.
 			ST_ANSWER_QUALITY, ///< Level of answer quality.
