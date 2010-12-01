@@ -20,6 +20,7 @@
 #if _DEBUG_HEAP_
 #include <iostream>
 #endif
+#include <new>
 #include <string.h>
 #include "heap.h"
 
@@ -42,6 +43,7 @@ using namespace VM;
 
 const Heap::UInt BLOCK_ADDRESS_OFFSET = 4; ///< Number of bits in position pointed to block.
 const Heap::UInt BLOCK_SIZE = 1 << BLOCK_ADDRESS_OFFSET; ///< Size of blocks in elements.
+const size_t MAX_BLOCKS = 64 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UInt)); ///< Maximum blocks count.
 
 Heap::Heap()
 	:blocks(1)
@@ -178,13 +180,31 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #endif
 	if(! blocks[0][0].tail)
 	{
+		if(blocks.size() >= MAX_BLOCKS)
+		{
+#if _DEBUG_HEAP_
+			std::clog << "Heap " << this << ": Reach maximum blocks: " << blocks.size() + 1 << std::endl;
+#endif
+			return 0;
+		}
 		//allocate new block
 #if _DEBUG_HEAP_
 		std::clog << "Heap " << this << ": Allocate new block. New size is " << blocks.size() + 1 << std::endl;
 #endif
 		blocks.resize(blocks.size() + 1);
 		Heap::UInt last_block = blocks.size() - 1;
-		blocks[last_block] = new Heap::Element[BLOCK_SIZE];
+		try
+		{
+			blocks[last_block] = new Heap::Element[BLOCK_SIZE];
+		}
+		catch(std::bad_alloc &e)
+		{
+#if _DEBUG_HEAP_
+		std::clog << "Heap " << this << ": Cann't alloc block: " << e.what() << std::endl;
+#endif
+			blocks.resize(blocks.size() - 1);
+			return 0;
+		}
 		memset(blocks[last_block], 0, BLOCK_SIZE * sizeof(Heap::Element));
 		blocks[0][0].tail = last_block << BLOCK_ADDRESS_OFFSET;
 	}
