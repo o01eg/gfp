@@ -26,6 +26,7 @@
 #include "ioobject.h"
 #include "ga_utils.h"
 #include "world.h"
+#include "current_state.h"
 
 const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
@@ -82,6 +83,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		World world(env, DATA_DIR "labirint.txt");
 		VM::Program prog = population[i].GetProgram(env);
 		env.SetProgram(prog);
+		CurrentState::s_Program = population[i].GetText();
 		VM::Object memory(env);
 		VM::Object prev_res(env);
 		size_t prev_dir = 0;

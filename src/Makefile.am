@@ -1,6 +1,7 @@
 SUBDIRS = libfunctions ruby
 bin_PROGRAMS = gfp gplisp gptest
-gfp_SOURCES = environment.cpp \
+gfp_SOURCES = current_state.cpp \
+	environment.cpp \
 	ga.cpp \
 	ga_utils.cpp \
 	heap.cpp \
@@ -34,6 +35,7 @@ gptest_SOURCES = dot_dump.cpp \
 	program.cpp \
 	weak_object.cpp
 noinst_HEADERS = conf.h \
+	current_state.h \
 	dot_dump.h \
 	environment.h \
 	errors.h \

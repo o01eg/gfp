@@ -148,7 +148,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	VM::Object res(obj.GetEnv());
 	if(is_exec)
 	{
-		if((rand() % 100) > 70)
+		if((rand() % 100) > 80)
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
 		}
@@ -195,7 +195,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if((rand() % 100) > 70)
+		if((rand() % 100) > 80)
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
 		}

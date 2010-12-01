@@ -22,6 +22,7 @@
 #include <csignal>
 #include <string>
 #include "ga.h"
+#include "current_state.h"
 
 /// \brief Maximum step for persistent best individuals.
 const size_t MAX_STEP_UNCHANGED = 4000;
@@ -43,6 +44,7 @@ void close_handler()
 /// \param signum Number of signal.
 void interrupt_handler(int signum)
 {
+	CurrentState::Dump();
 	app_is_run = false;
 }
 
@@ -132,6 +134,7 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Crossover(2, 3));
 		while((remain_steps > 0) && app_is_run)
 		{
+			CurrentState::s_Generation = generation;
 			if(ga.Step(operations))
 			{
 				std::clog << "Better." << std::endl;
