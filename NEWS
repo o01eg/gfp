@@ -15,6 +15,7 @@ Now
  * Refuse get Object from WeakObject.
  * Set maximum of object to calculate stack in Environment::Eval.
  * Add --enable-static to compile functions statically to avoid stack corruption.
+ * Speedup output objects with setted width.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.

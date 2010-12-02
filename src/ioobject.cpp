@@ -25,7 +25,6 @@
 #include <locale>
 #include <sstream>
 #include <iomanip>
-#include <algorithm>
 #include "ioobject.h"
 
 using namespace VM;
@@ -77,6 +76,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 				break;
 			case LIST:
 				{
+					signed long w = width;
 					std::stack<bool> arrow_stack; // true - head, false - tail
 					std::stack<WeakObject> stack;
 					arrow_stack.push(true);
@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 					WeakObject object(obj);
 					bool arrow = true;
 					//size_t level = 0;
-					while(! stack.empty())
+					while((! stack.empty()) && (w > 0))
 					{
 						object = stack.top();
 						stack.pop();
@@ -94,7 +94,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 						{
 							if(object.IsNIL())
 							{
-								os << "NIL ";
+								if(w > 0)
+								{
+									os << "NIL ";
+									w = std::max(0l, w - 4);
+								}
 							}
 							else
 							{
@@ -105,7 +109,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 									{
 										os << " ";
 									}*/
-									os << "( ";
+									if(w > 0)
+									{
+										os << "( ";
+										w = std::max(0l, w - 2);
+									}
 									//level ++;
 									stack.push(object.GetTail());
 									arrow_stack.push(false);
@@ -114,7 +122,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 								}
 								else
 								{
-									os << object;
+									if(w > 0)
+									{
+										os << std::setw(w) << object;
+										w = std::max(0l, w - 2);
+									}
 								}
 							}
 						}
@@ -122,7 +134,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 						{
 							if(object.IsNIL())
 							{
-								os << ") ";
+								if(w > 0)
+								{
+									os << ") ";
+									w = std::max(0l, w - 2);
+								}
 								//level --;
 							}
 							else
@@ -136,7 +152,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 								}
 								else
 								{
-									os << ". " << object << ") ";
+									if(w > 0)
+									{
+										os << ". " << std::setw(w) << object << ") ";
+										w = std::max(0l, w - 6);
+									}
 									//level --;
 								}
 							}
