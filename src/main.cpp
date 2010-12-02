@@ -25,7 +25,7 @@
 #include "current_state.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 4000;
+const size_t MAX_STEP_UNCHANGED = 10000;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(20);
+		GA ga(24);
 		if(filename)
 		{
 			try
@@ -119,6 +119,9 @@ int main(int argc, char **argv)
 		size_t generation = 0;
 		std::vector<GA::Operation> operations;
 		operations.push_back(GA::Mutation(0));
+		operations.push_back(GA::Mutation(0));
+		operations.push_back(GA::Mutation(0));
+		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(2));
 		operations.push_back(GA::Mutation(3));
