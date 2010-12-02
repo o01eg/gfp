@@ -11,8 +11,10 @@ Snapshot ????-??-?? ToDo
 Now
  * Add support for current state.
  * Fix for better individuals.
- * Set maximum heap size to 64 MB.
+ * Set maximum heap size to 196 blocks.
  * Refuse get Object from WeakObject.
+ * Set maximum of object to calculate stack in Environment::Eval.
+ * Add --enable-static to compile functions statically to avoid stack corruption.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.

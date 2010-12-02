@@ -17,42 +17,38 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "functions.h"
 #include "../object.h"
 
 /// \file functions.cpp
 
-#ifdef _USRDLL
-# define DLLEXPORT __declspec(dllexport)
-#else
-# define DLLEXPORT 
-#endif
-
-using namespace VM;
-
-extern "C"
+#if COMPILE_STATIC
+Environment::Func func_array[] =
 {
-	void DLLEXPORT func_01_cons(const Object& args, Object *result);
-	void DLLEXPORT func_02_car(const Object& args, Object *result);
-	void DLLEXPORT func_03_cdr(const Object& args, Object *result);
-	void DLLEXPORT func_04_is_nil(const Object& args, Object *result);
-	void DLLEXPORT func_05_is_int(const Object& args, Object *result);
-	void DLLEXPORT func_06_is_func(const Object& args, Object *result);
-	void DLLEXPORT func_07_is_adf(const Object& args, Object *result);
-	void DLLEXPORT func_08_is_param(const Object& args, Object *result);
-	void DLLEXPORT func_09_is_quote(const Object& args, Object *result);
-	void DLLEXPORT func_11_is_list(const Object& args, Object *result);
-	void DLLEXPORT func_12_int_plus(const Object& args, Object *result);
-	void DLLEXPORT func_13_int_minus(const Object& args, Object *result);
-	void DLLEXPORT func_14_int_mult(const Object& args, Object *result);
-	void DLLEXPORT func_15_int_div(const Object& args, Object *result);
-	void DLLEXPORT func_16_int_mod(const Object& args, Object *result);
-	void DLLEXPORT func_17_equal(const Object& args, Object *result);
-	void DLLEXPORT func_18_and(const Object& args, Object *result);
-	void DLLEXPORT func_19_or(const Object& args, Object *result);
-	void DLLEXPORT func_20_int_less(const Object& args, Object *result);
-	void DLLEXPORT func_21_int_greater(const Object& args, Object *result);
-	void DLLEXPORT func_22_int_equal(const Object& args, Object *result);
-}
+	Environment::Func(func_01_cons, "CONS", 2),
+	Environment::Func(func_02_car, "CAR", 1),
+	Environment::Func(func_03_cdr, "CDR", 1),
+	Environment::Func(func_04_is_nil, "NULL", 1),
+	Environment::Func(func_05_is_int, "INT", 1),
+	Environment::Func(func_06_is_func, "FUNC", 1),
+	Environment::Func(func_07_is_adf, "ADF", 1),
+	Environment::Func(func_08_is_param, "PARAM", 1),
+	Environment::Func(func_09_is_quote, "QUOTE?", 1),
+	Environment::Func(func_11_is_list, "LIST", 1),
+	Environment::Func(func_12_int_plus, "+", 2),
+	Environment::Func(func_13_int_minus, "-", 2),
+	Environment::Func(func_14_int_mult, "*", 2),
+	Environment::Func(func_15_int_div, "/", 2),
+	Environment::Func(func_16_int_mod, "%", 2),
+	Environment::Func(func_17_equal, "EQ", 2),
+	Environment::Func(func_18_and, "&", 2),
+	Environment::Func(func_19_or, "|", 2),
+	Environment::Func(func_20_int_less, "<", 2),
+	Environment::Func(func_21_int_greater, ">", 2),
+	Environment::Func(func_22_int_equal, "==", 2),
+	Environment::Func()
+};
+#endif
 
 /// \brief CONS - Construct list.
 /// \param args List of arguments.

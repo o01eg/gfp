@@ -44,6 +44,20 @@ namespace VM
 			std::string name; ///< Name of function.
 			unsigned char number_param; ///< Number of parameters.
 
+			/// \brief Constructor for static compilation
+			Func(FunctionPtr func_, const std::string& name_, unsigned char number_param_)
+				:func(func_),
+				name(name_),
+				number_param(number_param_)
+			{
+			}
+
+			/// \brief Default constructor
+			Func()
+				:func(0)
+			{
+			}
+
 			/// \brief Comparsion of names.
 			/// \todo Change it into hash table.
 			/// \param str String for comparsion.
@@ -65,12 +79,16 @@ namespace VM
 		/// \param[in,out] p_circle_counter Circle counter.
 		/// \return Result of evalation or ERROR.
 		Object Eval(const Object &arg1, size_t *p_circle_counter) const;
-
+#if ! COMPILE_STATIC
 		/// \brief Load Functions, described in filename.
 		/// \todo Add upcasing of function's names.
-		/// \param filename Path to file with functions.
+		/// \param[in] filename Path to file with functions.
 		void LoadFunctionsFromFile(const char* filename);
-
+#else
+		/// \brief Load Functions from array.
+		/// \param[in] array Pointer into array of functions (must be default ended)
+		void LoadFunctionsFromArray(Func* array);
+#endif
 		/// \brief Load or replace function.
 		/// \param[in] name Function name
 		/// \param[in] argc Number of agruments.

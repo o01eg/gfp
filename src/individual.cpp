@@ -27,6 +27,9 @@
 #include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"
+#if COMPILE_STATIC
+#include "libfunctions/functions.h"
+#endif
 
 const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
@@ -72,7 +75,11 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 {
 	std::vector<Individual::Result> results;
 	VM::Environment env;
+#if COMPILE_STATIC
+	env.LoadFunctionsFromArray(func_array);
+#else
 	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
+#endif
 	for(size_t i = 0; i < population.size(); i ++)
 	{
 		if(population[i].GetResult().IsTested())
@@ -94,142 +101,148 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		size_t max_stops = MAX_STOPS;
 		bool first_move = true;
 
-		// static check
-		VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env));
-		VM::Object output = env.Run(input, &circle_count);
-		if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
+		try
 		{
-			result.m_Quality[Result::ST_STATIC_CHECK] = 3;
-		}
-		else
-		{
-			input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env));
-			circle_count = MAX_CIRCLES;
-			output = env.Run(input, &circle_count);
+			// static check
+			VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env));
+			VM::Object output = env.Run(input, &circle_count);
 			if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
 			{
-				result.m_Quality[Result::ST_STATIC_CHECK] = 2;
+				result.m_Quality[Result::ST_STATIC_CHECK] = 3;
 			}
 			else
 			{
-				input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env));
+				input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env));
 				circle_count = MAX_CIRCLES;
 				output = env.Run(input, &circle_count);
 				if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
 				{
-					result.m_Quality[Result::ST_STATIC_CHECK] = 1;
+					result.m_Quality[Result::ST_STATIC_CHECK] = 2;
 				}
 				else
 				{
-					// program don't access to memory or world cell.
-					ss << std::setw(35) << output << std::endl;
-					result.m_Result = ss.str();
-					results.push_back(result);
-					continue;
+					input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env));
+					circle_count = MAX_CIRCLES;
+					output = env.Run(input, &circle_count);
+					if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
+					{
+						result.m_Quality[Result::ST_STATIC_CHECK] = 1;
+					}
+					else
+					{
+						// program don't access to memory or world cell.
+						ss << std::setw(35) << output << std::endl;
+						result.m_Result = ss.str();
+						results.push_back(result);
+						continue;
+					}
 				}
 			}
-		}
 
-		// moving in labirint
-		while(active && max_stops)
-		{
-			circle_count = MAX_CIRCLES;
-			bool changes = false;
-			VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
-			if(! prev_res.IsNIL())
-			{
-				if(res != prev_res)
-				{
-					result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
-				}
-			}
-			if(first_move)
-			{
-				if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
-				{
-					// it's simply bugged program
-					result.m_Quality[Result::ST_STATIC_CHECK] = 0;
-					active = false;
-				}
-			}
-			prev_res = res;
-			if(circle_count >= MAX_CIRCLES - 1000)
+			// moving in labirint
+			while(active && max_stops)
 			{
 				circle_count = MAX_CIRCLES;
-			}
-			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
-			ss << std::setw(35) << res << std::endl;
-			if(! res.IsNIL())
-			{
-				switch(res.GetType())
+				bool changes = false;
+				VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
+				if(! prev_res.IsNIL())
 				{
-				case VM::LIST:
+					if(res != prev_res)
 					{
-						VM::Object new_mem = res.GetTail();
-						if(new_mem != memory)
+						result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
+					}
+				}
+				if(first_move)
+				{
+					if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
+					{
+						// it's simply bugged program
+						result.m_Quality[Result::ST_STATIC_CHECK] = 0;
+						active = false;
+					}
+				}
+				prev_res = res;
+				if(circle_count >= MAX_CIRCLES - 1000)
+				{
+					circle_count = MAX_CIRCLES;
+				}
+				result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
+				ss << std::setw(35) << res << std::endl;
+				if(! res.IsNIL())
+				{
+					switch(res.GetType())
+					{
+					case VM::LIST:
 						{
-							changes = true;
-							memory = new_mem;
-						}
-						VM::WeakObject move = res.GetHead();
-						signed long code = 0, direction = 0;
-						result.m_Quality[Result::ST_ANSWER_QUALITY] = CheckMove(move, &code, &direction);
-						if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 6) // got code
-						{
-							result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - 1);
-							if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 10) // got direction
+							VM::Object new_mem = res.GetTail();
+							if(new_mem != memory)
 							{
-								result.m_Quality[Result::ST_DIR_DIFF] = ( direction <= 0 ) ? (direction - 1) : (4 - direction);
-								if(prev_dir)
+								changes = true;
+								memory = new_mem;
+							}
+							VM::WeakObject move = res.GetHead();
+							signed long code = 0, direction = 0;
+							result.m_Quality[Result::ST_ANSWER_QUALITY] = CheckMove(move, &code, &direction);
+							if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 6) // got code
+							{
+								result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - 1);
+								if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 10) // got direction
 								{
-									if((direction % 4 + 1) != prev_dir)
+									result.m_Quality[Result::ST_DIR_DIFF] = ( direction <= 0 ) ? (direction - 1) : (4 - direction);
+									if(prev_dir)
 									{
-										result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+										if((direction % 4 + 1) != prev_dir)
+										{
+											result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+										}
 									}
+									prev_dir = direction % 4 + 1;
+	
+									if((code == 1) && (direction > 0) && (direction <= 4))
+									{
+										result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
+									}
+									if(world.Move(direction % 4 + 1))
+									{
+										changes = true;
+										max_stops = MAX_STOPS;
+										result.m_Quality[Result::ST_GOOD_MOVES] ++;
+									}
+									result.m_Quality[Result::ST_BAD_MOVES] ++;
 								}
-								prev_dir = direction % 4 + 1;
-
-								if((code == 1) && (direction > 0) && (direction <= 4))
-								{
-									result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
-								}
-								if(world.Move(direction % 4 + 1))
-								{
-									changes = true;
-									max_stops = MAX_STOPS;
-									result.m_Quality[Result::ST_GOOD_MOVES] ++;
-								}
-								result.m_Quality[Result::ST_BAD_MOVES] ++;
 							}
 						}
+						break;
+					case VM::ERROR:
+						break;
+					default:
+						result.m_Quality[Result::ST_ANSWER_QUALITY] = 1;
+						break;
 					}
-					break;
-				case VM::ERROR:
-					break;
-				default:
-					result.m_Quality[Result::ST_ANSWER_QUALITY] = 1;
-					break;
 				}
-			}
 
-			if(! changes)
-			{
-				if(memory.IsNIL())
+				if(! changes)
 				{
-					active = false;
+					if(memory.IsNIL())
+					{
+						active = false;
+					}
+					else
+					{
+						memory = VM::Object(env);
+					}
 				}
 				else
 				{
-					memory = VM::Object(env);
+					result.m_Quality[Result::ST_STATE_CHANGES]++;
 				}
+				max_stops --;
 			}
-			else
-			{
-				result.m_Quality[Result::ST_STATE_CHANGES]++;
-			}
-			max_stops --;
 		}
-
+		catch(...)
+		{
+			result.m_Quality[0] = -10000;
+		}
 		result.m_Result = ss.str();
 		results.push_back(result);
 	}
@@ -314,7 +327,11 @@ Individual Individual::Load(const char* filename)
 		throw Glib::Error(1, 0, Glib::ustring::compose("Cann't open file %1", filename));
 	}
 	VM::Environment env;
+#if COMPILE_STATIC
+	env.LoadFunctionsFromArray(func_array);
+#else
 	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
+#endif
 	VM::Object obj(env);
 	f >> obj;
 	return Individual(VM::Program(obj));

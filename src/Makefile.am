@@ -8,6 +8,7 @@ gfp_SOURCES = current_state.cpp \
 	individual.cpp \
 	ioobject.cpp \
 	jobthread.cpp \
+	libfunctions/functions.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object.cpp \
@@ -20,6 +21,7 @@ gplisp_SOURCES = environment.cpp \
 	gplisp.cpp \
 	heap.cpp \
 	ioobject.cpp \
+	libfunctions/functions.cpp \
 	logbuf.cpp \
 	object.cpp \
 	program.cpp \
@@ -30,6 +32,7 @@ gptest_SOURCES = dot_dump.cpp \
 	gptest.cpp \
 	heap.cpp \
 	ioobject.cpp \
+	libfunctions/functions.cpp \
 	logbuf.cpp \
 	object.cpp \
 	program.cpp \
@@ -54,10 +57,13 @@ noinst_HEADERS = conf.h \
 	weak_object.h \
 	world.h \
 	world_file.h
-gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
+if COMPILE_STATIC
+static_CPPFLAGS = -DCOMPILE_STATIC
+endif
+gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" $(static_CPPFLAGS)
 if COMPILE_RUBY
 gfp_LDADD = ruby/librubypp.a
 endif
-gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_EVAL_
-gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_
+gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_EVAL_ $(static_CPPFLAGS)
+gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_ $(static_CPPFLAGS)
 

@@ -22,6 +22,9 @@
 #include "program.h"
 #include "object.h"
 #include "ioobject.h"
+#if COMPILE_STATIC
+#include "libfunctions/functions.h"
+#endif
 
 /// \brief Main Function.
 /// \param argc Number of arguments.
@@ -36,7 +39,11 @@ int main(int argc, char **argv)
 	try
 	{
 		VM::Environment env;
+#if COMPILE_STATIC
+		env.LoadFunctionsFromArray(func_array);
+#else
 		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
+#endif
 		try
 		{
 			VM::Program prog(env, argv[1]);

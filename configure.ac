@@ -61,6 +61,13 @@ AS_IF([test "x$enable_ruby" != xno],
 
 AM_CONDITIONAL(COMPILE_RUBY, test "x$enable_ruby" != xno)
 
+AC_ARG_ENABLE([static],
+	[AS_HELP_STRING([--enable-static],
+		[support for static compiled functions @<:@default=yes@:>@])],
+	[],
+	[enable_static=yes])
+AM_CONDITIONAL(COMPILE_STATIC, test "x$enable_static" != xno)
+
 # == check for header files ==
 
 # == check for typedefs, structers and compiler characteristics ==

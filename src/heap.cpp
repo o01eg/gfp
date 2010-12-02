@@ -17,9 +17,9 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if _DEBUG_HEAP_
+//#if _DEBUG_HEAP_
 #include <iostream>
-#endif
+//#endif
 #include <new>
 #include <string.h>
 #include "heap.h"
@@ -43,7 +43,7 @@ using namespace VM;
 
 const Heap::UInt BLOCK_ADDRESS_OFFSET = 4; ///< Number of bits in position pointed to block.
 const Heap::UInt BLOCK_SIZE = 1 << BLOCK_ADDRESS_OFFSET; ///< Size of blocks in elements.
-const size_t MAX_BLOCKS = 64 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UInt)); ///< Maximum blocks count.
+const size_t MAX_BLOCKS = 300;//1 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UInt)); ///< Maximum blocks count.
 
 Heap::Heap()
 	:blocks(1)
@@ -182,9 +182,9 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	{
 		if(blocks.size() >= MAX_BLOCKS)
 		{
-#if _DEBUG_HEAP_
-			std::clog << "Heap " << this << ": Reach maximum blocks: " << blocks.size() + 1 << std::endl;
-#endif
+//#if _DEBUG_HEAP_
+			std::cerr << "Heap " << this << ": Reach maximum blocks: " << blocks.size() + 1 << std::endl;
+//#endif
 			return 0;
 		}
 		//allocate new block
@@ -244,7 +244,10 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 Heap::UInt Heap::AllocD(const char *at, UInt hash, UInt value, UInt tail)
 {
 	UInt res = Alloc(hash, value, tail);
-	UnsafeAt(res, false).at = at;
+	if(res)
+	{
+		UnsafeAt(res, false).at = at;
+	}
 	return res;
 }
 #endif

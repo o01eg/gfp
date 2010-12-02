@@ -19,6 +19,7 @@
 
 #if _DEBUG_ENV_ || _DEBUG_EVAL_
 #include <iostream>
+#include <iomanip>
 #include "ioobject.h"
 #endif
 #include <fstream>
@@ -32,6 +33,8 @@
 #include "program.h"
 
 using namespace VM;
+
+const size_t MAX_TO_CALC_SIZE = 196;
 
 Environment::Environment()
 	:m_Program(0)
@@ -51,7 +54,7 @@ Environment::~Environment()
 Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 {
 #if _DEBUG_ENV_
-	std::clog << "Evalation object " << arg1 << " in " << this << std::endl;
+	std::clog << "Evalation object " << std::setw(40) << arg1 << " in " << this << std::endl;
 #endif
 	// create all needed stacks
 	std::stack<Object> adf_params_obj;
@@ -66,7 +69,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	while((! obj_to_calc.empty()) && (circle_count))
 	{
 #if _DEBUG_EVAL_
-		std::clog << "===" << std::endl;
+		std::clog << "  --===--  " << std::endl;
 #endif
 		Heap::UInt depth = obj_to_calc.size();
 		while(is_in_adf && (depth <= adf_depth.top()))
@@ -88,7 +91,10 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 		std::clog << "Objects from calculate:" << std::endl;
 		DumpStack(obj_from_calc);
 #endif
-
+		if(obj_to_calc.size() > MAX_TO_CALC_SIZE)
+		{
+			return Object(*this, ERROR);
+		}
 		Object obj = obj_to_calc.back();
 		obj_to_calc.pop_back();
 
@@ -101,8 +107,11 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 			switch(obj.GetType())
 			{
 				case FUNC:
-					// make arguments list and call
-					obj_from_calc.push_back(CallFunction(obj.GetValue(), &obj_from_calc));
+					{
+						// make arguments list and call
+						Object res = CallFunction(obj.GetValue(), &obj_from_calc);
+						obj_from_calc.push_back(res);
+					}
 					break;
 				case LIST:
 					{
@@ -257,7 +266,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	if(obj_from_calc.size() == 1)
 	{
 #if _DEBUG_ENV_
-		std::clog << "Result of evalatuon is " << obj_from_calc.back() << std::endl;
+		std::clog << "Result of evalatuon is " << std::setw(40) << obj_from_calc.back() << std::endl;
 #endif
 		return obj_from_calc.back();
 	}
@@ -270,6 +279,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	}
 }
 
+#if ! COMPILE_STATIC
 void Environment::LoadFunctionsFromFile(const char* filename)
 {
 #if _DEBUG_ENV_
@@ -283,7 +293,11 @@ void Environment::LoadFunctionsFromFile(const char* filename)
 		{
 			std::string line;
 			fin >> line;
-			if(line[0]=='[')
+			if(line[0] == '#')
+			{
+				break;
+			}
+			if(line[0] == '[')
 			{
 				//module
 				std::string module_name;
@@ -375,6 +389,18 @@ void Environment::LoadFunctionsFromFile(const char* filename)
 	}
 }
 
+#else // COMPILE_STATIC
+
+void Environment::LoadFunctionsFromArray(Func* array)
+{
+	while(array->func)
+	{
+		LoadFunction(array->name, array->number_param, array->func);
+		array ++;
+	}
+}
+#endif // COMPILE_STATIC
+
 FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
 {
 	std::vector<Func>::iterator it = std::find(functions.begin(), functions.end(), name);
@@ -418,7 +444,7 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 #endif
 	Object args = GenerateArgsList(function.number_param, ptr_obj_from_calc);
 #if _DEBUG_EVAL_
-		std::clog << "args " << args << std::endl;
+		std::clog << "args " << std::setw(40) << args << std::endl;
 #endif
 	if(args.IsNIL())
 	{
@@ -427,7 +453,7 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 	Object result(*this);
 	function.func(args, &result);
 #if _DEBUG_EVAL_
-	std::clog << " -> " << result << std::endl;
+	std::clog << " -> " << std::setw(40) << result << std::endl;
 #endif
 	return result;
 }
@@ -443,7 +469,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != ERROR)))
 		{
 #if _DEBUG_EVAL_
-			std::clog << "arg " << obj_from_calc.back() << std::endl;
+			std::clog << "arg " << std::setw(40) << obj_from_calc.back() << std::endl;
 #endif
 			arguments.push(obj_from_calc.back());
 			obj_from_calc.pop_back();
@@ -458,7 +484,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 			}
 			else
 			{
-				std::clog << "arg end " << obj_from_calc.back() << std::endl;
+				std::clog << "arg end " << std::setw(40) << obj_from_calc.back() << std::endl;
 			}
 #endif
 			break;
@@ -490,9 +516,10 @@ Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 #if _DEBUG_EVAL_
 void Environment::DumpStack(const std::deque<Object> &stack) const
 {
+	std::clog << "Size: " << stack.size() << std::endl;
 	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); it ++)
 	{
-		std::clog << (*it) << std::endl;
+		std::clog << std::setw(40) << (*it) << std::endl;
 	}
 }
 #endif

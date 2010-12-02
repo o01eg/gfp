@@ -26,6 +26,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <glibmm/error.h>
+#if COMPILE_STATIC
+#include "libfunctions/functions.h"
+#endif
 
 int main(int argc, char **argv)
 {
@@ -37,10 +40,15 @@ int main(int argc, char **argv)
 	{
 		VM::Environment env;
 		{
+#if COMPILE_STATIC
+			env.LoadFunctionsFromArray(func_array);
+#else
 			env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#if 0
+#endif
+#if 1
 			std::vector<std::pair<VM::Object, size_t> > funcs;
 			funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
+			funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
 			for(size_t i = 0 ; i < env.functions.size(); i ++)
 			{
 				funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
@@ -48,10 +56,10 @@ int main(int argc, char **argv)
 #endif
 			std::cout << "Generate program... " << std::endl;
 			VM::Program prg1 = GP::GenerateProg(env, 32);
-
-			std::cout << "prog1 = " << prg1.Save() << std::endl;
-			prg1.Minimize();
-			std::cout << "prog2 = " << prg1.Save() << std::endl;
+			VM::Object arg = GP::GenerateObj(env, funcs, 32);
+			env.SetProgram(prg1);
+			size_t circle_count = 10000;
+			VM::Object res = env.Run(arg, &circle_count);
 #ifdef _DEBUG_HEAP_
 			DotDump(env, "/tmp/1.dot");
 #endif

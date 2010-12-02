@@ -22,11 +22,19 @@
 #include <fstream>
 #include "ga.h"
 
+#if COMPILE_STATIC
+#include "libfunctions/functions.h"
+#endif
+
 GA::GA(size_t population_size_)
 	:m_PopulationSize(population_size_)
 {
 	VM::Environment env;
+#if COMPILE_STATIC
+	env.LoadFunctionsFromArray(func_array);
+#else
 	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
+#endif
 	m_Population = new Population;
 	for(size_t i = 0; i < m_PopulationSize; i ++)
 	{
@@ -59,7 +67,11 @@ bool GA::Step(const std::vector<Operation> &operations)
 	try //added here to avoid memory leak with new_population
 	{
 		VM::Environment env;
+#if COMPILE_STATIC
+		env.LoadFunctionsFromArray(func_array);
+#else
 		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
+#endif
 		// Add best individuals.
 		size_t num_best = m_Population->size() - operations.size();
 		size_t index = num_best;
