@@ -38,6 +38,7 @@ Object str2atom(const std::string& str, Environment &env);
 std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 {
 	std::streamsize width = ostr.width();
+	bool not_width = width ? false : true;
 	ostr.width(0);
 	std::stringstream os;
 	/// \todo Use normal stack.
@@ -84,7 +85,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 					WeakObject object(obj);
 					bool arrow = true;
 					//size_t level = 0;
-					while((! stack.empty()) && (w > 0))
+					while((! stack.empty()) && (not_width || (w > 0)))
 					{
 						object = stack.top();
 						stack.pop();
@@ -94,7 +95,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 						{
 							if(object.IsNIL())
 							{
-								if(w > 0)
+								if(not_width || (w > 0))
 								{
 									os << "NIL ";
 									w = std::max(0l, w - 4);
@@ -109,7 +110,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 									{
 										os << " ";
 									}*/
-									if(w > 0)
+									if(not_width || (w > 0))
 									{
 										os << "( ";
 										w = std::max(0l, w - 2);
@@ -122,7 +123,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 								}
 								else
 								{
-									if(w > 0)
+									if(not_width || (w > 0))
 									{
 										os << std::setw(w) << object;
 										w = std::max(0l, w - 2);
@@ -134,7 +135,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 						{
 							if(object.IsNIL())
 							{
-								if(w > 0)
+								if(not_width || (w > 0))
 								{
 									os << ") ";
 									w = std::max(0l, w - 2);
@@ -152,7 +153,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 								}
 								else
 								{
-									if(w > 0)
+									if(not_width || (w > 0))
 									{
 										os << ". " << std::setw(w) << object << ") ";
 										w = std::max(0l, w - 6);
