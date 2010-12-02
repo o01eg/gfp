@@ -18,6 +18,7 @@ Now
  * Speedup output objects with setted width.
  * Set maximum stack depth in Environment::Eval.
  * Add test for infinity recursion.
+ * Add Ackermann function for tests.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.
