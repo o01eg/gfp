@@ -17,6 +17,7 @@ Now
  * Add --enable-static to compile functions statically to avoid stack corruption.
  * Speedup output objects with setted width.
  * Set maximum stack depth in Environment::Eval.
+ * Add test for infinity recursion.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.
