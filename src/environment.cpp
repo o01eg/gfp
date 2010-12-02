@@ -34,7 +34,7 @@
 
 using namespace VM;
 
-const size_t MAX_TO_CALC_SIZE = 196;
+const size_t MAX_DEPTH = 8192;
 
 Environment::Environment()
 	:m_Program(0)
@@ -86,13 +86,17 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 		}
 
 #if _DEBUG_EVAL_
+		std::clog << "Depth: " << adf_depth.size() << std::endl;
 		std::clog << "Objects to calculate:" << std::endl;
 		DumpStack(obj_to_calc);
 		std::clog << "Objects from calculate:" << std::endl;
 		DumpStack(obj_from_calc);
 #endif
-		if(obj_to_calc.size() > MAX_TO_CALC_SIZE)
+		if(adf_depth.size() > MAX_DEPTH)
 		{
+#if _DEBUG_EVAL_
+			std::clog << "Reach maximum depth." << std::endl;
+#endif
 			return Object(*this, ERROR);
 		}
 		Object obj = obj_to_calc.back();
