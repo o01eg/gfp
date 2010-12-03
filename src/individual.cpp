@@ -194,10 +194,13 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							result.m_Quality[Result::ST_ANSWER_QUALITY] = CheckMove(move, &code, &direction);
 							if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 6) // got code
 							{
-								result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - 1);
+								const signed long CODE_VALUE = -15000;
+								result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - CODE_VALUE);
 								if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 10) // got direction
 								{
-									result.m_Quality[Result::ST_DIR_DIFF] = ( direction <= 0 ) ? (direction - 1) : (4 - direction);
+									const signed long MIN_DIR = 10000;
+									const signed long MAX_DIR = MIN_DIR + 3;
+									result.m_Quality[Result::ST_DIR_DIFF] = (direction < MIN_DIR) ? (direction - MIN_DIR) : (MAX_DIR - direction);
 									if(prev_dir)
 									{
 										if((direction % 4 + 1) != prev_dir)
@@ -207,7 +210,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									}
 									prev_dir = direction % 4 + 1;
 	
-									if((code == 1) && (direction > 0) && (direction <= 4) && (result.m_Quality[Result::ST_ANSWER_QUALITY] >= 100))
+									if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR) && (result.m_Quality[Result::ST_ANSWER_QUALITY] >= 100))
 									{
 										result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
 										result.m_Quality[Result::ST_DIR_DIFF] = 0;
@@ -233,14 +236,14 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 
 				if(! changes)
 				{
-					if(memory.IsNIL())
-					{
+					//if(memory.IsNIL())
+					//{
 						active = false;
-					}
-					else
-					{
-						memory = VM::Object(env);
-					}
+					//}
+					//else
+					//{
+					//	memory = VM::Object(env);
+					//}
 				}
 				else
 				{
