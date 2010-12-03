@@ -34,7 +34,7 @@
 
 using namespace VM;
 
-const size_t MAX_DEPTH = 8192;
+const size_t MAX_DEPTH = 2048;
 
 Environment::Environment()
 	:m_Program(0)
