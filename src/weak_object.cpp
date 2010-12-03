@@ -17,6 +17,7 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stack>
 #include "weak_object.h"
 
 using namespace VM;
@@ -112,7 +113,50 @@ bool WeakObject::operator==(const WeakObject& obj) const
 					case ADF:
 						return GetValue() == obj.GetValue();
 					case LIST:
-						return (GetHead() == obj.GetHead()) && (GetTail() == obj.GetTail());
+						{
+							std::stack<VM::WeakObject> stack;
+							stack.push(*this);
+							stack.push(obj);
+							while(! stack.empty())
+							{
+								VM::WeakObject obj1 = stack.top();
+								stack.pop();
+								VM::WeakObject obj2 = stack.top();
+								stack.pop();
+								if(obj1.IsNIL())
+								{
+									if(! obj2.IsNIL())
+									{
+										return false;
+									}
+								}
+								else
+								{
+									if(obj2.IsNIL())
+									{
+										return false;
+									}
+									else
+									{
+										if((obj1.GetType() == LIST) && (obj2.GetType() == LIST))
+										{
+											stack.push(obj1.GetHead());
+											stack.push(obj2.GetHead());
+											stack.push(obj1.GetTail());
+											stack.push(obj2.GetTail());
+										}
+										else
+										{
+											if(obj1 != obj2)
+											{
+												return false;
+											}
+										}
+									}
+								}
+							}
+							return true;
+						}
 				}
 			}
 			else
