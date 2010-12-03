@@ -35,11 +35,12 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_MOVE_CHANGES = 0, ///< Number of changes moves.
+			ST_DIR_CHANGES = 0, ///< Number of direction changes.
 			ST_STATIC_CHECK, ///< Result of static check.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
-			ST_BAD_MOVES, ///< Number of moves with collisions with walls.
+			ST_SUM_MOVES, ///< Number of summary moves.
 			ST_ANSWER_QUALITY, ///< Level of answer quality.
+			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_MOVE_DIFF, ///< Different from 0 in move code.
 			ST_DIR_DIFF, ///< Different from 1-4 in direction.

@@ -93,6 +93,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		CurrentState::s_Program = population[i].GetText();
 		VM::Object memory(env);
 		VM::Object prev_res(env);
+		VM::Object prev_move(env);
 		size_t prev_dir = 0;
 		bool active = true;
 		size_t circle_count = MAX_CIRCLES;
@@ -180,7 +181,15 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 								changes = true;
 								memory = new_mem;
 							}
-							VM::WeakObject move = res.GetHead();
+							VM::Object move = res.GetHead();
+							if(! prev_move.IsNIL())
+							{
+								if(move != prev_move)
+								{
+									result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+								}
+							}
+							prev_move = move;
 							signed long code = 0, direction = 0;
 							result.m_Quality[Result::ST_ANSWER_QUALITY] = CheckMove(move, &code, &direction);
 							if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 6) // got code
@@ -193,14 +202,15 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									{
 										if((direction % 4 + 1) != prev_dir)
 										{
-											result.m_Quality[Result::ST_MOVE_CHANGES] ++;
+											result.m_Quality[Result::ST_DIR_CHANGES] ++;
 										}
 									}
 									prev_dir = direction % 4 + 1;
 	
-									if((code == 1) && (direction > 0) && (direction <= 4))
+									if((code == 1) && (direction > 0) && (direction <= 4) && (result.m_Quality[Result::ST_ANSWER_QUALITY] >= 100))
 									{
 										result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
+										result.m_Quality[Result::ST_DIR_DIFF] = 0;
 									}
 									if(world.Move(direction % 4 + 1))
 									{
@@ -208,7 +218,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 										max_stops = MAX_STOPS;
 										result.m_Quality[Result::ST_GOOD_MOVES] ++;
 									}
-									result.m_Quality[Result::ST_BAD_MOVES] ++;
+									result.m_Quality[Result::ST_SUM_MOVES] ++;
 								}
 							}
 						}

@@ -25,7 +25,7 @@
 #include "current_state.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 10000;
+const size_t MAX_STEP_UNCHANGED = 50000;
 
 bool app_is_run = true; ///< Application's state variable.
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(24);
+		GA ga(32);
 		if(filename)
 		{
 			try
@@ -121,6 +121,8 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Mutation(0));
 		operations.push_back(GA::Mutation(0));
 		operations.push_back(GA::Mutation(0));
+		operations.push_back(GA::Mutation(0));
+		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(1));
 		operations.push_back(GA::Mutation(2));
@@ -129,9 +131,17 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Mutation(5));
 		operations.push_back(GA::Crossover(0, 1));
 		operations.push_back(GA::Crossover(0, 1));
+		operations.push_back(GA::Crossover(0, 1));
+		operations.push_back(GA::Crossover(0, 2));
+		operations.push_back(GA::Crossover(0, 2));
 		operations.push_back(GA::Crossover(0, 2));
 		operations.push_back(GA::Crossover(0, 3));
+		operations.push_back(GA::Crossover(0, 3));
+		operations.push_back(GA::Crossover(0, 3));
 		operations.push_back(GA::Crossover(0, 4));
+		operations.push_back(GA::Crossover(0, 4));
+		operations.push_back(GA::Crossover(1, 2));
+		operations.push_back(GA::Crossover(1, 2));
 		operations.push_back(GA::Crossover(1, 2));
 		operations.push_back(GA::Crossover(1, 3));
 		operations.push_back(GA::Crossover(2, 3));
@@ -144,11 +154,12 @@ int main(int argc, char **argv)
 				remain_steps = MAX_STEP_UNCHANGED;
 				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
 				std::clog << "result = " << ga.GetBest().GetResult().m_Result;
-				std::clog << "result[MOVE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
+				std::clog << "result[DIR_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
 				std::clog << "result[STATIC_CHECK] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
 				std::clog << "result[GOOD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
-				std::clog << "result[BAD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_BAD_MOVES] << std::endl;
+				std::clog << "result[SUM_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
 				std::clog << "result[ANSWER_QUALITY] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
+				std::clog << "result[MOVE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 				std::clog << "result[ANSWER_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
 				std::clog << "result[MOVE_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
 				std::clog << "result[DIR_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
