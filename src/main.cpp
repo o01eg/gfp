@@ -48,6 +48,24 @@ void interrupt_handler(int signum)
 	app_is_run = false;
 }
 
+/// \brief Dump individual fitness
+/// \param ind Individual.
+void dump_individual(const Individual& ind)
+{
+	std::clog << "result = " << ind.GetResult().m_Result;
+	std::clog << "result[DIR_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
+	std::clog << "result[GOOD_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
+	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
+	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
+	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
+	std::clog << "result[STATIC_CHECK] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
+	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
+	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
+	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
+	std::clog << "result[DIR_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
+	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
+}
+
 /// \brief Main Function.
 /// \param argc Number of arguments.
 /// \param argv Array of arguments.
@@ -152,19 +170,10 @@ int main(int argc, char **argv)
 			{
 				std::clog << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
-				std::clog << "best = " << ga.GetBest().GetText() << std::endl;
-				std::clog << "result = " << ga.GetBest().GetResult().m_Result;
-				std::clog << "result[DIR_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
-				std::clog << "result[STATIC_CHECK] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
-				std::clog << "result[GOOD_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
-				std::clog << "result[SUM_MOVES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
-				std::clog << "result[ANSWER_QUALITY] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
-				std::clog << "result[MOVE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
-				std::clog << "result[ANSWER_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
-				std::clog << "result[MOVE_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
-				std::clog << "result[DIR_DIFF] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
-				std::clog << "result[STATE_CHANGES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
-				std::clog << "result[NEG_CIRCLES] = " << ga.GetBest().GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
+				std::clog << "1st = " << ga.GetBest().GetText() << std::endl;
+				dump_individual(ga.GetBest());
+				std::clog << "2nd = " << ga.GetBest(1).GetText() << std::endl;
+				dump_individual(ga.GetBest(1));
 			}
 			else
 			{
@@ -172,12 +181,16 @@ int main(int argc, char **argv)
 				//std::cout << "steps: " << remain_steps << std::endl;
 			}
 			generation ++;
-			if(generation % 100 == 0)
+			if((generation % 200 == 0) || (remain_steps = MAX_STEP_UNCHANGED))
 			{
 				std::cout << "generation = " << generation << std::endl;
 			}
 		}
-		std::clog << "best = " << ga.GetBest().GetText() << std::endl;
+		std::clog << "1st = " << ga.GetBest().GetText() << std::endl;
+		std::clog << "2nd = " << ga.GetBest(1).GetText() << std::endl;
+		std::clog << "3nd = " << ga.GetBest(2).GetText() << std::endl;
+		std::clog << "4nd = " << ga.GetBest(3).GetText() << std::endl;
+		std::clog << "5nd = " << ga.GetBest(4).GetText() << std::endl;
 		if(filename)
 		{
 			ga.Save(filename);

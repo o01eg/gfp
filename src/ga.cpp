@@ -79,8 +79,14 @@ bool GA::Step(const std::vector<Operation> &operations)
 		{
 			new_population->push_back(m_Population->at(result->GetIndex()));
 		}
-		if(results[0].GetIndex() != 0)
+		if((results[0].GetIndex() != 0) || (results[1].GetIndex() != 1))
 		{
+			std::clog << "  --==--" << std::endl;
+			std::clog << "0 is " << results[0].GetIndex() << std::endl;
+			std::clog << "1 is " << results[1].GetIndex() << std::endl;
+			std::clog << "2 is " << results[2].GetIndex() << std::endl;
+			std::clog << "3 is " << results[3].GetIndex() << std::endl;
+			std::clog << "4 is " << results[4].GetIndex() << std::endl;
 //			ss << "after:" << std::endl;
 //			DumpResults(*new_population, ss);
 			updated = true;

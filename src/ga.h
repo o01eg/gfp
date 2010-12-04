@@ -69,6 +69,15 @@ public:
 		return m_Population->at(0);
 	}
 
+	/// \brief Get best from top individual
+	/// Reference actual only before next Step.
+	/// \param[in] index Index from top.
+	/// \return individual.
+	const Individual& GetBest(size_t index) const
+	{
+		return m_Population->at(index);
+	}
+
 	/// \brief Mutation.
 	/// \param i Index of individual.
 	/// \return Genetic operation.
