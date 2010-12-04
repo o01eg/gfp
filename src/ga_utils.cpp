@@ -151,7 +151,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	VM::Object res(obj.GetEnv());
 	if(is_exec)
 	{
-		if((rand() % 100) > 80)
+		if((rand() % 100) > 90)
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
 		}
@@ -198,7 +198,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if((rand() % 100) > 80)
+		if((rand() % 100) > 90)
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
 		}
@@ -274,7 +274,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 			{
 				new_adf = GP::Mutation(adf, true, funcs, 0);
 			}
-			while(! GP::CheckForParam(new_adf));
+			while((! GP::CheckForParam(new_adf)) || (adf == new_adf));
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
@@ -331,7 +331,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 					{
 						adf = GP::Mutation(prog1.GetADF(adf_index), true, funcs, 0);
 					}
-					while(! GP::CheckForParam(adf));
+					while((! GP::CheckForParam(adf)) || (adf == prog1.GetADF(adf_index)));
 
 				}
 				else
