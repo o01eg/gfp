@@ -87,6 +87,22 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			results.push_back(population[i].GetResult(i));
 			continue;
 		}
+		bool equal_ind = false;
+		for(size_t j = 0; j < i; j ++)
+		{
+			if(population[j].GetText() == population[i].GetText())
+			{
+				equal_ind = true;
+				break;
+			}
+		}
+		if(equal_ind)
+		{
+			Result result(i);
+			result.m_Quality[0] = -100;
+			results.push_back(result);
+			continue;
+		}
 		World world(env, DATA_DIR "labirint.txt");
 		VM::Program prog = population[i].GetProgram(env);
 		env.SetProgram(prog);
@@ -255,6 +271,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		catch(...)
 		{
 			result.m_Quality[0] = -10000;
+			std::cerr << "exception = " << population[i].GetText() << std::endl;
 		}
 		result.m_Result = ss.str();
 		results.push_back(result);
