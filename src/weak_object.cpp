@@ -140,10 +140,13 @@ bool WeakObject::operator==(const WeakObject& obj) const
 									{
 										if((obj1.GetType() == LIST) && (obj2.GetType() == LIST))
 										{
-											stack.push(obj1.GetHead());
-											stack.push(obj2.GetHead());
-											stack.push(obj1.GetTail());
-											stack.push(obj2.GetTail());
+											if(obj1.m_Pos != obj2.m_Pos)
+											{
+												stack.push(obj1.GetHead());
+												stack.push(obj2.GetHead());
+												stack.push(obj1.GetTail());
+												stack.push(obj2.GetTail());
+											}
 										}
 										else
 										{
