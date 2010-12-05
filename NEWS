@@ -24,6 +24,7 @@ Now
  * Show more information about evolution.
  * Avoiding double individual.
  * Speedup comparing objects.
+ * Dump objects for viewing them in gdb.
 
 Version 0.0.0.7 2010-12-01
  * Make GP::CheckForParam more strict.

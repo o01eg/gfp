@@ -186,6 +186,11 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 	return ostr;
 }
 
+void dump_object(const WeakObject& obj, std::streamsize width)
+{
+	std::cout << std::setw(width) << obj << std::endl;
+}
+
 std::istream& operator>>(std::istream& is, Object& obj)
 {
 	/// \todo Use normal stack.
