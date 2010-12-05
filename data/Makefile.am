@@ -3,6 +3,8 @@ EXTRA_DIST = config.rb \
 	1.lsp \
 	2.lsp \
 	3.lsp \
+	4.lsp \
+	ackermann.lsp \
 	labirint.txt
 dist_DATA = $(EXTRA_DIST)
 distdir = $(pkgdatadir)
