@@ -56,10 +56,10 @@ void dump_individual(const Individual& ind)
 	std::clog << "result[DIR_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
 	std::clog << "result[GOOD_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
 	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
+	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
 	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
 	std::clog << "result[STATIC_CHECK] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
-	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
 	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
 	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
 	std::clog << "result[DIR_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 				//std::cout << "steps: " << remain_steps << std::endl;
 			}
 			generation ++;
-			if((generation % 200 == 0) || (remain_steps = MAX_STEP_UNCHANGED))
+			if((generation % 200 == 0) || (remain_steps == MAX_STEP_UNCHANGED))
 			{
 				std::cout << "generation = " << generation << std::endl;
 			}
