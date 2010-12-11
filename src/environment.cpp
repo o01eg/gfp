@@ -267,7 +267,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 
 	(*p_circle_counter) = circle_count;
 
-	if(obj_from_calc.size() == 1)
+	if((obj_from_calc.size() == 1) && (circle_count))
 	{
 #if _DEBUG_ENV_
 		std::clog << "Result of evalatuon is " << std::setw(40) << obj_from_calc.back() << std::endl;
