@@ -216,7 +216,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 								{
 									const signed long MIN_DIR = 10000;
 									const signed long MAX_DIR = MIN_DIR + 3;
-									result.m_Quality[Result::ST_DIR_DIFF] = (direction < MIN_DIR) ? (direction - MIN_DIR) : (MAX_DIR - direction);
+									result.m_Quality[Result::ST_DIR_DIFF] = (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0);
 									if(prev_dir)
 									{
 										if((direction % 4 + 1) != prev_dir)

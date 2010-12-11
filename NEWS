@@ -10,6 +10,7 @@ Snapshot ????-??-?? ToDo
 
 Now
  * Remove check for equality in mutation and crossover because it can break good ADF.
+ * Fix DIR_DIFF status calculating.
 
 Version 0.0.0.8 2010-12-05
  * Add support for current state.
