@@ -8,6 +8,9 @@ Snapshot ????-??-?? ToDo
  * Add program optimization.
  * Move VM into library.
 
+Now
+ * Remove check for equality in mutation and crossover because it can break good ADF.
+
 Version 0.0.0.8 2010-12-05
  * Add support for current state.
  * Fix for better individuals.

@@ -274,7 +274,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 			{
 				new_adf = GP::Mutation(adf, true, funcs, 0);
 			}
-			while((! GP::CheckForParam(new_adf)) || (adf == new_adf));
+			while((! GP::CheckForParam(new_adf)));
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
@@ -331,7 +331,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 					{
 						adf = GP::Mutation(prog1.GetADF(adf_index), true, funcs, 0);
 					}
-					while((! GP::CheckForParam(adf)) || (adf == prog1.GetADF(adf_index)));
+					while((! GP::CheckForParam(adf)));
 
 				}
 				else
