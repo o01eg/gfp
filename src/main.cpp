@@ -54,16 +54,16 @@ void dump_individual(const Individual& ind)
 {
 	std::clog << "result = " << ind.GetResult().m_Result;
 	std::clog << "result[DIR_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
+	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 	std::clog << "result[GOOD_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
 	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
 	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
-	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
 	std::clog << "result[STATIC_CHECK] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
 	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
+	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
 	std::clog << "result[DIR_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
-	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 }
 
 /// \brief Main Function.
@@ -135,6 +135,7 @@ int main(int argc, char **argv)
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		size_t generation = 0;
+#if 0
 		std::vector<GA::Operation> operations;
 		operations.push_back(GA::Mutation(0));
 		operations.push_back(GA::Mutation(0));
@@ -163,17 +164,16 @@ int main(int argc, char **argv)
 		operations.push_back(GA::Crossover(1, 2));
 		operations.push_back(GA::Crossover(1, 3));
 		operations.push_back(GA::Crossover(2, 3));
+#endif
 		while((remain_steps > 0) && app_is_run)
 		{
 			CurrentState::s_Generation = generation;
-			if(ga.Step(operations))
+			if(ga.Step())
 			{
 				std::clog << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
 				std::clog << "1st = " << ga.GetBest().GetText() << std::endl;
 				dump_individual(ga.GetBest());
-				std::clog << "2nd = " << ga.GetBest(1).GetText() << std::endl;
-				dump_individual(ga.GetBest(1));
 			}
 			else
 			{

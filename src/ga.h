@@ -46,9 +46,8 @@ public:
 	}
 
 	/// \brief Step.
-	/// \param operations Rules of creating new generation.
 	/// \return True if best individuals changed.
-	bool Step(const std::vector<Operation> &operations);
+	bool Step();
 	
 	/// \brief Save population
 	/// \param[in] filename File for saving individual.

@@ -44,7 +44,7 @@ GA::GA(size_t population_size_)
 	}
 }
 
-bool GA::Step(const std::vector<Operation> &operations)
+bool GA::Step()
 {
 	Results results = Individual::Execute(*m_Population);
 	if(m_PopulationSize != results.size())
@@ -60,8 +60,6 @@ bool GA::Step(const std::vector<Operation> &operations)
 //	DumpResults(*m_Population, ss);
 	std::stable_sort(results.begin(), results.end());
 	
-	std::vector<Operation>::const_iterator operation;
-	Results::iterator result;
 	Population *new_population = new Population;
 	bool updated = false;
 	try //added here to avoid memory leak with new_population
@@ -72,41 +70,42 @@ bool GA::Step(const std::vector<Operation> &operations)
 #else
 		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 #endif
-		// Add best individuals.
-		size_t num_best = m_Population->size() - operations.size();
-		size_t index = num_best;
-		for(result = results.begin(); index; index --, result++)
+
+		// add elite individual
+		new_population->push_back(m_Population->at(results[0].GetIndex()));
+		if(results[0].GetIndex() != 0)
 		{
-			new_population->push_back(m_Population->at(result->GetIndex()));
-		}
-		if((results[0].GetIndex() != 0) || (results[1].GetIndex() != 1))
-		{
-			std::clog << "  --==--" << std::endl;
-			std::clog << "0 is " << results[0].GetIndex() << std::endl;
-			std::clog << "1 is " << results[1].GetIndex() << std::endl;
-			std::clog << "2 is " << results[2].GetIndex() << std::endl;
-			std::clog << "3 is " << results[3].GetIndex() << std::endl;
-			std::clog << "4 is " << results[4].GetIndex() << std::endl;
-//			ss << "after:" << std::endl;
-//			DumpResults(*new_population, ss);
 			updated = true;
-//			std::cout << ss.str();
 		}
-		// Make genetic operations.
-		for(operation = operations.begin(); operation < operations.end();
-			operation ++)
+
+		// make parent pool by tournament
+		std::vector<size_t> parent_pool;
+		while(parent_pool.size() < m_PopulationSize - 1)
 		{
-			if(operation->first == -1)
+			size_t i1 = rand() % results.size();
+			size_t i2 = rand() % results.size();
+			parent_pool.push_back(std::min(results[i1], results[i2]).GetIndex());
+		}
+
+		//make new population
+		while(new_population->size() < m_PopulationSize)
+		{
+			switch(rand() % 3)
 			{
-				// Mutation.
-				new_population->push_back(Individual::Mutation(env, m_Population->at(results[operation->second].GetIndex())));
-			}
-			else
-			{
-				// Crossover.
-				new_population->push_back(Individual::Crossover(env, m_Population->at(results[operation->first].GetIndex()), m_Population->at(results[operation->second].GetIndex())));
+			case 0:
+				new_population->push_back(m_Population->at(parent_pool[rand() % parent_pool.size()]));
+				break;
+			case 1:
+				// mutation
+				new_population->push_back(Individual::Mutation(env, m_Population->at(parent_pool[rand() % parent_pool.size()])));
+				break;
+			case 2:
+				// crossover
+				new_population->push_back(Individual::Crossover(env, m_Population->at(parent_pool[rand() % parent_pool.size()]), m_Population->at(parent_pool[rand() % parent_pool.size()])));
+				break;
 			}
 		}
+
 	}
 	catch(...)
 	{

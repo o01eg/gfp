@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 		{
 			VM::Program prog(env, argv[1]);
 			env.SetProgram(prog);
-			const size_t MAX_CIRCLES = 40000;
+			const size_t MAX_CIRCLES = 100;
 			size_t max_circles = MAX_CIRCLES;
 			VM::Object a(env);
 			std::cin >> a;
