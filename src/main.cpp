@@ -135,36 +135,7 @@ int main(int argc, char **argv)
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		size_t generation = 0;
-#if 0
-		std::vector<GA::Operation> operations;
-		operations.push_back(GA::Mutation(0));
-		operations.push_back(GA::Mutation(0));
-		operations.push_back(GA::Mutation(0));
-		operations.push_back(GA::Mutation(0));
-		operations.push_back(GA::Mutation(1));
-		operations.push_back(GA::Mutation(1));
-		operations.push_back(GA::Mutation(1));
-		operations.push_back(GA::Mutation(2));
-		operations.push_back(GA::Mutation(3));
-		operations.push_back(GA::Mutation(4));
-		operations.push_back(GA::Mutation(5));
-		operations.push_back(GA::Crossover(0, 1));
-		operations.push_back(GA::Crossover(0, 1));
-		operations.push_back(GA::Crossover(0, 1));
-		operations.push_back(GA::Crossover(0, 2));
-		operations.push_back(GA::Crossover(0, 2));
-		operations.push_back(GA::Crossover(0, 2));
-		operations.push_back(GA::Crossover(0, 3));
-		operations.push_back(GA::Crossover(0, 3));
-		operations.push_back(GA::Crossover(0, 3));
-		operations.push_back(GA::Crossover(0, 4));
-		operations.push_back(GA::Crossover(0, 4));
-		operations.push_back(GA::Crossover(1, 2));
-		operations.push_back(GA::Crossover(1, 2));
-		operations.push_back(GA::Crossover(1, 2));
-		operations.push_back(GA::Crossover(1, 3));
-		operations.push_back(GA::Crossover(2, 3));
-#endif
+
 		while((remain_steps > 0) && app_is_run)
 		{
 			CurrentState::s_Generation = generation;

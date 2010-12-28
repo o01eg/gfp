@@ -13,6 +13,7 @@ Now
  * Fix DIR_DIFF status calculating.
  * Fix evalation at end of circles.
  * Use elitism and tournament selection.
+ * Change move format from "( CODE DIRECTION )" to "( CODE . DIRECTION )"
 
 Version 0.0.0.8 2010-12-05
  * Add support for current state.

@@ -212,7 +212,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							{
 								const signed long CODE_VALUE = -15000;
 								result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - CODE_VALUE);
-								if(result.m_Quality[Result::ST_ANSWER_QUALITY] >= 10) // got direction
+								if(result.m_Quality[Result::ST_ANSWER_QUALITY] == 8) // got direction
 								{
 									const signed long MIN_DIR = 10000;
 									const signed long MAX_DIR = MIN_DIR + 3;
@@ -228,7 +228,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	
 									if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR) && (result.m_Quality[Result::ST_ANSWER_QUALITY] >= 100))
 									{
-										result.m_Quality[Result::ST_ANSWER_QUALITY] = 200;
+										result.m_Quality[Result::ST_ANSWER_QUALITY] = 100;
 										result.m_Quality[Result::ST_DIR_DIFF] = 0;
 									}
 									if(world.Move(direction % 4 + 1))
@@ -312,33 +312,20 @@ size_t Individual::CheckMove(const VM::WeakObject &move, signed long *code, sign
 	{
 		(*code) = static_cast<signed long>(code_obj.GetValue());
 	}
-	if(move.GetTail().IsNIL())
+	VM::WeakObject dir_obj = move.GetTail();
+	if(dir_obj.IsNIL())
 	{
 		return 6;
 	}
-	if(move.GetTail().GetType() != VM::LIST)
-	{
-		return 7;
-	}
-	// move.GetTail() is LIST
-	VM::WeakObject dir_obj = move.GetTail().GetHead();
-	if(dir_obj.IsNIL())
-	{
-		return 8;
-	}
 	if(dir_obj.GetType() != VM::INTEGER)
 	{
-		return 9;
+		return 7;
 	}
 	if(direction)
 	{
 		(*direction) = static_cast<signed long>(dir_obj.GetValue());
 	}
-	if(! move.GetTail().GetTail().IsNIL())
-	{
-		return 10;
-	}
-	return 100;
+	return 8;
 }
 
 VM::Program Individual::GetProgram(VM::Environment &env) const
