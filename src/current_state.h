@@ -47,12 +47,13 @@ public:
 	/// \return Is program run.
 	static bool IsRun()
 	{
-		return s_AppIsRun();
+		return s_AppIsRun;
 	}
 
-	static bool s_AppIsRun; ///< Run flag.
 	static std::string s_Program; ///< Current evalating program.
 	static size_t s_Generation; ///< Current generation.
+private:
+	static bool s_AppIsRun; ///< Run flag.
 };
 
 #endif

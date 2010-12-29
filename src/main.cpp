@@ -27,8 +27,6 @@
 /// \brief Maximum step for persistent best individuals.
 const size_t MAX_STEP_UNCHANGED = 50000;
 
-bool app_is_run = true; ///< Application's state variable.
-
 /// Handler of Ctrl+D event.
 void close_handler()
 {
@@ -37,7 +35,7 @@ void close_handler()
 		char c;
 		std::cin >> c;
 	}
-	app_is_run = false;
+	CurrentState::Shutdown();
 }
 
 /// \brief Handler of Ctrl+C event.
@@ -45,7 +43,7 @@ void close_handler()
 void interrupt_handler(int signum)
 {
 	CurrentState::Dump();
-	app_is_run = false;
+	CurrentState::Shutdown();
 }
 
 /// \brief Dump individual fitness
@@ -135,7 +133,7 @@ int main(int argc, char **argv)
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		size_t generation = 0;
 
-		while((remain_steps > 0) && app_is_run)
+		while((remain_steps > 0) && CurrentState::IsRun())
 		{
 			CurrentState::s_Generation = generation;
 			if(ga.Step())

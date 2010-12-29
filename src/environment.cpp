@@ -31,6 +31,7 @@
 #include "environment.h"
 #include "object.h"
 #include "program.h"
+#include "current_state.h"
 
 using namespace VM;
 
@@ -66,7 +67,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 
 	size_t circle_count = *p_circle_counter;
 
-	while((! obj_to_calc.empty()) && (circle_count))
+	while((! obj_to_calc.empty()) && circle_count && CurrentState::IsRun())
 	{
 #if _DEBUG_EVAL_
 		std::clog << "  --===--  " << std::endl;
@@ -267,7 +268,15 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 
 	(*p_circle_counter) = circle_count;
 
-	if((obj_from_calc.size() == 1) && (circle_count))
+	if(! CurrentState::IsRun())
+	{
+#if _DEBUG_ENV_
+		std::clog << "Environment::Eval: Stop by interrupt." << std::endl;
+#endif
+		return Object(*this, ERROR);
+	}
+
+	if((obj_from_calc.size() == 1) && circle_count)
 	{
 #if _DEBUG_ENV_
 		std::clog << "Result of evalatuon is " << std::setw(40) << obj_from_calc.back() << std::endl;

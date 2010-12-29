@@ -17,7 +17,8 @@ gfp_SOURCES = current_state.cpp \
 	weak_object.cpp \
 	world.cpp \
 	world_file.cpp
-gplisp_SOURCES = environment.cpp \
+gplisp_SOURCES = current_state.cpp \
+	environment.cpp \
 	gplisp.cpp \
 	heap.cpp \
 	ioobject.cpp \
@@ -26,7 +27,8 @@ gplisp_SOURCES = environment.cpp \
 	object.cpp \
 	program.cpp \
 	weak_object.cpp
-gptest_SOURCES = dot_dump.cpp \
+gptest_SOURCES = current_state.cpp \
+	dot_dump.cpp \
 	environment.cpp \
 	ga_utils.cpp \
 	gptest.cpp \

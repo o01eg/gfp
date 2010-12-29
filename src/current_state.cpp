@@ -21,5 +21,5 @@
 
 std::string CurrentState::s_Program;
 size_t CurrentState::s_Generation = 0;
-bool s_AppIsRun = true;
+bool CurrentState::s_AppIsRun = true;
 
