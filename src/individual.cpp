@@ -34,6 +34,7 @@
 const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
 const size_t MAX_CIRCLES = 10000; ///< Maximum of eval circles.
+const size_t MAX_STEPS = 16; ///< Maximum of any moves.
 
 Individual::Individual(const VM::Program &prog)
 	:m_Result(-1) // new, not yet tested
@@ -121,7 +122,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		try
 		{
 			// moving in labirint
-			while(active && max_stops)
+			for(size_t step = 0; active && max_stops && (step < MAX_STEPS); step ++)
 			{
 				circle_count = MAX_CIRCLES;
 				bool changes = false;

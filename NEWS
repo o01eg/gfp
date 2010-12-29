@@ -17,6 +17,7 @@ Now
  * Remove ST_STATIC_CHECK.
  * Move run status into CurrentState.
  * Shutdown Environment::Eval loop.
+ * Set maximum number of steps.
 
 Version 0.0.0.8 2010-12-05
  * Add support for current state.
