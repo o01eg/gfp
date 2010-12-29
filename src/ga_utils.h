@@ -35,14 +35,14 @@ namespace GP
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
 	/// \return Generated object.
-	VM::Object GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
+	VM::Object GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
 
 	/// \brief Generate any object.
 	/// \param env Environment.
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
 	/// \return Generated object.
-	VM::Object GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
+	VM::Object GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
 
 	/// \brief Mutation of objects.
 	/// \param obj Object.
@@ -50,7 +50,7 @@ namespace GP
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
 	/// \return New object.
-	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth);
+	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
 
 	/// \brief Generate new program.
 	/// \param env Environment.

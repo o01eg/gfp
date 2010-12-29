@@ -66,6 +66,14 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 					case VM::IF: // check only condition
 						stack.push(obj.GetTail().GetHead());
 						continue;
+					case VM::ERROR:
+					case VM::INTEGER:
+					case VM::FUNC:
+					case VM::ADF:
+					case VM::PARAM:
+					case VM::LIST:
+					case VM::EVAL:
+						break; // do nothing, only avoid warning
 					}
 				}
 				while((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
@@ -87,7 +95,7 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 	return result;
 }
 
-VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth)
+VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
 {
 	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 5 : 6); // don't choose LIST on more depth.
 	VM::Object res(env);
@@ -114,7 +122,7 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	return res;
 }
 
-VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth)
+VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
 {
 	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 3 : 8); // don't choose LIST on more depth.
 	VM::Object res(env);
@@ -146,7 +154,7 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	return res;
 }
 
-VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, int depth)
+VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
 {
 	VM::Object res(obj.GetEnv());
 	if(is_exec)

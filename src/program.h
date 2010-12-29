@@ -58,7 +58,7 @@ namespace VM
 		/// \brief Get ADF.
 		/// \param num Number of ADF.
 		/// \return ADF.
-		Object GetADF(int num) const
+		Object GetADF(size_t num) const
 		{
 			if(num < m_ADFs.size())
 			{

@@ -111,7 +111,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		VM::Object memory(env);
 		VM::Object prev_res(env);
 		VM::Object prev_move(env);
-		size_t prev_dir = 0;
+		signed long prev_dir = 0;
 		bool active = true;
 		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
