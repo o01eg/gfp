@@ -37,6 +37,20 @@ public:
 		std::cerr << std::endl;
 	}
 
+	/// \brief Shutdown program
+	static void Shutdown()
+	{
+		s_AppIsRun = false;
+	}
+
+	/// \brief Check if program run.
+	/// \return Is program run.
+	static bool IsRun()
+	{
+		return s_AppIsRun();
+	}
+
+	static bool s_AppIsRun; ///< Run flag.
 	static std::string s_Program; ///< Current evalating program.
 	static size_t s_Generation; ///< Current generation.
 };
