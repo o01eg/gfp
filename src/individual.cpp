@@ -81,7 +81,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 #else
 	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
 #endif
-	for(size_t i = 0; i < population.size(); i ++)
+	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); i ++)
 	{
 		if(population[i].GetResult().IsTested())
 		{
@@ -122,7 +122,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		try
 		{
 			// moving in labirint
-			for(size_t step = 0; active && max_stops && (step < MAX_STEPS); step ++)
+			for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); step ++)
 			{
 				circle_count = MAX_CIRCLES;
 				bool changes = false;

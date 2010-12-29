@@ -49,7 +49,7 @@ bool GA::Step()
 	Results results = Individual::Execute(*m_Population);
 	if(m_PopulationSize != results.size())
 	{
-		THROW("Different sizes between population and results of individuals.");
+		return false;
 	}
 	for(size_t i = 0; i < m_PopulationSize; i++)
 	{
