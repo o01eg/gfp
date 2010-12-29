@@ -59,7 +59,6 @@ void dump_individual(const Individual& ind)
 	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
 	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
 	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
-	std::clog << "result[STATIC_CHECK] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATIC_CHECK] << std::endl;
 	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
 	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;

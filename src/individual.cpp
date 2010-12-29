@@ -120,42 +120,6 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 
 		try
 		{
-			// static check
-			VM::Object input = VM::Object(world.GetErrorWorld(env), VM::Object(env));
-			VM::Object output = env.Run(input, &circle_count);
-			if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
-			{
-				result.m_Quality[Result::ST_STATIC_CHECK] = 3;
-			}
-			else
-			{
-				input = VM::Object(world.GetErrorWorldLines(env), VM::Object(env));
-				circle_count = MAX_CIRCLES;
-				output = env.Run(input, &circle_count);
-				if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
-				{
-					result.m_Quality[Result::ST_STATIC_CHECK] = 2;
-				}
-				else
-				{
-					input = VM::Object(VM::Object(env, VM::ERROR), VM::Object(env));
-					circle_count = MAX_CIRCLES;
-					output = env.Run(input, &circle_count);
-					if((! output.IsNIL()) && (output.GetType() == VM::ERROR) && circle_count)
-					{
-						result.m_Quality[Result::ST_STATIC_CHECK] = 1;
-					}
-					else
-					{
-						// program don't access to memory or world cell.
-						ss << std::setw(35) << output << std::endl;
-						result.m_Result = ss.str();
-						results.push_back(result);
-						continue;
-					}
-				}
-			}
-
 			// moving in labirint
 			while(active && max_stops)
 			{
@@ -174,7 +138,6 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 					if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
 					{
 						// it's simply bugged program
-						result.m_Quality[Result::ST_STATIC_CHECK] = 0;
 						active = false;
 					}
 				}
