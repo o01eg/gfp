@@ -74,7 +74,7 @@ Object Program::Save() const
 	return Object(Object(env, INTEGER, m_ADFs.size()), res);
 }
 
-void Program::SetADF(int num, const Object& obj)
+void Program::SetADF(size_t num, const Object& obj)
 {
 	if(m_ADFs.size() <= num)
 	{

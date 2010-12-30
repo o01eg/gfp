@@ -70,7 +70,7 @@ namespace VM
 		/// \brief Set ADF.
 		/// \param num Number of ADF.
 		/// \param obj Source of ADF.
-		void SetADF(int num, const Object& obj);
+		void SetADF(size_t num, const Object& obj);
 
 		/// \brief Get number of not-NIL ADFs.
 		/// \return Number of ADFs.
