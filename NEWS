@@ -7,6 +7,10 @@ Snapshot ????-??-?? ToDo
  * Use own tokenizer.
  * Add program optimization.
  * Move VM into library.
+ * Make callable EVAL.
+
+Now
+ * Remove Ruby support.
 
 Version 0.0.0.9 2010-12-30
  * Remove check for equality in mutation and crossover because it can break good ADF.

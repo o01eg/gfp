@@ -41,26 +41,6 @@ AS_IF([test "x$enable_multithread" != xno],
 
 PKG_CHECK_MODULES([GLIBMM],[glibmm-2.4],[LDFLAGS="$GLIBMM_LIBS $LDFLAGS";CXXFLAGS="$GLIBMM_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GLibmm library])])
 
-# ToDo: delete it when Gentoo move into ruby 1.9
-PATH="/mnt/other/games/ruby/bin:$PATH"
-
-AC_ARG_ENABLE([ruby],
-	[AS_HELP_STRING([--enable-ruby],
-		[support for ruby scripts @<:@default=no@:>@])],
-	[],
-	[enable_ruby=no])
-
-AS_IF([test "x$enable_ruby" != xno],
-	[AM_CHECK_RUBY([1.9])
-	AC_SUBST(CXXFLAGS,"$CXXFLAGS $RUBY_CFLAGS")
-	AC_SUBST(LDFLAGS,"$LDFLAGS $RUBY_LIBS")
-	AC_CHECK_HEADERS([ruby.h],,AC_MSG_ERROR([ruby.h header not found]))
-	AC_CHECK_LIB([ruby], [ruby_init],,AC_MSG_ERROR([ruby library not found]))
-	],
-	[])
-
-AM_CONDITIONAL(COMPILE_RUBY, test "x$enable_ruby" != xno)
-
 AC_ARG_ENABLE([static],
 	[AS_HELP_STRING([--enable-static],
 		[support for static compiled functions @<:@default=yes@:>@])],
@@ -83,7 +63,6 @@ AC_CONFIG_FILES([
     m4/Makefile
     src/Makefile
     src/libfunctions/Makefile
-    src/ruby/Makefile
     tools/Makefile
     win32/Makefile
 ])

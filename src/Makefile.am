@@ -1,4 +1,4 @@
-SUBDIRS = libfunctions ruby
+SUBDIRS = libfunctions
 bin_PROGRAMS = gfp gplisp gptest
 gfp_SOURCES = current_state.cpp \
 	environment.cpp \
@@ -63,9 +63,6 @@ if COMPILE_STATIC
 static_CPPFLAGS = -DCOMPILE_STATIC
 endif
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" $(static_CPPFLAGS)
-if COMPILE_RUBY
-gfp_LDADD = ruby/librubypp.a
-endif
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_EVAL_ $(static_CPPFLAGS)
 gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_ $(static_CPPFLAGS)
 
