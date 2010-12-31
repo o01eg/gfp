@@ -20,7 +20,7 @@ README from 2010-02-21
 	- gthreadmm - for cross-platform threads' support.
 	- ruby-1.9 - for scripts (can be disabled).
 
-   Copyright (C) 2010, O01eg
+   Copyright (C) 2010-2011, O01eg
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

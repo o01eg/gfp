@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2011 O01eg <o01eg@yandex.ru> 
  *
  *  This file is part of Genetic Function Programming.
  *
