@@ -57,7 +57,7 @@ World::World(VM::Environment &env, const char *filename)
 
 bool World::CheckCell(int x, int y) const
 {
-	if((x < 0) || (x >= s_File.GetWidth()) || (y < 0) || (y >= s_File.GetHeight()))
+	if((x < 0) || (x >= static_cast<int>(s_File.GetWidth())) || (y < 0) || (y >= static_cast<int>(s_File.GetHeight())))
 	{
 		return true;
 	}

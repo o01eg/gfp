@@ -35,7 +35,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_DIR_CHANGES = 0, ///< Number of direction changes.
+			ST_DIRS = 0, ///< Number of used directions.
+			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.

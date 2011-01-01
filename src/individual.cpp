@@ -126,6 +126,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
 		bool first_move = true;
+		bool dirs[4] = {false, false, false, false};
 
 		try
 		{
@@ -205,6 +206,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									}
 									if(world.Move(direction % 4 + 1))
 									{
+										dirs[direction % 4] = true;
 										changes = true;
 										max_stops = MAX_STOPS;
 										result.m_Quality[Result::ST_GOOD_MOVES] ++;
@@ -218,7 +220,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 					case VM::ERROR:
 						break;
 					default:
-						result.m_Quality[Result::ST_ANSWER_QUALITY] = 1;
+						result.m_Quality[Result::ST_ANSWER_QUALITY] += 1;
 						break;
 					}
 				}
@@ -239,6 +241,13 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 					result.m_Quality[Result::ST_STATE_CHANGES]++;
 				}
 				max_stops --;
+			}// end moving
+			for(size_t i = 0; i < 4; i ++)
+			{
+				if(dirs[i])
+				{
+					result.m_Quality[Result::ST_DIRS] ++;
+				}
 			}
 		}
 		catch(...)
