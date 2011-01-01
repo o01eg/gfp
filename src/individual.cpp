@@ -31,6 +31,14 @@
 #include "libfunctions/functions.h"
 #endif
 
+inline signed long antioverflow_plus(signed long x, signed long y)
+{
+	const signed long z = x + y;
+	const signed long f = (x ^ y) >> (sizeof(signed long) * 8 - 1); // -1 if different sign 
+	const signed long f1 = (~(x ^ z)) >> (sizeof(signed long) * 8 - 1); // -1 if same sign
+	return (z & (f | f1)) | (x & (~(f | f1)));
+}
+
 const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
 const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
 const size_t MAX_CIRCLES = 10000; ///< Maximum of eval circles.
@@ -176,12 +184,12 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							if(quality >= 6) // got code
 							{
 								const signed long CODE_VALUE = -15000;
-								result.m_Quality[Result::ST_MOVE_DIFF] += -abs(code - CODE_VALUE);
+								result.m_Quality[Result::ST_MOVE_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_MOVE_DIFF], (((code - CODE_VALUE) >= 0) ? -1L : 1L) * (code - CODE_VALUE));
 								if(quality == 8) // got direction
 								{
 									const signed long MIN_DIR = 10000;
 									const signed long MAX_DIR = MIN_DIR + 3;
-									result.m_Quality[Result::ST_DIR_DIFF] += (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0);
+									result.m_Quality[Result::ST_DIR_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_DIR_DIFF], (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0));
 									if(prev_dir)
 									{
 										if((direction % 4 + 1) != prev_dir)
@@ -204,7 +212,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									result.m_Quality[Result::ST_SUM_MOVES] ++;
 								}
 							}
-							result.m_Quality[Result::ST_ANSWER_QUALITY] += quality;
+							result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
 						}
 						break;
 					case VM::ERROR:

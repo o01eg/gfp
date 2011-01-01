@@ -108,7 +108,7 @@ public:
 		{
 			return (m_Index != -1);
 		}
-		int m_Quality[STATUS_VARIABLES];
+		signed long m_Quality[STATUS_VARIABLES];
 		std::string m_Result;
 	private:
 		int m_Index;
