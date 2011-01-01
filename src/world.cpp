@@ -18,6 +18,7 @@
  */
 
 #include <stack>
+#include <algorithm>
 #include "world.h"
 #include "ioobject.h"
 #include "object_utils.h"
@@ -45,6 +46,7 @@ World::World(VM::Environment &env, const char *filename)
 				// Get initial position.
 				m_PosX = wm;
 				m_PosY = hm;
+				m_Area.push_back(std::make_pair(m_PosX, m_PosY));
 				break;
 			}
 			line = VM::Object(obj, line);
@@ -95,6 +97,10 @@ bool World::Move(int dir)
 	}
 	m_PosX += dX;
 	m_PosY += dY;
+	if(std::find(m_Area.begin(), m_Area.end(), std::make_pair(m_PosX, m_PosY)) == m_Area.end())
+	{
+		m_Area.push_back(std::make_pair(m_PosX, m_PosY));		
+	}
 	UpdateCurrentMap();
 	return true;
 }

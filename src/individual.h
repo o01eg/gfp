@@ -35,7 +35,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_DIRS = 0, ///< Number of used directions.
+			ST_AREA_SIZE = 0, ///< Size of path's area.
+			ST_DIRS, ///< Number of used directions.
 			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.

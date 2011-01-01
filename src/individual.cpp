@@ -242,6 +242,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				}
 				max_stops --;
 			}// end moving
+			result.m_Quality[Result::ST_AREA_SIZE] = world.GetAreaSize();
 			for(size_t i = 0; i < 4; i ++)
 			{
 				if(dirs[i])

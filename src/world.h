@@ -61,6 +61,13 @@ public:
 	/// \param[in] env Environment.
 	/// \return World object.
 	VM::Object GetErrorWorldLines(VM::Environment &env) const;
+
+	/// \brief Get area size.
+	/// \return Area size.
+	size_t GetAreaSize() const
+	{
+		return m_Area.size();
+	}
 private:
 	/// \brief Update current map.
 	void UpdateCurrentMap();
@@ -71,5 +78,6 @@ private:
 	VM::Object m_Map; ///< Static map;
 	VM::Object m_CurrentMap; ///< Cureent map with individual.
 	VM::Object m_IndObject; ///< Individual as object.
+	std::vector<std::pair<int, int> > m_Area; ///< Area of path.
 };
 

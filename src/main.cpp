@@ -51,6 +51,7 @@ void interrupt_handler(int signum)
 void dump_individual(const Individual& ind)
 {
 	std::clog << "result = " << ind.GetResult().m_Result;
+	std::clog << "result[AREA_SIZE] = " << ind.GetResult().m_Quality[Individual::Result::ST_AREA_SIZE] << std::endl;
 	std::clog << "result[DIRS] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIRS] << std::endl;
 	std::clog << "result[DIR_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
 	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
