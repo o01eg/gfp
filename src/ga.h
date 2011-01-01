@@ -29,8 +29,9 @@
 class GA
 {
 	typedef std::vector<Individual> Population;
-	typedef std::vector<Individual::Result> Results;
 public:
+	typedef std::vector<Individual::Result> Results;
+
 	/// \brief Genetic operation.
 	/// If first is -1 then it's mutation.
 	/// Numbers mean index of parent.
@@ -48,6 +49,10 @@ public:
 	/// \brief Step.
 	/// \return True if best individuals changed.
 	bool Step();
+
+	/// \brief Examine population.
+	/// \return Results.
+	Results Examine() const;
 	
 	/// \brief Save population
 	/// \param[in] filename File for saving individual.
@@ -60,19 +65,11 @@ public:
 		m_Population->at(m_PopulationSize - 1) = Individual::Load(filename);
 	}
 
-	/// \brief Get best individual.
-	/// Refence actual only before next Step.
-	/// \return best individual.
-	const Individual& GetBest() const
-	{
-		return m_Population->at(0);
-	}
-
-	/// \brief Get best from top individual
+	/// \brief Get individual from population.
 	/// Reference actual only before next Step.
-	/// \param[in] index Index from top.
+	/// \param[in] index Index in population.
 	/// \return individual.
-	const Individual& GetBest(size_t index) const
+	const Individual& GetInd(size_t index) const
 	{
 		return m_Population->at(index);
 	}

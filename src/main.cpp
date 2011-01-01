@@ -135,30 +135,33 @@ int main(int argc, char **argv)
 
 		while((remain_steps > 0) && CurrentState::IsRun())
 		{
+			generation ++;
 			CurrentState::s_Generation = generation;
 			if(ga.Step())
 			{
-				std::clog << "Better." << std::endl;
+				std::clog << std::endl << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
-				std::clog << "1st = " << ga.GetBest().GetText() << std::endl;
-				dump_individual(ga.GetBest());
+				std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
+				dump_individual(ga.GetInd(0));
+				std::clog << "generation = " << generation << std::endl << std::endl;
 			}
 			else
 			{
 				remain_steps --;
 				//std::cout << "steps: " << remain_steps << std::endl;
 			}
-			generation ++;
-			if((generation % 200 == 0) || (remain_steps == MAX_STEP_UNCHANGED))
+			if(generation % 10 == 0)
 			{
-				std::cout << "generation = " << generation << std::endl;
+				std::cout << "\x1b[0`generation = " << generation << "(" << (remain_steps * 100 / MAX_STEP_UNCHANGED) << "%)            ";
+				std::cout.flush();
 			}
 		}
-		std::clog << "1st = " << ga.GetBest().GetText() << std::endl;
-		std::clog << "2nd = " << ga.GetBest(1).GetText() << std::endl;
-		std::clog << "3nd = " << ga.GetBest(2).GetText() << std::endl;
-		std::clog << "4nd = " << ga.GetBest(3).GetText() << std::endl;
-		std::clog << "5nd = " << ga.GetBest(4).GetText() << std::endl;
+		GA::Results results = ga.Examine();
+		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
+		{
+			std::clog << "[" << size_t(results.begin() - it) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
+			dump_individual(ga.GetInd(it->GetIndex()));
+		}
 		if(filename)
 		{
 			ga.Save(filename);

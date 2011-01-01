@@ -44,22 +44,32 @@ GA::GA(size_t population_size_)
 	}
 }
 
-bool GA::Step()
+GA::Results GA::Examine() const
 {
-	Results results = Individual::Execute(*m_Population);
-	if(m_PopulationSize != results.size())
+	Results res = Individual::Execute(*m_Population);
+	if(m_PopulationSize != res.size())
 	{
-		return false;
+		return res;
 	}
 	for(size_t i = 0; i < m_PopulationSize; i++)
 	{
-		(*m_Population)[i].SetResult(results[i]);
+		(*m_Population)[i].SetResult(res[i]);
 	}
 //	std::stringstream ss;
 //	ss << "before:" << std::endl;
 //	DumpResults(*m_Population, ss);
-	std::stable_sort(results.begin(), results.end());
-	
+	std::stable_sort(res.begin(), res.end());
+	return res;
+}
+
+bool GA::Step()
+{
+	Results results = Examine();
+	if(m_PopulationSize != results.size())
+	{
+		return false;
+	}
+
 	Population *new_population = new Population;
 	bool updated = false;
 	try //added here to avoid memory leak with new_population
@@ -128,6 +138,6 @@ void GA::DumpResults(const Population &population, std::ostream& os)
 void GA::Save(const char *filename)
 {
 	std::ofstream f(filename);
-	f << GetBest().GetText();
+	f << GetInd(0).GetText();
 }
 
