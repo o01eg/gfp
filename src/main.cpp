@@ -55,9 +55,9 @@ void dump_individual(const Individual& ind)
 	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
 	std::clog << "result[GOOD_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
 	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
+	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
 	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
 	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
-	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
 	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
 	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
 	std::clog << "result[DIR_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 		GA::Results results = ga.Examine();
 		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
 		{
-			std::clog << "[" << size_t(results.begin() - it) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
+			std::clog << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
 			dump_individual(ga.GetInd(it->GetIndex()));
 		}
 		if(filename)

@@ -176,12 +176,12 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 							if(quality >= 6) // got code
 							{
 								const signed long CODE_VALUE = -15000;
-								result.m_Quality[Result::ST_MOVE_DIFF] = -abs(code - CODE_VALUE);
+								result.m_Quality[Result::ST_MOVE_DIFF] += -abs(code - CODE_VALUE);
 								if(quality == 8) // got direction
 								{
 									const signed long MIN_DIR = 10000;
 									const signed long MAX_DIR = MIN_DIR + 3;
-									result.m_Quality[Result::ST_DIR_DIFF] = (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0);
+									result.m_Quality[Result::ST_DIR_DIFF] += (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0);
 									if(prev_dir)
 									{
 										if((direction % 4 + 1) != prev_dir)
@@ -194,7 +194,6 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR))
 									{
 										quality = 100;
-										result.m_Quality[Result::ST_DIR_DIFF] = 0;
 									}
 									if(world.Move(direction % 4 + 1))
 									{
@@ -205,7 +204,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 									result.m_Quality[Result::ST_SUM_MOVES] ++;
 								}
 							}
-							result.m_Quality[Result::ST_ANSWER_QUALITY] = quality;
+							result.m_Quality[Result::ST_ANSWER_QUALITY] += quality;
 						}
 						break;
 					case VM::ERROR:

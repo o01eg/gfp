@@ -39,12 +39,12 @@ public:
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.
-			ST_ANSWER_QUALITY, ///< Level of answer quality.
-			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_STATE_CHANGES, ///< Number when memory or world changes.
+			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
+			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
-			ST_MOVE_DIFF, ///< Different from 0 in move code.
-			ST_DIR_DIFF, ///< Different from 1-4 in direction.
+			ST_MOVE_DIFF, ///< Different from 0 in move code. (Aggregate by move)
+			ST_DIR_DIFF, ///< Different from 1-4 in direction. (Aggrerage by move)
 			STATUS_VARIABLES
 		};
 
