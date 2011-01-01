@@ -24,7 +24,7 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-ggdb3 -Wall -Wextra -pedantic $CXXFLAGS"
+CXXFLAGS="-ggdb3 -O0 -Wall -Wextra -pedantic `echo $CXXFLAGS | sed \"s/-O.//\"`"
 
 # == check for libraries ==
 
