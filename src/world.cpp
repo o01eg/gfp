@@ -157,3 +157,37 @@ VM::Object World::GetErrorWorldLines(VM::Environment &env) const
 	return res;
 }
 
+std::ostream& operator<<(std::ostream& os, const World& world)
+{
+	for(int hm = -1; hm <= static_cast<int>(world.s_File.GetHeight()); hm ++)
+	{
+		for(int wm = -1; wm <= static_cast<int>(world.s_File.GetWidth()); wm ++)
+		{
+			if(world.CheckCell(wm, hm))
+			{
+				os << "#";
+			}
+			else
+			{
+				if((wm == world.m_PosX) && (hm == world.m_PosY))
+				{
+					os << "@";
+				}
+				else
+				{
+					if(std::find(world.m_Area.begin(), world.m_Area.end(), std::make_pair(wm, hm)) == world.m_Area.end())
+					{
+						os << ".";
+					}
+					else
+					{
+						os << "+";
+					}
+				}
+			}
+		}
+		os << std::endl;
+	}	
+	return os;
+}
+

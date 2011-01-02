@@ -24,6 +24,8 @@
 class World
 {
 public:
+	friend std::ostream& operator<<(std::ostream& os, const World& world);
+
 	/// \brief Construct world from file.
 	/// \param[in] env Environment.
 	/// \param[in] filename Name of file with world.
@@ -80,4 +82,6 @@ private:
 	VM::Object m_IndObject; ///< Individual as object.
 	std::vector<std::pair<int, int> > m_Area; ///< Area of path.
 };
+
+std::ostream& operator<<(std::ostream& os, const World& world);
 

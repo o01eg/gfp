@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 		GA::Results results = ga.Examine();
 		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
 		{
-			std::clog << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
+			std::clog << std::endl << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
 			dump_individual(ga.GetInd(it->GetIndex()));
 		}
 		if(filename)
