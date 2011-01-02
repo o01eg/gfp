@@ -1,2 +1,2 @@
-EXTRA_DIST = ruby.m4
+EXTRA_DIST = ax_pthread.m4
 

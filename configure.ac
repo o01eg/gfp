@@ -30,13 +30,14 @@ CXXFLAGS="-ggdb3 -O0 -Wall -Wextra -pedantic `echo $CXXFLAGS | sed \"s/-O.//\"`"
 
 AC_ARG_ENABLE([multithread],
 	[AS_HELP_STRING([--enable-multithread],
-		[support for miltithreading, dependence on gthread @<:@default=no@:>@])],
+		[support for miltithreading, dependence on pthread @<:@default=no@:>@])],
 	[],
 	[enable_multithread=no])
 
 AS_IF([test "x$enable_multithread" != xno],
-	[],
+	[AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS";CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"], [AC_MSG_ERROR([Sorry, but you need pthread for multithread support.])])],
 	[])
+AM_CONDITIONAL(MULTITHREAD, test "x$enable_multithread" != xno)
 
 GUILE_FLAGS
 
