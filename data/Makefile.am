@@ -1,5 +1,4 @@
-EXTRA_DIST = config.rb \
-	functions.txt \
+EXTRA_DIST = config.scm \
 	1.lsp \
 	2.lsp \
 	3.lsp \

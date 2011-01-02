@@ -59,9 +59,7 @@ noinst_HEADERS = conf.h \
 	weak_object.h \
 	world.h \
 	world_file.h
-if COMPILE_STATIC
-static_CPPFLAGS = -DCOMPILE_STATIC
-endif
+
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" $(static_CPPFLAGS)
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_EVAL_ $(static_CPPFLAGS)
 gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_ $(static_CPPFLAGS)

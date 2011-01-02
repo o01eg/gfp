@@ -35,18 +35,13 @@ AC_ARG_ENABLE([multithread],
 	[enable_multithread=no])
 
 AS_IF([test "x$enable_multithread" != xno],
-	[PKG_CHECK_MODULES([GTHREAD],[gthread-2.0],[LDFLAGS="$GTHREAD_LIBS $LDFLAGS";CXXFLAGS="$GTHREAD_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GThread library])])
-	],
+	[],
 	[])
 
-PKG_CHECK_MODULES([GLIBMM],[glibmm-2.4],[LDFLAGS="$GLIBMM_LIBS $LDFLAGS";CXXFLAGS="$GLIBMM_CFLAGS $CXXFLAGS"],[AC_MSG_ERROR([Sorry, but you need GLibmm library])])
+GUILE_FLAGS
 
-AC_ARG_ENABLE([static],
-	[AS_HELP_STRING([--enable-static],
-		[support for static compiled functions @<:@default=yes@:>@])],
-	[],
-	[enable_static=yes])
-AM_CONDITIONAL(COMPILE_STATIC, test "x$enable_static" != xno)
+CXXFLAGS="$GUILE_CFLAGS $CXXFLAGS"
+LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
 
 # == check for header files ==
 
@@ -64,7 +59,6 @@ AC_CONFIG_FILES([
     src/Makefile
     src/libfunctions/Makefile
     tools/Makefile
-    win32/Makefile
 ])
 
 AC_OUTPUT

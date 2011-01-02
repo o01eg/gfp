@@ -27,7 +27,6 @@
 #include <stack>
 #include <deque>
 #include <algorithm>
-#include <glibmm/module.h>
 #include "environment.h"
 #include "object.h"
 #include "program.h"
@@ -292,118 +291,6 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	}
 }
 
-#if ! COMPILE_STATIC
-void Environment::LoadFunctionsFromFile(const char* filename)
-{
-#if _DEBUG_ENV_
-	std::clog << "Load functions from " << filename << std::endl;
-#endif
-	std::ifstream fin(filename);
-	Glib::Module *module = static_cast<Glib::Module*>(0);
-	try
-	{
-		while(!fin.eof())
-		{
-			std::string line;
-			fin >> line;
-			if(line[0] == '#')
-			{
-				break;
-			}
-			if(line[0] == '[')
-			{
-				//module
-				std::string module_name;
-				for(size_t i = 1; (i < line.size()) && (line[i] != ']'); i ++)
-				{
-					module_name += line[i];
-				}
-				if(module)
-				{
-					delete module;
-					module = static_cast<Glib::Module*>(0);
-				}
-#if _DEBUG_ENV_
-				std::clog << "Load module " << module_name << std::endl;
-				std::clog << Glib::Module::build_path(LIB_DIR, module_name) << std::endl;
-#endif
-				module = new Glib::Module(Glib::Module::build_path(LIB_DIR, module_name), Glib::MODULE_BIND_LAZY);
-#if _DEBUG_ENV_
-				std::clog << module->get_name() << std::endl;
-#endif
-				module->make_resident();
-			}
-			else
-			{
-				if(module)
-				{
-					//function "func_00_eval:1:EVAL"
-					//Environment::Func function;
-					std::string symbol;
-					void* func_ptr;
-					size_t i;
-					for(i = 0; (i < line.size()) && (line[i] != ':'); i ++)
-					{
-						symbol += line[i];
-					}
-					if(module->get_symbol(symbol, func_ptr))
-					{
-						i++;
-						FunctionPtr func = reinterpret_cast<FunctionPtr>(func_ptr);
-						size_t number_param = atoi(line.c_str() + i);
-						for(; (i < line.size()) && (line[i] != ':'); i ++);
-						i++;
-						std::string name;
-						for(; i < line.size(); i ++)
-						{
-							name += line[i];
-						}
-						if(name.size())
-						{
-#if _DEBUG_ENV_
-							std::clog << "Load function " << name << " with " << static_cast<int>(number_param) << " parameters" << std::endl;
-#endif
-							LoadFunction(name, number_param, func);
-						}
-#if _DEBUG_ENV_
-						else
-						{
-							std::clog << "No name" << std::endl;
-						}
-#endif
-					}
-#if _DEBUG_ENV_
-					else
-					{
-						std::clog << "No symbol " << symbol << std::endl;
-					}
-#endif
-				}
-#if _DEBUG_ENV_
-				else
-				{
-					std::clog << "No module" << std::endl;
-				}
-#endif
-			}
-		}
-	}
-	catch(...)
-	{
-		if(module)
-		{
-			delete module;
-		}
-		throw;
-	}
-	if(module)
-	{
-		delete module;
-	}
-}
-
-#else // COMPILE_STATIC
-
 void Environment::LoadFunctionsFromArray(Func* array)
 {
 	while(array->func)
@@ -412,7 +299,6 @@ void Environment::LoadFunctionsFromArray(Func* array)
 		array ++;
 	}
 }
-#endif // COMPILE_STATIC
 
 FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
 {

@@ -40,24 +40,7 @@ Object::Object(const Object &obj)
 	{
 		GetEnv().heap.Attach(m_Pos);
 	}
-#if _DEBUG_OBJECT_
-	//std::clog << "Create object " << *this;
-#endif
 }
-
-#if 0
-Object::Object(const WeakObject& obj)
-	:WeakObject(obj)
-{
-#if _DEBUG_OBJECT_
-	m_AllObjects.insert(this);
-#endif
-	if(m_Pos)
-	{
-		GetEnv().heap.Attach(m_Pos);
-	}
-}
-#endif
 
 Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
@@ -68,18 +51,14 @@ Object::Object(const Environment &env, Types type)
 #if _DEBUG_OBJECT_
 	if((type != ERROR) && (type != PARAM) && (type != QUOTE) && (type != IF) && (type != EVAL))
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non parameterless type %2.", this, type));
+		THROW(FormatString("Object 0x", this, ": Non parameterless type ", type, "."));
 	}
 #endif
 	m_Pos = GetEnv().heap.Alloc(0x10 | (type & 0xf), 0);
-//#if _DEBUG_OBJECT_
 	if(! m_Pos)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
 	}
-	//std::clog << "Create object " << *this;
-//#endif
-
 }
 
 Object::Object(const Environment &env, Types type, Heap::UInt value)
@@ -91,18 +70,15 @@ Object::Object(const Environment &env, Types type, Heap::UInt value)
 #if _DEBUG_OBJECT_
 	if((type != INTEGER) && (type != FUNC) && (type != ADF))
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non one-parameter type %2.", this, type));
+		THROW(FormatString("Object 0x", this, ": Non one-parameter type ", type, "."));
 	}
 #endif
 	m_Pos = GetEnv().heap.Alloc((value << 4) | 0x10 | (type & 0xf), value);
-//#if _DEBUG_OBJECT_
+
 	if(! m_Pos)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
 	}
-	//std::clog << "Create object " << *this;
-//#endif
-
 }
 
 Object::Object(const Object& head, const Object& tail)
@@ -114,7 +90,7 @@ Object::Object(const Object& head, const Object& tail)
 #if _DEBUG_OBJECT_
 	if(&GetEnv() != &tail.GetEnv())
 	{
-		THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environment.", &head, &tail));
+		THROW(FormatString("Object 0x", &head, " and 0x", &tail, ": Different environment."));
 	}
 #endif
 	Heap::UInt hash = LIST;
@@ -129,13 +105,10 @@ Object::Object(const Object& head, const Object& tail)
 		GetEnv().heap.Attach(tail.m_Pos);
 	}
 	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
-//#if _DEBUG_OBJECT_
 	if(! m_Pos)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Couldn't alloc memory", this));
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
 	}
-	//std::clog << "Create object " << *this;
-//#endif
 }
 
 Object::~Object()
@@ -206,7 +179,7 @@ Object& Object::operator=(const Object& obj)
 #if _DEBUG_OBJECT_
 		if(&GetEnv() != &obj.GetEnv())
 		{
-			THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
+			THROW(FormatString("Object 0x", this, " and 0x", &obj, ": Different environments."));
 		}
 #endif
 		if(m_Pos && GetType() == LIST) // If LIST before then use recursive destroing at destructor
@@ -246,7 +219,7 @@ Object Object::GetHead() const
 #if _DEBUG_OBJECT_
 	if(GetType() != LIST)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
+		THROW(FormatString("Object 0x", this, ": Non LIST type ", GetType(), "."));
 	}
 #endif
 	return GetObjectFrom(GetEnv(), GetEnv().heap.At(m_Pos).value);
@@ -257,7 +230,7 @@ Object Object::GetTail() const
 #if _DEBUG_OBJECT_
 	if(GetType() != LIST)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
+		THROW(FormatString("Object 0x", this, ": Non LIST type ", GetType(), "."));
 	}
 #endif
 	return GetObjectFrom(GetEnv(), GetEnv().heap.At(m_Pos).tail);

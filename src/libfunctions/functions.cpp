@@ -22,7 +22,6 @@
 
 /// \file functions.cpp
 
-#if COMPILE_STATIC
 Environment::Func func_array[] =
 {
 	Environment::Func(func_01_cons, "CONS", 2),
@@ -34,21 +33,20 @@ Environment::Func func_array[] =
 	Environment::Func(func_07_is_adf, "ADF", 1),
 	Environment::Func(func_08_is_param, "PARAM", 1),
 	Environment::Func(func_09_is_quote, "QUOTE?", 1),
-	Environment::Func(func_11_is_list, "LIST", 1),
-	Environment::Func(func_12_int_plus, "+", 2),
-	Environment::Func(func_13_int_minus, "-", 2),
-	Environment::Func(func_14_int_mult, "*", 2),
-	Environment::Func(func_15_int_div, "/", 2),
-	Environment::Func(func_16_int_mod, "%", 2),
-	Environment::Func(func_17_equal, "EQ", 2),
-	Environment::Func(func_18_and, "&", 2),
-	Environment::Func(func_19_or, "|", 2),
-	Environment::Func(func_20_int_less, "<", 2),
-	Environment::Func(func_21_int_greater, ">", 2),
-	Environment::Func(func_22_int_equal, "==", 2),
+	Environment::Func(func_10_is_list, "LIST", 1),
+	Environment::Func(func_11_int_plus, "+", 2),
+	Environment::Func(func_12_int_minus, "-", 2),
+	Environment::Func(func_13_int_mult, "*", 2),
+	Environment::Func(func_14_int_div, "/", 2),
+	Environment::Func(func_15_int_mod, "%", 2),
+	Environment::Func(func_16_equal, "EQ", 2),
+	Environment::Func(func_17_and, "&", 2),
+	Environment::Func(func_18_or, "|", 2),
+	Environment::Func(func_19_int_less, "<", 2),
+	Environment::Func(func_20_int_greater, ">", 2),
+	Environment::Func(func_21_int_equal, "==", 2),
 	Environment::Func()
 };
-#endif
 
 /// \brief CONS - Construct list.
 /// \param args List of arguments.
@@ -204,7 +202,7 @@ void func_09_is_quote(const Object& args, Object *result)
 /// \brief LIST - Predicate: true if arg1 has type Object::LIST.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_11_is_list(const Object& args, Object *result)
+void func_10_is_list(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	if((! arg1.IsNIL()) && (arg1.GetType() == LIST))
@@ -223,7 +221,7 @@ void func_11_is_list(const Object& args, Object *result)
 /// \brief + - Adding integers.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_12_int_plus(const Object& args, Object *result)
+void func_11_int_plus(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -241,7 +239,7 @@ void func_12_int_plus(const Object& args, Object *result)
 /// \brief - - Subtract integers.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_13_int_minus(const Object& args, Object *result)
+void func_12_int_minus(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -259,7 +257,7 @@ void func_13_int_minus(const Object& args, Object *result)
 /// \brief * - Multiply integers.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_14_int_mult(const Object& args, Object *result)
+void func_13_int_mult(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -277,7 +275,7 @@ void func_14_int_mult(const Object& args, Object *result)
 /// \brief / - Divide integers.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_15_int_div(const Object& args, Object *result)
+void func_14_int_div(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -295,7 +293,7 @@ void func_15_int_div(const Object& args, Object *result)
 /// \brief % - Division by mobule on integers.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_16_int_mod(const Object& args, Object *result)
+void func_15_int_mod(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -313,7 +311,7 @@ void func_16_int_mod(const Object& args, Object *result)
 /// \brief EQ - Return not-NIL if types and values are equal.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_17_equal(const Object& args, Object *result)
+void func_16_equal(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -331,7 +329,7 @@ void func_17_equal(const Object& args, Object *result)
 /// \brief AND - Return not-NIL if both arguments are not-NIL.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_18_and(const Object& args, Object *result)
+void func_17_and(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -350,7 +348,7 @@ void func_18_and(const Object& args, Object *result)
 /// \brief OR - Return not-NIL if less one of arguments is not-NIL.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_19_or(const Object& args, Object *result)
+void func_18_or(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -369,7 +367,7 @@ void func_19_or(const Object& args, Object *result)
 /// \brief < - Return not-NIL if first argument less than second.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_20_int_less(const Object& args, Object *result)
+void func_19_int_less(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -397,7 +395,7 @@ void func_20_int_less(const Object& args, Object *result)
 /// \brief > - Return not-NIL if first argument greater than second.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_21_int_greater(const Object& args, Object *result)
+void func_20_int_greater(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();
@@ -425,7 +423,7 @@ void func_21_int_greater(const Object& args, Object *result)
 /// \brief == - Return not-NIL if first argument equal second.
 /// \param args List of arguments.
 /// \param result Pointer to result.
-void func_22_int_equal(const Object& args, Object *result)
+void func_21_int_equal(const Object& args, Object *result)
 {
 	const Object& arg1 = args.GetHead();
 	const Object& arg2 = args.GetTail().GetHead();

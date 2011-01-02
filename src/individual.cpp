@@ -27,9 +27,8 @@
 #include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"
-#if COMPILE_STATIC
+
 #include "libfunctions/functions.h"
-#endif
 
 inline signed long antioverflow_plus(signed long x, signed long y)
 {
@@ -84,11 +83,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 {
 	std::vector<Individual::Result> results;
 	VM::Environment env;
-#if COMPILE_STATIC
 	env.LoadFunctionsFromArray(func_array);
-#else
-	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); i ++)
 	{
 		if(population[i].GetResult().IsTested())
@@ -328,14 +323,10 @@ Individual Individual::Load(const char* filename)
 	std::ifstream f(filename);
 	if(f.fail())
 	{
-		throw Glib::Error(1, 0, Glib::ustring::compose("Cann't open file %1", filename));
+		THROW(std::string("Cann't open file ") + filename);
 	}
 	VM::Environment env;
-#if COMPILE_STATIC
 	env.LoadFunctionsFromArray(func_array);
-#else
-	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 	VM::Object obj(env);
 	f >> obj;
 	return Individual(VM::Program(obj));

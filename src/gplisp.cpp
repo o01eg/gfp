@@ -22,9 +22,7 @@
 #include "program.h"
 #include "object.h"
 #include "ioobject.h"
-#if COMPILE_STATIC
 #include "libfunctions/functions.h"
-#endif
 
 /// \brief Main Function.
 /// \param argc Number of arguments.
@@ -39,11 +37,7 @@ int main(int argc, char **argv)
 	try
 	{
 		VM::Environment env;
-#if COMPILE_STATIC
 		env.LoadFunctionsFromArray(func_array);
-#else
-		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 		try
 		{
 			VM::Program prog(env, argv[1]);
@@ -55,7 +49,7 @@ int main(int argc, char **argv)
 			std::cout << "result = " << env.Run(a, &max_circles) << std::endl;
 			std::cout << "use " << (MAX_CIRCLES - max_circles) << " circles" << std::endl;
 		}
-		catch(Glib::Error &e)
+		catch(std::exception &e)
 		{
 			std::cerr << "Catch Glib::Error in environment: " << e.what() << std::endl;
 		}
@@ -63,10 +57,6 @@ int main(int argc, char **argv)
 	catch(std::exception &e)
 	{
 		std::cerr << "Catch std::exception: " << e.what() << std::endl;
-	}
-	catch(Glib::Error &e)
-	{
-		std::cerr << "Catch Glib::Error: " << e.what() << std::endl;
 	}
 
 	return 0;

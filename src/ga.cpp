@@ -22,19 +22,13 @@
 #include <fstream>
 #include "ga.h"
 
-#if COMPILE_STATIC
 #include "libfunctions/functions.h"
-#endif
 
 GA::GA(size_t population_size_)
 	:m_PopulationSize(population_size_)
 {
 	VM::Environment env;
-#if COMPILE_STATIC
 	env.LoadFunctionsFromArray(func_array);
-#else
-	env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 	m_Population = new Population;
 	for(size_t i = 0; i < m_PopulationSize; i ++)
 	{
@@ -75,11 +69,7 @@ bool GA::Step()
 	try //added here to avoid memory leak with new_population
 	{
 		VM::Environment env;
-#if COMPILE_STATIC
 		env.LoadFunctionsFromArray(func_array);
-#else
-		env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 
 		// add elite individual
 		new_population->push_back(m_Population->at(results[0].GetIndex()));

@@ -28,7 +28,7 @@ WeakObject& WeakObject::operator=(const WeakObject& obj)
 	{
 		if(&m_Env != &obj.m_Env)
 		{
-			THROW(Glib::ustring::compose("WeakObject 0x%1 and 0x%2: Different environments.", this, &obj));
+			THROW(FormatString("WeakObject 0x", this, " and 0x", &obj, ": Different environments."));
 		}
 		m_Pos = obj.m_Pos;
 	}
@@ -41,7 +41,7 @@ Heap::UInt WeakObject::GetValue() const
 	Types type = GetType();
 	if((type != INTEGER) && (type != FUNC) && (type != ADF))
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non one-parameter type %2.", this, type));
+		THROW(FormatString("Object 0x", this, ": Non one-parameter type ", type, "."));
 	}
 #endif
 	return m_Env.heap.At(m_Pos).value;	
@@ -52,7 +52,7 @@ WeakObject WeakObject::GetHead() const
 #if _DEBUG_OBJECT_
 	if(GetType() != LIST)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
+		THROW(FormatString("Object 0x", this, ": Non LIST type ", GetType(), "."));
 	}
 #endif
 	return GetWeakObjectFrom(m_Env, m_Env.heap.At(m_Pos).value);
@@ -63,7 +63,7 @@ WeakObject WeakObject::GetTail() const
 #if _DEBUG_OBJECT_
 	if(GetType() != LIST)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1: Non LIST type %2.", this, GetType()));
+		THROW(FormatString("Object 0x", this, ": Non LIST type ", GetType(), "."));
 	}
 #endif
 	return GetWeakObjectFrom(m_Env, m_Env.heap.At(m_Pos).tail);
@@ -81,7 +81,7 @@ bool WeakObject::operator==(const WeakObject& obj) const
 #if _DEBUG_OBJECT_
 	if(&m_Env != &obj.m_Env)
 	{
-		THROW(Glib::ustring::compose("Object 0x%1 and 0x%2: Different environments.", this, &obj));
+		THROW(FormatString("WeakObject 0x", this, " and 0x", &obj, ": Different environments."));
 	}
 #endif
 	if(m_Pos == obj.m_Pos)

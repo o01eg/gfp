@@ -18,7 +18,6 @@
  */
 
 #include <iostream>
-#include <glibmm/thread.h>
 #include <csignal>
 #include <string>
 #include "ga.h"
@@ -75,7 +74,6 @@ int main(int argc, char **argv)
 	signal(SIGINT, interrupt_handler);
 #endif
 
-	Glib::thread_init();
 #if 0
 	Glib::Thread::create(sigc::ptr_fun(close_handler), false);
 #endif
@@ -126,10 +124,6 @@ int main(int argc, char **argv)
 			{
 				std::clog << "Catch std::exception: " << e.what() << std::endl;
 			}
-			catch(Glib::Error &e)
-			{
-				std::clog << "Catch Glib::Error: " << e.what() << std::endl;
-			}
 		}
 		std::cout << "Start evolution" << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
@@ -173,10 +167,6 @@ int main(int argc, char **argv)
 	catch(std::exception &e)
 	{
 		std::clog << "Catch std::exception: " << e.what() << std::endl;
-	}
-	catch(Glib::Error &e)
-	{
-		std::clog << "Catch Glib::Error: " << e.what() << std::endl;
 	}
 	
 	// Finish application.

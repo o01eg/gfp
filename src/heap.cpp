@@ -134,15 +134,15 @@ Heap::Element& Heap::UnsafeAt(Heap::UInt position, bool allow_free)
 #if _DEBUG_HEAP_
 	if(! position)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Request 0 position.", this));
+		THROW(FormatString("Heap 0x", this, ": Request 0 position."));
 	}
 	if(block >= blocks.size())
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Out of array at position %2, block %3.", this, position, block));
+		THROW(FormatString("Heap 0x", this, ": Out of array at position ", position, ", block ", block, "."));
 	}
 	if((! allow_free) && (! blocks[block][offset].hash))
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Request free element at position %1.", this, position));
+		THROW(FormatString("Heap 0x", this, ": Request free element at position ", position, "."));
 	}
 #endif
 	return blocks[block][offset];
@@ -153,17 +153,17 @@ const Heap::Element& Heap::UnsafeAt(Heap::UInt position, bool allow_free) const
 	Heap::UInt block = position >> BLOCK_ADDRESS_OFFSET;
 	Heap::UInt offset = position & (BLOCK_SIZE - 1);
 #if _DEBUG_HEAP_
-	if( !position)
+	if(! position)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Request 0 position.", this));
+		THROW(FormatString("Heap 0x", this, ": Request 0 position."));
 	}
 	if(block >= blocks.size())
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Out of array at position %2, block %3.", this, position, block));
+		THROW(FormatString("Heap 0x", this, ": Out of array at position ", position, ", block ", block, "."));
 	}
 	if((! allow_free) && (! blocks[block][offset].hash))
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Request free element at position %2.", this, position));
+		THROW(FormatString("Heap 0x", this, ": Request free element at position ", position, "."));
 	}
 #endif
 	return blocks[block][offset];
@@ -175,7 +175,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #if _DEBUG_HEAP_
 	if(! hash)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Alloc free element.", this));
+		THROW(FormatString("Heap 0x", this, ": Alloc free element."));
 	}
 #endif
 	if(! blocks[0][0].tail)
@@ -214,7 +214,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #if _DEBUG_HEAP_
 	if(elem.hash)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Trying to allocate used element at position %2.", this, pos));
+		THROW(FormatString("Heap 0x", this, ": Trying to allocate used element at position ", pos, "."));
 	}
 #endif
 	// element is free. Tail point to other free element.
@@ -227,12 +227,6 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	{
 		blocks[0][0].tail = elem.tail;
 	}
-#if 0 // not need now because if check after
-	if(blocks[0][0].tail && UnsafeAt(blocks[0][0].tail, true).hash) // Check new point of free pointer.
-	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Free pointer point to used element at position %2.", this, pos + 1));
-	}
-#endif
 	elem.hash = hash;
 	elem.count = 1;
 	elem.value = value;
@@ -257,7 +251,7 @@ void Heap::Attach(Heap::UInt pos)
 #if _DEBUG_HEAP_
 	if(!pos)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Trying to attach to zero positin", this));
+		THROW(FormatString("Heap 0x", this, ": Trying to attach to zero positin"));
 	}
 #endif
 	Heap::Element& elem = UnsafeAt(pos, false);
@@ -269,7 +263,7 @@ void Heap::Detach(Heap::UInt pos)
 #if _DEBUG_HEAP_
 	if(! pos)
 	{
-		THROW(Glib::ustring::compose("Heap 0x%1: Trying to detach to zero positin", this));
+		THROW(FormatString("Heap 0x", this, ": Trying to detach to zero positin"));
 	}
 #endif
 	Heap::Element& elem = UnsafeAt(pos, false);

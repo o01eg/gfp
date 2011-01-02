@@ -25,10 +25,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
-#include <glibmm/error.h>
-#if COMPILE_STATIC
 #include "libfunctions/functions.h"
-#endif
 
 int main(int argc, char **argv)
 {
@@ -40,11 +37,7 @@ int main(int argc, char **argv)
 	{
 		VM::Environment env;
 		{
-#if COMPILE_STATIC
 			env.LoadFunctionsFromArray(func_array);
-#else
-			env.LoadFunctionsFromFile(DATA_DIR "functions.txt");
-#endif
 #if 1
 			std::vector<std::pair<VM::Object, size_t> > funcs;
 			funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
@@ -64,10 +57,6 @@ int main(int argc, char **argv)
 			DotDump(env, "/tmp/1.dot");
 #endif
 		}
-	}
-	catch(Glib::Error &e)
-	{
-		std::cout << "Glib::Error: " << e.what() << std::endl;
 	}
 	catch(std::exception &e)
 	{

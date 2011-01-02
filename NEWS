@@ -10,6 +10,9 @@ Snapshot ????-??-?? ToDo
  * Make callable EVAL.
  * Use GNU Guile for scripting and config.
 
+Now
+ * Remove GTKmm dependencies.
+
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.
  * Dump full population at the end.
