@@ -1,3 +1,12 @@
+Version 0.0.0.10 2011-01-02
+ * Remove Ruby support.
+ * Dump full population at the end.
+ * Make ST_ANSWER_QUALITY, ST_MOVE_DIFF, ST_DIR_DIFF as aggregative.
+ * Fix overflow in aggregation.
+ * Append ST_DIRS parameter.
+ * Append ST_AREA parameter.
+ * Print world map.
+
 Version 0.0.0.9 2010-12-30
  * Remove check for equality in mutation and crossover because it can break good ADF.
  * Fix DIR_DIFF status calculating.

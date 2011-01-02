@@ -2,7 +2,7 @@
 
 AC_INIT(
  [Genetic Functional Programming],
- [0.0.0.9],
+ [0.0.0.10],
  [o01eg@yandex.ru],
  [gfp])
 
