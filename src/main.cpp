@@ -48,25 +48,6 @@ void interrupt_handler(int signum)
 	VM::Environment::Stop();
 }
 
-/// \brief Dump individual fitness
-/// \param ind Individual.
-void dump_individual(const Individual& ind)
-{
-	std::clog << "result = " << ind.GetResult().m_Result;
-	std::clog << "result[AREA_SIZE] = " << ind.GetResult().m_Quality[Individual::Result::ST_AREA_SIZE] << std::endl;
-	std::clog << "result[DIRS] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIRS] << std::endl;
-	std::clog << "result[DIR_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_CHANGES] << std::endl;
-	std::clog << "result[MOVE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_CHANGES] << std::endl;
-	std::clog << "result[GOOD_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_GOOD_MOVES] << std::endl;
-	std::clog << "result[SUM_MOVES] = " << ind.GetResult().m_Quality[Individual::Result::ST_SUM_MOVES] << std::endl;
-	std::clog << "result[STATE_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_STATE_CHANGES] << std::endl;
-	std::clog << "result[ANSWER_QUALITY] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_QUALITY] << std::endl;
-	std::clog << "result[ANSWER_CHANGES] = " << ind.GetResult().m_Quality[Individual::Result::ST_ANSWER_CHANGES] << std::endl;
-	std::clog << "result[NEG_CIRCLES] = " << ind.GetResult().m_Quality[Individual::Result::ST_NEG_CIRCLES] << std::endl;
-	std::clog << "result[MOVE_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_MOVE_DIFF] << std::endl;
-	std::clog << "result[DIR_DIFF] = " << ind.GetResult().m_Quality[Individual::Result::ST_DIR_DIFF] << std::endl;
-}
-
 /// \brief Main Function.
 /// \param argc Number of arguments.
 /// \param argv Array of arguments.
@@ -141,7 +122,7 @@ int main(int argc, char **argv)
 				std::clog << std::endl << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
 				std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
-				dump_individual(ga.GetInd(0));
+				ga.GetInd(0).GetResult().Dump(std::clog);
 				std::clog << "generation = " << generation << std::endl << std::endl;
 			}
 			else
@@ -159,7 +140,7 @@ int main(int argc, char **argv)
 		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
 		{
 			std::clog << std::endl << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
-			dump_individual(ga.GetInd(it->GetIndex()));
+			ga.GetInd(it->GetIndex()).GetResult().Dump(std::clog);
 		}
 		if(filename)
 		{

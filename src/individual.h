@@ -35,8 +35,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_AREA_SIZE = 0, ///< Size of path's area.
-			ST_DIRS, ///< Number of used directions.
+			ST_DIRS = 0, ///< Number of used directions.
+			ST_AREA_SIZE, ///< Size of path's area.
 			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
@@ -99,12 +99,19 @@ public:
 		}
 		void Dump(std::ostream &os) const
 		{
-			os << std::setw(2) << m_Index << "[" << m_Quality[0];
-			for(size_t j = 1; j < Individual::Result::STATUS_VARIABLES; j ++)
-			{
-				os << "," << m_Quality[j];
-			}
-			os << "]" << std::endl;
+			os << "result = " << m_Result;
+			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
+			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
+			os << "result[DIR_CHANGES] = " << m_Quality[ST_DIR_CHANGES] << std::endl;
+			os << "result[MOVE_CHANGES] = " << m_Quality[ST_MOVE_CHANGES] << std::endl;
+			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
+			os << "result[SUM_MOVES] = " << m_Quality[ST_SUM_MOVES] << std::endl;
+			os << "result[STATE_CHANGES] = " << m_Quality[ST_STATE_CHANGES] << std::endl;
+			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
+			os << "result[ANSWER_CHANGES] = " << m_Quality[ST_ANSWER_CHANGES] << std::endl;
+			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
+			os << "result[MOVE_DIFF] = " << m_Quality[ST_MOVE_DIFF] << std::endl;
+			os << "result[DIR_DIFF] = " << m_Quality[ST_DIR_DIFF] << std::endl;
 		}
 		bool IsTested() const
 		{
