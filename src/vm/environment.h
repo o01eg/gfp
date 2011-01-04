@@ -93,7 +93,7 @@ namespace VM
 
 		/// \brief Run program with parameter.
 		/// \param[in] param Parameter.
-		/// \oaram[in,out] p_circle_counter Circle counter.
+		/// \param[in,out] p_circle_counter Circle counter.
 		/// \return Result.
 		Object Run(const Object& param, size_t *p_circle_counter) const;
 

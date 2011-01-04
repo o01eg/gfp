@@ -1,3 +1,12 @@
+Version 0.0.1 2011-01-04
+ * Remove GTKmm dependencies.
+ * Use GNU Guile for scripting and config.
+ * Move VM into library.
+ * Catch Scheme exceptions.
+ * Load options from Scheme file.
+ * Remove GP test and load other options.
+ * Append --enable-gprof and --enable-debug options.
+
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.
  * Dump full population at the end.

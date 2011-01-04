@@ -8,7 +8,7 @@ Snapshot ????-??-?? ToDo
  * Add program optimization.
  * Make callable EVAL.
 
-Now
+Version 0.0.1 2011-01-04
  * Remove GTKmm dependencies.
  * Use GNU Guile for scripting and config.
  * Move VM into library.
