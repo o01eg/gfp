@@ -59,6 +59,7 @@ AC_CONFIG_FILES([
     m4/Makefile
     src/Makefile
     src/libfunctions/Makefile
+    src/scheme/Makefile
     tools/Makefile
 ])
 

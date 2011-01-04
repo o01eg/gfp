@@ -8,10 +8,10 @@ Snapshot ????-??-?? ToDo
  * Add program optimization.
  * Move VM into library.
  * Make callable EVAL.
- * Use GNU Guile for scripting and config.
 
 Now
  * Remove GTKmm dependencies.
+ * Use GNU Guile for scripting and config.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.

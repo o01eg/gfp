@@ -1,6 +1,8 @@
-SUBDIRS = libfunctions
+SUBDIRS = libfunctions \
+	scheme
 bin_PROGRAMS = gfp gplisp gptest
-gfp_SOURCES = current_state.cpp \
+gfp_SOURCES = conf.cpp \
+	current_state.cpp \
 	environment.cpp \
 	ga.cpp \
 	ga_utils.cpp \
@@ -63,4 +65,6 @@ noinst_HEADERS = conf.h \
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" $(static_CPPFLAGS)
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_EVAL_ $(static_CPPFLAGS)
 gptest_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -D_DEBUG_ENV_ -D_DEBUG_HEAP_ -D_DEBUG_OBJECT_ -D_DEBUG_EVAL_ -D_DOT_MEMORY_ $(static_CPPFLAGS)
+
+gfp_LDADD = scheme/libscheme.a
 

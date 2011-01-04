@@ -22,9 +22,10 @@
 #include <string>
 #include "ga.h"
 #include "current_state.h"
+#include "conf.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = 50000;
+const size_t MAX_STEP_UNCHANGED = Config::Instance().GetSLong();
 
 /// Handler of Ctrl+D event.
 void close_handler()

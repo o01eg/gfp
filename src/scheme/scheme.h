@@ -17,33 +17,27 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _SCHEME_SCHEME_H_
+#define _SCHEME_SCHEME_H_
 
-#include "scheme/scheme.h"
+#include <libguile.h>
 
-/// \brief Signleton for access to config files.
-class Config
+class Scheme
 {
 public:
-	static Config& Instance()
+	static Scheme& Instance()
 	{
-		static Config conf;
-		return conf;
+		static Scheme scheme;
+		return scheme;
 	}
 
-	signed long GetSLong() const
-	{
-		return 2;
-	}
+	SCM PrimitiveLoad(const char *filename);
 private:
-	Config();
-	~Config();
+	Scheme();
+	~Scheme();
 
-	Config(const Config&); ///< 
-	Config& operator=(const Config&);
-
-	SCM m_SCM;
+	Scheme(const Scheme&);
+	Scheme& operator=(const Scheme&);
 };
 
 #endif

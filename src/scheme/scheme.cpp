@@ -17,34 +17,34 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#include "scheme.h"
 
-#include "scheme/scheme.h"
+SCM ScmPrimitiveLoad(void *data);
+SCM ScmHandle(void *data, SCM key, SCM parameter);
 
-/// \brief Signleton for access to config files.
-class Config
+SCM ScmPrimitiveLoad(void *data)
 {
-public:
-	static Config& Instance()
-	{
-		static Config conf;
-		return conf;
-	}
+	return scm_c_primitive_load(reinterpret_cast<const char*>(data));
+}
 
-	signed long GetSLong() const
-	{
-		return 2;
-	}
-private:
-	Config();
-	~Config();
+SCM ScmHandle(void *data, SCM key, SCM parameter)
+{
+	return SCM_BOOL_T;
+}
 
-	Config(const Config&); ///< 
-	Config& operator=(const Config&);
+Scheme::Scheme()
+{
+	scm_init_guile();
+}
 
-	SCM m_SCM;
-};
+Scheme::~Scheme()
+{
+}
 
-#endif
+SCM Scheme::PrimitiveLoad(const char *filename)
+{
+	SCM scm = scm_c_catch(SCM_BOOL_T, ScmPrimitiveLoad, const_cast<void*>(reinterpret_cast<const void*>(filename)), ScmHandle, NULL, NULL, NULL);
+	return scm;
+}
+
 

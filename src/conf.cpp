@@ -17,34 +17,16 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
-
+#include "conf.h"
 #include "scheme/scheme.h"
 
-/// \brief Signleton for access to config files.
-class Config
+Config::Config()
 {
-public:
-	static Config& Instance()
-	{
-		static Config conf;
-		return conf;
-	}
+	Scheme &scheme = Scheme::Instance();
+	m_SCM = scheme.PrimitiveLoad(DATA_DIR "config.scm");
+}
 
-	signed long GetSLong() const
-	{
-		return 2;
-	}
-private:
-	Config();
-	~Config();
-
-	Config(const Config&); ///< 
-	Config& operator=(const Config&);
-
-	SCM m_SCM;
-};
-
-#endif
+Config::~Config()
+{
+}
 
