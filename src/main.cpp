@@ -25,7 +25,7 @@
 #include "conf.h"
 
 /// \brief Maximum step for persistent best individuals.
-const size_t MAX_STEP_UNCHANGED = Config::Instance().GetSLong();
+const size_t MAX_STEP_UNCHANGED = Config::Instance().GetSLong("max-step-unchanged", 100);
 
 /// Handler of Ctrl+D event.
 void close_handler()
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 		}
 #endif
 		// Genetic programming
-		GA ga(32);
+		GA ga(Config::Instance().GetSLong("population-size", 10));
 		if(filename)
 		{
 			try

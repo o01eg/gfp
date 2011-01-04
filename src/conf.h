@@ -20,6 +20,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#include <iostream>
 #include "scheme/scheme.h"
 
 /// \brief Signleton for access to config files.
@@ -32,9 +33,11 @@ public:
 		return conf;
 	}
 
-	signed long GetSLong() const
+	signed long GetSLong(const char *name, signed long def) const
 	{
-		return 2;
+		signed long res = m_Scheme.HashRefSLong(m_HashTable, name, def);
+		std::cout << "Load option " << name << " = " << res << std::endl;
+		return res;
 	}
 private:
 	Config();
@@ -43,7 +46,8 @@ private:
 	Config(const Config&); ///< 
 	Config& operator=(const Config&);
 
-	SCM m_SCM;
+	SCM m_HashTable;
+	Scheme& m_Scheme;
 };
 
 #endif

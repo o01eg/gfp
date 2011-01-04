@@ -18,19 +18,21 @@
  */
 
 #include <iostream>
+#include <stdexcept>
 #include "catch.h"
 
 SCM CatchHandle(void *data, SCM key, SCM parameters)
 {
 	/// \todo Write this.
-	SCM out = scm_current_output_port();
-	std::cout << " Catch error!" << std::endl << "Key: ";
-	std::cout.flush();
+	SCM out = scm_current_error_port();
+	std::cerr << " Catch error!" << std::endl << "Key: ";
+	std::cerr.flush();
 	scm_display(key, out);
-	std::cout << std::endl << "Parameters: ";
-	std::cout.flush();
+	std::cerr << std::endl << "Parameters: ";
+	std::cerr.flush();
 	scm_display(parameters, out);
-	std::cout << std::endl;
-	return SCM_BOOL_T;
+	std::cerr << std::endl;
+	throw std::runtime_error("Scheme error");
+	return SCM_BOOL_F;
 }
 

@@ -19,7 +19,6 @@
 
 #include <iostream>
 #include "scheme.h"
-#include "catch.h"
 
 Scheme::Scheme()
 {

@@ -13,6 +13,7 @@ Now
  * Use GNU Guile for scripting and config.
  * Move VM into library.
  * Catch Scheme exceptions.
+ * Load options from Scheme file.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.

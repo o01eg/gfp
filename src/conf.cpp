@@ -21,9 +21,10 @@
 #include "scheme/scheme.h"
 
 Config::Config()
+	:m_Scheme(Scheme::Instance())
 {
-	Scheme &scheme = Scheme::Instance();
-	m_SCM = scheme.PrimitiveLoad(DATA_DIR "config.scm");
+	m_Scheme.PrimitiveLoad(DATA_DIR "config.scm");
+	m_HashTable = m_Scheme.LookUp("config");
 }
 
 Config::~Config()

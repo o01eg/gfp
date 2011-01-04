@@ -21,6 +21,7 @@
 #define _SCHEME_SCHEME_H_
 
 #include <libguile.h>
+#include "catch.h"
 
 class Scheme
 {
@@ -32,12 +33,33 @@ public:
 	}
 
 	SCM PrimitiveLoad(const char *filename);
+
+	SCM LookUp(const char* symbol)
+	{
+		return scm_variable_ref(Catch(scm_c_lookup, symbol));
+	}
+
+	SCM Symbol(const char *name)
+	{
+		return scm_from_locale_symbol(name);
+	}
+
+	signed long HashRefSLong(SCM hash_table, const char *symbol, signed long def)
+	{
+		return Catch(StaticHashRefSLong, hash_table, Symbol(symbol), scm_from_long(def));
+	}
 private:
 	Scheme();
 	~Scheme();
 
 	Scheme(const Scheme&);
 	Scheme& operator=(const Scheme&);
+
+	static signed long StaticHashRefSLong(SCM hash_table, SCM symbol, SCM def)
+	{
+		SCM value = scm_hashq_ref(hash_table, symbol, def);
+		return scm_to_long(value);
+	}
 };
 
 #endif
