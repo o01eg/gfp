@@ -20,7 +20,7 @@
 #ifndef _OBJECT_UTILS_H_
 #define _OBJECT_UTILS_H_
 
-#include "object.h"
+#include "vm/object.h"
 
 /// \brief Replace object at position in list.
 /// \param[in] list List.

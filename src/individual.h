@@ -23,7 +23,7 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
-#include "program.h"
+#include "vm/program.h"
 
 class Individual
 {

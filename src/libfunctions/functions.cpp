@@ -18,7 +18,7 @@
  */
 
 #include "functions.h"
-#include "../object.h"
+#include "../vm/object.h"
 
 /// \file functions.cpp
 

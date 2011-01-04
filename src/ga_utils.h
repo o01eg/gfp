@@ -20,7 +20,7 @@
 #ifndef _GA_UTILS_H_
 #define _GA_UTILS_H_
 
-#include "object.h"
+#include "vm/object.h"
 
 /// \brief GP-related stuff.
 namespace GP

@@ -18,10 +18,10 @@
  */
 
 #include <iostream>
-#include "environment.h"
-#include "program.h"
-#include "object.h"
-#include "ioobject.h"
+#include "vm/environment.h"
+#include "vm/program.h"
+#include "vm/object.h"
+#include "vm/ioobject.h"
 #include "libfunctions/functions.h"
 
 /// \brief Main Function.

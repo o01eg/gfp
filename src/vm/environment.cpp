@@ -30,11 +30,12 @@
 #include "environment.h"
 #include "object.h"
 #include "program.h"
-#include "current_state.h"
 
 using namespace VM;
 
 const size_t MAX_DEPTH = 1536;
+
+bool Environment::s_Stop = false;
 
 Environment::Environment()
 	:m_Program(0)
@@ -66,7 +67,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 
 	size_t circle_count = *p_circle_counter;
 
-	while((! obj_to_calc.empty()) && circle_count && CurrentState::IsRun())
+	while((! obj_to_calc.empty()) && circle_count && (! s_Stop))
 	{
 #if _DEBUG_EVAL_
 		std::clog << "  --===--  " << std::endl;
@@ -267,7 +268,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 
 	(*p_circle_counter) = circle_count;
 
-	if(! CurrentState::IsRun())
+	if(s_Stop)
 	{
 #if _DEBUG_ENV_
 		std::clog << "Environment::Eval: Stop by interrupt." << std::endl;

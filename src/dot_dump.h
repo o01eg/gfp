@@ -21,7 +21,7 @@
 #define _DOT_DUMP_H_
 
 #ifdef _DEBUG_HEAP_
-#include "environment.h"
+#include "vm/environment.h"
 
 void DotDump(VM::Environment &env, const char* filename);
 #endif

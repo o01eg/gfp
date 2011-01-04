@@ -20,7 +20,7 @@
 #ifndef _FUNCTIONS_H_
 #define _FUNCTIONS_H_
 
-#include "environment.h"
+#include "vm/environment.h"
 
 using namespace VM;
 

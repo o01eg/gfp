@@ -20,7 +20,7 @@
 #include <stack>
 #include <algorithm>
 #include "world.h"
-#include "ioobject.h"
+#include "vm/ioobject.h"
 #include "object_utils.h"
 
 WorldFile World::s_File;

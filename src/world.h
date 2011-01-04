@@ -17,7 +17,7 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "object.h"
+#include "vm/object.h"
 #include "world_file.h"
 
 /// \brief Class is describing world for individuals.

@@ -6,12 +6,12 @@ Snapshot ????-??-?? ToDo
  * Move functions info into library instead text file.
  * Use own tokenizer.
  * Add program optimization.
- * Move VM into library.
  * Make callable EVAL.
 
 Now
  * Remove GTKmm dependencies.
  * Use GNU Guile for scripting and config.
+ * Move VM into library.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.

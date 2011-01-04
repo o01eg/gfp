@@ -17,10 +17,10 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "environment.h"
+#include "vm/environment.h"
 #include "ga_utils.h"
-#include "ioobject.h"
-#include "program.h"
+#include "vm/ioobject.h"
+#include "vm/program.h"
 #include "dot_dump.h"
 #include <ctime>
 #include <cstdlib>

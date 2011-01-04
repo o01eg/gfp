@@ -60,6 +60,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/libfunctions/Makefile
     src/scheme/Makefile
+    src/vm/Makefile
     tools/Makefile
 ])
 

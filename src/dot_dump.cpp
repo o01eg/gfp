@@ -19,7 +19,7 @@
 
 #include <fstream>
 #include "dot_dump.h"
-#include "object.h"
+#include "vm/object.h"
 
 #ifdef _DEBUG_HEAP_
 void DotDump(VM::Environment &env, const char* filename)

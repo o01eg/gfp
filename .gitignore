@@ -2,6 +2,7 @@
 .*.swo
 .deps
 *.o
+*.a
 Makefile
 Makefile.in
 aclocal.m4

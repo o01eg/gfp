@@ -23,7 +23,7 @@
 #include <iomanip>
 #include <fstream>
 #include "individual.h"
-#include "ioobject.h"
+#include "vm/ioobject.h"
 #include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"

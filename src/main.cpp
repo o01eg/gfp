@@ -36,6 +36,7 @@ void close_handler()
 		std::cin >> c;
 	}
 	CurrentState::Shutdown();
+	VM::Environment::Stop();
 }
 
 /// \brief Handler of Ctrl+C event.
@@ -44,6 +45,7 @@ void interrupt_handler(int signum)
 {
 	CurrentState::Dump();
 	CurrentState::Shutdown();
+	VM::Environment::Stop();
 }
 
 /// \brief Dump individual fitness

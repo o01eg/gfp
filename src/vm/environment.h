@@ -103,6 +103,12 @@ namespace VM
 		{
 			m_Program = &prog;
 		}
+
+		/// \brief Stop all evalation.
+		static void Stop()
+		{
+			s_Stop = true;
+		}
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -122,6 +128,8 @@ namespace VM
 		void DumpStack(const std::deque<Object> &stack) const;
 #endif
 		Program *m_Program; ///< Program executing in environment.
+
+		static bool s_Stop; ///< Stop all evalations.
 	};
 }
 

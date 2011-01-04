@@ -20,7 +20,7 @@
 #include <stack>
 #include <cstdlib>
 #include "ga_utils.h"
-#include "program.h"
+#include "vm/program.h"
 
 const size_t MAX_DEPTH = 32;
 
