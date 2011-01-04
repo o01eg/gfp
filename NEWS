@@ -14,6 +14,7 @@ Now
  * Move VM into library.
  * Catch Scheme exceptions.
  * Load options from Scheme file.
+ * Remove GP test and load other options.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.

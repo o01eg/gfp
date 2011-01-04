@@ -21,8 +21,9 @@
 #include <cstdlib>
 #include "ga_utils.h"
 #include "vm/program.h"
+#include "conf.h"
 
-const size_t MAX_DEPTH = 32;
+const size_t MAX_DEPTH = Config::Instance().GetSLong("max-object-depth", 8);
 
 bool GP::CheckForParam(const VM::WeakObject &func)
 {

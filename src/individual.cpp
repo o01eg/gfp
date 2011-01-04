@@ -27,7 +27,7 @@
 #include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"
-
+#include "conf.h"
 #include "libfunctions/functions.h"
 
 inline signed long antioverflow_plus(signed long x, signed long y)
@@ -38,10 +38,10 @@ inline signed long antioverflow_plus(signed long x, signed long y)
 	return (z & (f | f1)) | (x & (~(f | f1)));
 }
 
-const size_t MAX_FUNCTIONS = 32; ///< Maximum size of program.
-const size_t MAX_STOPS = 4; ///< Maximum of stop moves.
-const size_t MAX_CIRCLES = 10000; ///< Maximum of eval circles.
-const size_t MAX_STEPS = 16; ///< Maximum of any moves.
+const size_t MAX_FUNCTIONS = Config::Instance().GetSLong("max-individual-adfs", 1); ///< Maximum size of program.
+const size_t MAX_STOPS = Config::Instance().GetSLong("max-stop-moves", 1);; ///< Maximum of stop moves.
+const size_t MAX_CIRCLES = Config::Instance().GetSLong("max-evalation-loops", 1000);; ///< Maximum of eval circles.
+const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 1);; ///< Maximum of any moves.
 
 Individual::Individual(const VM::Program &prog)
 	:m_Result(-1) // new, not yet tested
