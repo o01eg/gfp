@@ -24,7 +24,20 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-ggdb3 -O0 -Wall -Wextra -pedantic `echo $CXXFLAGS | sed \"s/-O.//\"`"
+CXXFLAGS="-Wall -Wextra -pedantic $CXXFLAGS"
+
+AC_ARG_ENABLE([gprof],
+	[AS_HELP_STRING([--enable-gprof],
+		[suppurt for profiling @<:@default=no@:>@])],
+	[CXXFLAGS="-pg $CXXFLAGS";LDFLAGS="-pg $LDFLAGS"],
+	[])
+
+AC_ARG_ENABLE([debug],
+	[AS_HELP_STRING([--enable-debug],
+		[suppurt for debugging @<:@default=no@:>@])],
+	[CXXFLAGS="-ggdb3 -O0 `echo $CXXFLAGS | sed \"s/-O.//\"`"],
+	[enable_debug=no])
+AM_CONDITIONAL(DEBUG, test "x$enable_debug" != xno)
 
 # == check for libraries ==
 

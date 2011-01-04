@@ -37,5 +37,9 @@ gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfp_LDADD = scheme/libscheme.a \
 	vm/libvm.a
 
+if DEBUG
 gplisp_LDADD = vm/libvm_d.a
+else
+gplisp_LDADD = vm/libvm.a
+endif
 

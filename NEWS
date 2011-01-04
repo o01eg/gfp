@@ -15,6 +15,7 @@ Now
  * Catch Scheme exceptions.
  * Load options from Scheme file.
  * Remove GP test and load other options.
+ * Append --enable-gprof and --enable-debug options.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.
