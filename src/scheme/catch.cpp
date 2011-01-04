@@ -18,23 +18,19 @@
  */
 
 #include <iostream>
-#include "scheme.h"
 #include "catch.h"
 
-Scheme::Scheme()
+SCM CatchHandle(void *data, SCM key, SCM parameters)
 {
-	std::ios_base::sync_with_stdio(true);
-	scm_init_guile();
+	/// \todo Write this.
+	SCM out = scm_current_output_port();
+	std::cout << " Catch error!" << std::endl << "Key: ";
+	std::cout.flush();
+	scm_display(key, out);
+	std::cout << std::endl << "Parameters: ";
+	std::cout.flush();
+	scm_display(parameters, out);
+	std::cout << std::endl;
+	return SCM_BOOL_T;
 }
-
-Scheme::~Scheme()
-{
-}
-
-SCM Scheme::PrimitiveLoad(const char *filename)
-{
-	SCM scm = Catch(scm_c_primitive_load, filename);
-	return scm;
-}
-
 

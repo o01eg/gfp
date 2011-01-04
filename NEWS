@@ -12,6 +12,7 @@ Now
  * Remove GTKmm dependencies.
  * Use GNU Guile for scripting and config.
  * Move VM into library.
+ * Catch Scheme exceptions.
 
 Version 0.0.0.10 2011-01-02
  * Remove Ruby support.
