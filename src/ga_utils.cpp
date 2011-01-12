@@ -300,29 +300,16 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 		THROW("Different environments in crossovered programs");
 	}
 	VM::Program res(env);
-	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
-	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.functions.size(); i ++)
-	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
-	}
 	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
 	{
 		VM::Object adf(env);
-		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		if(prog1.GetADF(adf_index).IsNIL())
 		{
-			if(prog2.GetADF(adf_index).IsNIL())
+			if(! prog2.GetADF(adf_index).IsNIL())
 			{
-				// both NIL
-				do
-				{
-					adf = GP::GenerateExec(env, funcs, 0);
-				}
-				while(! GP::CheckForParam(adf));
+				adf = prog2.GetADF(adf_index);
 			}
-			adf = prog2.GetADF(adf_index);
+			// else if both NIL then result also NIL
 		}
 		else
 		{
@@ -335,12 +322,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 				// both exist
 				if(prog1.GetADF(adf_index) == prog2.GetADF(adf_index))
 				{
-					//if equal then mutate them
-					do
-					{
-						adf = GP::Mutation(prog1.GetADF(adf_index), true, funcs, 0);
-					}
-					while((! GP::CheckForParam(adf)));
+					adf = prog1.GetADF(adf_index);
 
 				}
 				else
