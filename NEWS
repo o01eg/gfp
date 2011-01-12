@@ -14,6 +14,8 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
 
 Now
+ * VM
+   - Throw on wrong function number at minimization.
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.

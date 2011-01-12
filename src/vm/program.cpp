@@ -97,9 +97,16 @@ void Program::Minimize()
 			stack.pop();
 			if(! temp.IsNIL())
 			{
-				if((temp.GetType() == ADF) && (temp.GetValue() < m_ADFs.size()))
+				if(temp.GetType() == ADF)
 				{
-					adf_calls[adf_index * m_ADFs.size() + temp.GetValue()] = true;
+					if(temp.GetValue() < m_ADFs.size())
+					{
+						adf_calls[adf_index * m_ADFs.size() + temp.GetValue()] = true;
+					}
+					else
+					{
+						THROW(FormatString("Bugly generated program ", this, "."));
+					}
 				}
 				if(temp.GetType() == LIST)
 				{
