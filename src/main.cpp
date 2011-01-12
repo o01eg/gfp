@@ -20,6 +20,7 @@
 #include <iostream>
 #include <csignal>
 #include <string>
+#include <fstream>
 #include "ga.h"
 #include "current_state.h"
 #include "conf.h"
@@ -137,10 +138,11 @@ int main(int argc, char **argv)
 			}
 		}
 		GA::Results results = ga.Examine();
+		std::ofstream f("population.txt");
 		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
 		{
-			std::clog << std::endl << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
-			ga.GetInd(it->GetIndex()).GetResult().Dump(std::clog);
+			f << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
+			ga.GetInd(it->GetIndex()).GetResult().Dump(f);
 		}
 		if(filename)
 		{
