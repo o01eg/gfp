@@ -1,12 +1,21 @@
 gfp
 ===
 Snapshot ????-??-?? ToDo
- * Add scripting for individual testing and comparsion.
- * Add multithread support.
- * Move functions info into library instead text file.
- * Use own tokenizer.
- * Add program optimization.
- * Make callable EVAL.
+ * VM
+   - Callable EVAL.
+   - Symbol support.
+   - Macroses.
+   - Own tokenizer.
+   - Closure support.
+ * GP
+   - Static types.
+   - Program optimization.
+   - Multithread examine.
+   - Add scripting for individual testing and comparsion.
+
+Now
+ * GP
+   - Change generation of new population.
 
 Version 0.0.1 2011-01-04
  * Remove GTKmm dependencies.

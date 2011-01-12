@@ -73,6 +73,7 @@ bool GA::Step()
 
 		// add elite individual
 		new_population->push_back(m_Population->at(results[0].GetIndex()));
+
 		if(results[0].GetIndex() != 0)
 		{
 			updated = true;
@@ -87,22 +88,16 @@ bool GA::Step()
 			parent_pool.push_back(std::min(results[i1], results[i2]).GetIndex());
 		}
 
-		//make new population
 		while(new_population->size() < m_PopulationSize)
 		{
-			switch(rand() % 3)
+			new_population->push_back(Individual::Crossover(env, m_Population->at(parent_pool[rand() % parent_pool.size()]), m_Population->at(parent_pool[rand() % parent_pool.size()])));
+		}
+
+		for(size_t i = 1; i < m_PopulationSize; i ++)
+		{
+			if(rand() % 5 == 0)
 			{
-			case 0:
-				new_population->push_back(m_Population->at(parent_pool[rand() % parent_pool.size()]));
-				break;
-			case 1:
-				// mutation
-				new_population->push_back(Individual::Mutation(env, m_Population->at(parent_pool[rand() % parent_pool.size()])));
-				break;
-			case 2:
-				// crossover
-				new_population->push_back(Individual::Crossover(env, m_Population->at(parent_pool[rand() % parent_pool.size()]), m_Population->at(parent_pool[rand() % parent_pool.size()])));
-				break;
+				new_population->at(i) = Individual::Mutation(env, new_population->at(i));
 			}
 		}
 
