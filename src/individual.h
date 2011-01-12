@@ -42,8 +42,8 @@ public:
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.
 			ST_STATE_CHANGES, ///< Number when memory or world changes.
-			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
 			ST_ANSWER_CHANGES, ///< Numbers of different answers.
+			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
 			ST_NEG_CIRCLES, ///< Sum of least circles.
 			ST_MOVE_DIFF, ///< Different from 0 in move code. (Aggregate by move)
 			ST_DIR_DIFF, ///< Different from 1-4 in direction. (Aggrerage by move)
@@ -107,8 +107,8 @@ public:
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
 			os << "result[SUM_MOVES] = " << m_Quality[ST_SUM_MOVES] << std::endl;
 			os << "result[STATE_CHANGES] = " << m_Quality[ST_STATE_CHANGES] << std::endl;
-			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
 			os << "result[ANSWER_CHANGES] = " << m_Quality[ST_ANSWER_CHANGES] << std::endl;
+			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
 			os << "result[MOVE_DIFF] = " << m_Quality[ST_MOVE_DIFF] << std::endl;
 			os << "result[DIR_DIFF] = " << m_Quality[ST_DIR_DIFF] << std::endl;

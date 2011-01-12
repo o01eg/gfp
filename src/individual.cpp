@@ -151,8 +151,8 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 				{
 					circle_count = MAX_CIRCLES;
 				}
-				result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count;
-				ss << std::setw(35) << res << std::endl;
+				result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count - MAX_CIRCLES;
+				ss << std::setw(70) << res << std::endl;
 				if(! res.IsNIL())
 				{
 					switch(res.GetType())
@@ -210,6 +210,11 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 								}
 							}
 							result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
+							if(quality < 8)
+							{
+								// Individual must return good moves.
+								active = false;
+							}
 						}
 						break;
 					case VM::ERROR:

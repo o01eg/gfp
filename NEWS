@@ -17,6 +17,7 @@ Now
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.
+   - Stop on non-move answer.
 
 Version 0.0.1 2011-01-04
  * Remove GTKmm dependencies.
