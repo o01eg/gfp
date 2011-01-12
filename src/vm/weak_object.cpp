@@ -97,7 +97,7 @@ bool WeakObject::operator==(const WeakObject& obj) const
 		}
 		else
 		{
-			if(GetType() == obj.GetType())
+			if(m_Env.heap.At(m_Pos).hash == m_Env.heap.At(obj.m_Pos).hash)
 			{
 				/// \todo Rewrite this into low-level work with heap data.
 				switch(GetType())
@@ -164,7 +164,7 @@ bool WeakObject::operator==(const WeakObject& obj) const
 			}
 			else
 			{
-				// different types
+				// different hashes
 				return false;
 			}
 		}
