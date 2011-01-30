@@ -131,6 +131,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 							{
 								case FUNC:
 								case ADF:
+								case LIST: // closure
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();

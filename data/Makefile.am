@@ -4,6 +4,7 @@ EXTRA_DIST = config.scm \
 	3.lsp \
 	4.lsp \
 	ackermann.lsp \
+	closure.lsp \
 	labirint.txt
 dist_DATA = $(EXTRA_DIST)
 distdir = $(pkgdatadir)
