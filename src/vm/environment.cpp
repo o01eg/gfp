@@ -30,7 +30,6 @@
 #include "environment.h"
 #include "object.h"
 #include "program.h"
-#include "symbols.h"
 
 using namespace VM;
 
@@ -39,25 +38,15 @@ const size_t MAX_DEPTH = 1536;
 bool Environment::s_Stop = false;
 
 Environment::Environment()
-	:m_Program(0),
-	m_Symbols(new Symbols)
+	:m_Program(0)
 {
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
 #endif
-	m_Symbols->AppendSymbol("IF", Object(*this, IF));
-	m_Symbols->AppendSymbol("EVAL", Object(*this, EVAL));
-	m_Symbols->AppendSymbol("ERROR", Object(*this, ERROR));
-	m_Symbols->AppendSymbol("QUOTE", Object(*this, QUOTE));
-	m_Symbols->AppendSymbol("NIL", Object(*this));
 }
 
 Environment::~Environment()
 {
-	if(m_Symbols)
-	{
-		delete m_Symbols;
-	}
 #if _DEBUG_ENV_
 	std::clog << "Destroy environment " << this << std::endl;
 #endif
@@ -325,7 +314,6 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			function.name = name;
 			function.number_param = argc;
 			functions.push_back(function);
-			m_Symbols->AppendSymbol(name, Object(*this, FUNC, functions.size() - 1));
 		}
 		return NULL;
 	}
@@ -341,8 +329,7 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 		}
 		else
 		{
-			// remove deleting functions while symbols don't support undefining.
-			//functions.erase(it);
+			functions.erase(it);
 		}
 		return old_ptr;
 	}
@@ -436,14 +423,4 @@ void Environment::DumpStack(const std::deque<Object> &stack) const
 	}
 }
 #endif
-
-const Object& Environment::GetSymbol(const std::string& name) const
-{
-	return m_Symbols->GetObj(name);
-}
-
-const std::string& Environment::GetSymbol(const WeakObject& obj) const
-{
-	return m_Symbols->GetSym(obj);
-}
 

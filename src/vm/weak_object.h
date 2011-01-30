@@ -42,17 +42,6 @@ namespace VM
 	class WeakObject
 	{
 	public:
-		/// \brief Compare hashes between two objects for std::map
-		class HashCompareLess : std::binary_function<WeakObject, WeakObject, bool>
-		{
-		public:
-			bool operator()(const WeakObject& a, const WeakObject &b) const
-			{
-				return a.m_Env.heap.At(a.m_Pos).hash < b.m_Env.heap.At(b.m_Pos).hash;
-			}
-		private:
-		};
-
 		/// \brief Copy constructor.
 		/// \param obj Object.
 		WeakObject(const WeakObject& obj)

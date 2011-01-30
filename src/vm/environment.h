@@ -26,9 +26,7 @@
 namespace VM
 {
 	class Object;
-	class WeakObject;
 	class Program;
-	class Symbols;
 
 	typedef void (*FunctionPtr)(const Object& args, Object *result); ///< Pointer to LISP function.
 
@@ -111,16 +109,6 @@ namespace VM
 		{
 			s_Stop = true;
 		}
-
-		/// \brief Get symbol object by name.
-		/// \param[in] name Symbol's name.
-		/// \return Object.
-		const Object& GetSymbol(const std::string& name) const;
-
-		/// \brief Get name of symbol.
-		/// \param[in] obj Object.
-		/// \return Name.
-		const std::string& GetSymbol(const WeakObject& obj) const;
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -142,8 +130,6 @@ namespace VM
 		Program *m_Program; ///< Program executing in environment.
 
 		static bool s_Stop; ///< Stop all evalations.
-
-		Symbols *m_Symbols; ///< Symbols access;
 	};
 }
 
