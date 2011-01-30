@@ -37,18 +37,6 @@ namespace VM
 	/// \todo Fix memory leaks in heap.
 	class Environment
 	{
-		struct FuncInner
-		{
-			FunctionPtr func; ///< Pointer to callable function.
-			unsigned char number_param; ///< Number of parameters.
-
-			/// \brief Constructor for static compilation
-			FuncInner(FunctionPtr func_, unsigned char number_param_)
-				:func(func_),
-				number_param(number_param_)
-			{
-			}
-		};
 	public:
 
 		/// \brief Function data.
@@ -71,11 +59,19 @@ namespace VM
 				:func(0)
 			{
 			}
+
+			/// \brief Comparsion of names.
+			/// \todo Change it into hash table.
+			/// \param str String for comparsion.
+			bool operator==(const std::string& str)
+			{
+				return (name == str);
+			}
 		};
 
 		Heap heap; ///< Heap of objects.
 		Stack stack; ///< Stack.
-		std::vector<FuncInner> functions; ///< Functions' list.
+		std::vector<Func> functions; ///< Functions' list.
 
 		Environment(); ///< Constructor of environment.
 		~Environment(); ///< Destructor of environment.
@@ -94,7 +90,8 @@ namespace VM
 		/// \param[in] name Function name
 		/// \param[in] argc Number of agruments.
 		/// \param[in] ptr Pointer tofunction.
-		void LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
+		/// \return Old pointer or NULL.
+		FunctionPtr LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
 
 		/// \brief Run program with parameter.
 		/// \param[in] param Parameter.

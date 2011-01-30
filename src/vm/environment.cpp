@@ -49,7 +49,6 @@ Environment::Environment()
 	m_Symbols->AppendSymbol("EVAL", Object(*this, EVAL));
 	m_Symbols->AppendSymbol("ERROR", Object(*this, ERROR));
 	m_Symbols->AppendSymbol("QUOTE", Object(*this, QUOTE));
-	m_Symbols->AppendSymbol("$", Object(*this, PARAM));
 	m_Symbols->AppendSymbol("NIL", Object(*this));
 }
 
@@ -313,18 +312,48 @@ void Environment::LoadFunctionsFromArray(Func* array)
 	}
 }
 
-void Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
+FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
 {
-	// \todo Check for overloading symbols.
-	functions.push_back(Environment::FuncInner(ptr, argc));
-	m_Symbols->AppendSymbol(name, Object(*this, FUNC, functions.size() - 1));
+	std::vector<Func>::iterator it = std::find(functions.begin(), functions.end(), name);
+	if(it == functions.end())
+	{
+		// not exist.
+		if(ptr)
+		{
+			Environment::Func function;
+			function.func = ptr;
+			function.name = name;
+			function.number_param = argc;
+			functions.push_back(function);
+			m_Symbols->AppendSymbol(name, Object(*this, FUNC, functions.size() - 1));
+		}
+		return NULL;
+	}
+	else
+	{
+		FunctionPtr old_ptr = it->func;
+		// exist
+		if(ptr)
+		{
+			// replace
+			it->func = ptr;
+			it->number_param = argc;
+		}
+		else
+		{
+			// remove deleting functions while symbols don't support undefining.
+			//functions.erase(it);
+		}
+		return old_ptr;
+	}
+	return NULL;
 }
 
 Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const
 {
-	const FuncInner &function = functions[func_number];
+	const Func &function = functions[func_number];
 #if _DEBUG_EVAL_
-	std::clog << "Function " << this->GetSymbol(Object(*this, FUNC, func_number)) << " with " << static_cast<int>(function.number_param) << " args" << std::endl;
+	std::clog << "Function " << function.name << " with " << static_cast<int>(function.number_param) << " args" << std::endl;
 #endif
 	Object args = GenerateArgsList(function.number_param, ptr_obj_from_calc);
 #if _DEBUG_EVAL_

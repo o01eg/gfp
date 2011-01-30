@@ -24,7 +24,6 @@
 #include <sstream>
 #include <iomanip>
 #include "ioobject.h"
-#include "symbols.h"
 
 using namespace VM;
 
@@ -46,11 +45,33 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 		//const Environment& env = obj.GetEnv();
 		switch(obj.GetType())
 		{
+			case ERROR:
+				os << "ERROR ";
+				break;
 			case INTEGER:
 				os << static_cast<int>(obj.GetValue()) << " ";
 				break;
+			case FUNC:
+#if 0
+				os << "#" << obj.GetValue() << " ";
+#else
+				os << obj.GetEnv().functions[obj.GetValue()].name << " ";
+#endif
+				break;
 			case ADF:
 				os << "%" << obj.GetValue() << " ";
+				break;
+			case PARAM:
+				os << "$ ";
+				break;
+			case QUOTE:
+				os << "QUOTE ";
+				break;
+			case IF:
+				os << "IF ";
+				break;
+			case EVAL:
+				os << "EVAL ";
 				break;
 			case LIST:
 				{
@@ -103,7 +124,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 									if(not_width || (w > 0))
 									{
 										os << std::setw(w) << object;
-										w = std::max(0l, w - 1);
+										w = std::max(0l, w - 2);
 									}
 								}
 							}
@@ -133,7 +154,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 									if(not_width || (w > 0))
 									{
 										os << ". " << std::setw(w) << object << ") ";
-										w = std::max(0l, w - 4);
+										w = std::max(0l, w - 6);
 									}
 									//level --;
 								}
@@ -143,7 +164,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 				}
 				break;
 			default:
-				os << obj.GetEnv().GetSymbol(obj) << " ";
+				os << "ERROR ";
 				break;
 		}
 	}
@@ -275,19 +296,59 @@ Object str2atom(const std::string& str, Environment &env)
 	{
 		strup += std::toupper(*it, loc);
 	}
-	if(((strup[0] == '-') && ( strup[1] != '\0' )) || ((strup[0] >= '0') && (strup[0] <= '9')))
+	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), strup);
+	if(ptr != env.functions.end())
 	{
-		value = atol(strup.c_str());
-		return Object(env, INTEGER, value);
-	}
-	else if(strup[0] == '%')
-	{
-		value = atol(strup.c_str() + 1);
-		return Object(env, ADF, value);
+		return Object(env, FUNC, ptr - env.functions.begin());
 	}
 	else
 	{
-		return env.GetSymbol(strup);
+		switch(strup[0])
+		{
+			case 'E':
+				if(strup == "EVAL")
+				{
+					return Object(env, EVAL);
+				}
+				if(strup == "ERROR")
+				{
+					return Object(env, ERROR);
+				}
+				THROW("Unknown symbol " + strup);
+			case '%':
+				value = atol(strup.c_str() + 1);
+				return Object(env, ADF, value);
+			case '$':
+				return Object(env, PARAM);
+			case 'Q':
+				if(strup == "QUOTE")
+				{
+					return Object(env, QUOTE);
+				}
+				THROW("Unknown symbol " + strup);
+			case 'I':
+				if(strup == "IF")
+				{
+					return Object(env, IF);
+				}
+				THROW("Unknown symbol " + strup);
+			case 'N':
+				if(strup == "NIL")
+				{
+					return Object(env);
+				}
+				THROW("Unknown symbol " + strup);
+			default: // INTEGER
+				if((strup[0] == '-') || ((strup[0] >= '0') && (strup[0] <= '9')))
+				{
+					value = atol(strup.c_str());
+					return Object(env, INTEGER, value);
+				}
+				else // something strange
+				{
+					THROW("Unknown symbol " + strup);
+				}
+		}
 	}
 	return Object(env, ERROR);
 }

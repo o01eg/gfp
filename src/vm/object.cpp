@@ -121,7 +121,7 @@ Object::~Object()
 	}
 	else
 	{
-		std::cout << "Object 0x" << this << " type " << (m_Pos ? GetType() : -1) << " It didn't be added into objects' list." << std::endl;
+		std::cout << "Object 0x" << this << " It didn't be added into objects' list." << std::endl;
 	}
 #endif
 	if(m_Pos)

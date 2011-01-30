@@ -48,8 +48,7 @@ namespace VM
 		public:
 			bool operator()(const WeakObject& a, const WeakObject &b) const
 			{
-				return (a.m_Pos ? a.m_Env.heap.At(a.m_Pos).hash : 0) <
-					(b.m_Pos ? b.m_Env.heap.At(b.m_Pos).hash : 0);
+				return a.m_Env.heap.At(a.m_Pos).hash < b.m_Env.heap.At(b.m_Pos).hash;
 			}
 		private:
 		};
