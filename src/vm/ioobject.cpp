@@ -52,9 +52,6 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 			case ADF:
 				os << "%" << obj.GetValue() << " ";
 				break;
-			case FUNC:
-				os << "#" << obj.GetValue() << " ";
-				break;
 			case LIST:
 				{
 					signed long w = width;
@@ -287,11 +284,6 @@ Object str2atom(const std::string& str, Environment &env)
 	{
 		value = atol(strup.c_str() + 1);
 		return Object(env, ADF, value);
-	}
-	else if(strup[0] == '#')
-	{
-		value = atol(strup.c_str() + 1);
-		return Object(env, FUNC, value);
 	}
 	else
 	{

@@ -3,10 +3,10 @@ gfp
 Snapshot ????-??-?? ToDo
  * VM
    - Callable EVAL.
+   - Symbol support.
    - Macroses.
    - Own tokenizer.
    - Closure support.
-   - Add IO manipulator for human readable function's names.
  * GP
    - Static types.
    - Program optimization.
@@ -16,9 +16,8 @@ Snapshot ????-??-?? ToDo
 Now
  * VM
    - Throw on wrong function number at minimization.
-   - Storing symbols in environment.
+   - Storing symbols in environment (not yet using).
    - Use symbols for I/O.
-   - Speedup by exclude function names.
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.
