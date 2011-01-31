@@ -12,7 +12,7 @@ Snapshot ????-??-?? ToDo
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
 
-Now
+Version 0.0.2 2011-01-31
  * VM
    - Throw on wrong function number at minimization.
    - Closure support.

@@ -48,10 +48,8 @@ Environment::Environment()
 	m_Symbols->insert(std::make_pair("IF", Object(*this, IF)));
 	m_Symbols->insert(std::make_pair("EVAL", Object(*this, EVAL)));
 
-#if 1 // use only for test aim
-	DefineSymbol("^_^", Object(*this, INTEGER, 12345));
-#endif
 #if _DEBUG_ENV_
+	DefineSymbol("^_^", Object(*this, INTEGER, 12345));
 	std::clog << "Create environment " << this << std::endl;
 #endif
 }
@@ -359,7 +357,7 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			function.number_param = argc;
 			functions.push_back(function);
 			m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
-#if 1 // use only for test aim
+#if _DEBUG_ENV_ // use only for test aim
 			DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
 #endif
 		}
