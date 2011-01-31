@@ -18,6 +18,7 @@ Now
    - Throw on wrong function number at minimization.
    - Closure support.
    - Use symbols map for convert from string to Object.
+   - Add SYMBOL and MACRO object's types.
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.

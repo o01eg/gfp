@@ -73,6 +73,20 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 			case EVAL:
 				os << "EVAL ";
 				break;
+			case MACRO:
+#if 1
+				os << "@" << obj.GetValue() << " ";
+#else
+				os << obj.GetEnv().macroses[obj.GetValue()].name;
+#endif
+				break;
+			case SYMBOL:
+#if 1
+				os << "&" << obj.GetValue() << " ";
+#else
+				os << obj.GetEnv().symbols[obj.GetValue()].name << " ";
+#endif
+				break;
 			case LIST:
 				{
 					signed long w = width;
@@ -312,6 +326,12 @@ Object str2atom(const std::string& str, Environment &env)
 			case '#':
 				value = atol(strup.c_str() + 1);
 				return Object(env, FUNC, value);
+			case '@':
+				value = atol(strup.c_str() + 1);
+				return Object(env, MACRO, value);
+			case '&':
+				value = atol(strup.c_str() + 1);
+				return Object(env, SYMBOL, value);
 			default: // INTEGER
 				if((strup[0] == '-') || ((strup[0] >= '0') && (strup[0] <= '9')))
 				{

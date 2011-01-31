@@ -35,7 +35,9 @@ namespace VM
 		QUOTE,
 		IF,
 		LIST,
-		EVAL
+		EVAL,
+		SYMBOL,
+		MACRO
 	};
 
 	/// \brief Object for unchanging reference counter.

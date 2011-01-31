@@ -68,7 +68,7 @@ Object::Object(const Environment &env, Types type, Heap::UInt value)
 	m_AllObjects.insert(this);
 #endif
 #if _DEBUG_OBJECT_
-	if((type != INTEGER) && (type != FUNC) && (type != ADF))
+	if((type != INTEGER) && (type != FUNC) && (type != ADF) && (type != SYMBOL) && (type != MACRO))
 	{
 		THROW(FormatString("Object 0x", this, ": Non one-parameter type ", type, "."));
 	}

@@ -39,7 +39,7 @@ Heap::UInt WeakObject::GetValue() const
 {
 #if _DEBUG_OBJECT_
 	Types type = GetType();
-	if((type != INTEGER) && (type != FUNC) && (type != ADF))
+	if((type != INTEGER) && (type != FUNC) && (type != ADF) && (type != SYMBOL) && (type != MACRO))
 	{
 		THROW(FormatString("Object 0x", this, ": Non one-parameter type ", type, "."));
 	}
@@ -111,6 +111,8 @@ bool WeakObject::operator==(const WeakObject& obj) const
 					case INTEGER:
 					case FUNC:
 					case ADF:
+					case MACRO:
+					case SYMBOL:
 						return GetValue() == obj.GetValue();
 					case LIST:
 						{

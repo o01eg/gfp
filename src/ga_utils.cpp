@@ -74,6 +74,8 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 					case VM::PARAM:
 					case VM::LIST:
 					case VM::EVAL:
+					case VM::SYMBOL:
+					case VM::MACRO:
 						break; // do nothing, only avoid warning
 					}
 				}
