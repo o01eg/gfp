@@ -1,4 +1,4 @@
-README from 2010-02-21
+README from 2011-01-31
 
 		gfp - Genetic Function Programming
 	GFP use Genetic Programming and LISP-like language for growing program.
@@ -16,9 +16,8 @@ README from 2010-02-21
 		 Execute program and get argument in stdin.
 		
 		Dependencies.
-	- glibmm - for string manipulation and cross-platform library loading.
-	- gthreadmm - for cross-platform threads' support.
 	- ruby-1.9 - for scripts (can be disabled).
+	- GNU Guile 1.8 - for scripting and reading config.
 
    Copyright (C) 2010-2011, O01eg
 

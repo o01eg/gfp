@@ -1,3 +1,15 @@
+Version 0.0.2 2011-01-31
+ * VM
+   - Throw on wrong function number at minimization.
+   - Closure support.
+   - Use symbols map for convert from string to Object.
+   - Add SYMBOL and MACRO object's types.
+   - Symbol support.
+ * GP
+   - Change generation of new population.
+   - Remove mutations from crossover.
+   - Stop on non-move answer.
+
 Version 0.0.1 2011-01-04
  * Remove GTKmm dependencies.
  * Use GNU Guile for scripting and config.
