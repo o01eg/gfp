@@ -3,10 +3,9 @@ gfp
 Snapshot ????-??-?? ToDo
  * VM
    - Callable EVAL.
-   - Symbol support.
    - Macroses.
    - Own tokenizer.
-   - Reduce types.
+   - Use SYMBOL from storing FUNC name.
  * GP
    - Static types.
    - Program optimization.
@@ -19,6 +18,7 @@ Now
    - Closure support.
    - Use symbols map for convert from string to Object.
    - Add SYMBOL and MACRO object's types.
+   - Symbol support.
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.

@@ -39,13 +39,18 @@ bool Environment::s_Stop = false;
 
 Environment::Environment()
 	:m_Program(0),
-	m_Symbols(new std::map<std::string, Object>)
+	m_Symbols(new std::map<std::string, Object>),
+	m_SymbolValues(new std::vector<Object>)
 {
 	m_Symbols->insert(std::make_pair("NIL", Object(*this)));
 	m_Symbols->insert(std::make_pair("$", Object(*this, PARAM)));
 	m_Symbols->insert(std::make_pair("QUOTE", Object(*this, QUOTE)));
 	m_Symbols->insert(std::make_pair("IF", Object(*this, IF)));
 	m_Symbols->insert(std::make_pair("EVAL", Object(*this, EVAL)));
+
+#if 1 // use only for test aim
+	DefineSymbol("^_^", Object(*this, INTEGER, 12345));
+#endif
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
 #endif
@@ -56,6 +61,7 @@ Environment::~Environment()
 #if _DEBUG_ENV_
 	std::clog << "Destroy environment " << this << std::endl;
 #endif
+	delete m_SymbolValues;
 	delete m_Symbols;
 }
 
@@ -181,6 +187,33 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 										return Object(*this, ERROR);
 									}
 									break;
+								case SYMBOL:
+									obj_to_calc.push_back(m_SymbolValues->at(head.GetValue()));
+									obj = obj.GetTail();
+									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
+									{
+										head = obj.GetHead();
+										obj_to_calc.push_back(head);
+										obj = obj.GetTail();
+									}
+									break;
+								case PARAM:
+									if(is_in_adf)
+									{
+										obj_to_calc.push_back(adf_params_obj.top());
+									}
+									else
+									{
+										return Object(*this, ERROR);
+									}
+									obj = obj.GetTail();
+									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
+									{
+										head = obj.GetHead();
+										obj_to_calc.push_back(head);
+										obj = obj.GetTail();
+									}
+									break;
 								default: // here get ERROR and INTEGER
 									return Object(*this, ERROR);
 									break;
@@ -264,6 +297,9 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 						return Object(*this, ERROR);
 					}
 					break;
+				case SYMBOL:
+					obj_from_calc.push_back(m_SymbolValues->at(obj.GetValue()));
+					break;
 				case QUOTE:
 				default:
 					return Object(*this, ERROR);
@@ -323,6 +359,9 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			function.number_param = argc;
 			functions.push_back(function);
 			m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
+#if 1 // use only for test aim
+			DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
+#endif
 		}
 		return NULL;
 	}
@@ -357,6 +396,9 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 #endif
 	if(args.IsNIL())
 	{
+#if _DEBUG_EVAL_
+		std::clog << " -> ERROR" << std::endl;
+#endif
 		return Object(*this, ERROR);
 	}
 	Object result(*this);
@@ -442,5 +484,19 @@ bool Environment::GetObject(const std::string& name, Object& obj) const
 	}
 	obj = it->second;
 	return true;
+}
+
+const Object& Environment::DefineSymbol(const std::string& name, const Object& obj)
+{
+	Heap::UInt index = symbol_names.size();
+	Object sym(*this, SYMBOL, index);
+	std::pair<std::map<std::string, Object>::iterator, bool> res = m_Symbols->insert(std::make_pair(name, sym));
+	m_SymbolValues->push_back(obj);
+	symbol_names.push_back(name);
+	if(! res.second)
+	{
+		res.first->second = sym;
+	}
+	return res.first->second;
 }
 

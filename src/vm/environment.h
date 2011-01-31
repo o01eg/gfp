@@ -27,6 +27,7 @@
 namespace VM
 {
 	class Object;
+	class WeakObject;
 	class Program;
 
 	typedef void (*FunctionPtr)(const Object& args, Object *result); ///< Pointer to LISP function.
@@ -71,6 +72,7 @@ namespace VM
 		Heap heap; ///< Heap of objects.
 		Stack stack; ///< Stack.
 		std::vector<Func> functions; ///< Functions' list.
+		std::vector<std::string> symbol_names; ///< Symbols' list.
 
 		Environment(); ///< Constructor of environment.
 		~Environment(); ///< Destructor of environment.
@@ -111,7 +113,17 @@ namespace VM
 			s_Stop = true;
 		}
 
+		/// \brief Get object from symbols by name.
+		/// \param[in] name Name of symbol.
+		/// \param[out] obj Object.
+		/// \return True if found name in map.
 		bool GetObject(const std::string& name, Object& obj) const;
+
+		/// \brief Set symbols with name and value
+		/// \param[in] name Name of symbol.
+		/// \param[in] obj Value of symbol.
+		/// \return SYMBOL object.
+		const Object& DefineSymbol(const std::string& name, const Object& obj);
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -135,6 +147,7 @@ namespace VM
 		static bool s_Stop; ///< Stop all evalations.
 
 		std::map<std::string, Object> *m_Symbols; ///< String to object conversion.
+		std::vector<Object> *m_SymbolValues; ///< List of symbols values.
 	};
 }
 

@@ -81,10 +81,10 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 #endif
 				break;
 			case SYMBOL:
-#if 1
+#if 0
 				os << "&" << obj.GetValue() << " ";
 #else
-				os << obj.GetEnv().symbols[obj.GetValue()].name << " ";
+				os << obj.GetEnv().symbol_names[obj.GetValue()] << " ";
 #endif
 				break;
 			case LIST:
