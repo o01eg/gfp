@@ -5,9 +5,63 @@
 \usepackage[english]{babel}
 \usepackage{tikz}
 \begin{document}
- {\center
-  {\huge \bf Genetic Function Programming
+ {\center{\huge \bf Genetic Function Programming}}
+ \section{Type system}
+  GFP use static typing. List of types:
+  \begin{list}{-}{}
+   \item BOOL~--- Boolean type. In VM it presents as \textit{NIL} for FALSE or other value for TRUE. 
+   \item INT~--- Integer type $-2^{16} \ldots 2^{16}-1$. In VM it presents also as INTEGER.
+   \item SYM-\$~--- Symbol. Constant type and present own as value and type. In VM it presents as NIL because doesn't have value.
+   \item (LIST~\$1)~--- List type with elements of type \$1. In VM it presents as LIST with elements of type \$1 at each head.
+   \item (PAIR~\$1~\$2)~--- Pair of two elements of type \$1 and \$2. In VM it presents as LIST with element of type \$1 at head and type \$2 at tail.
+   \item (ANY~\$1~\$2)~--- This type can store value of type \$1 or \$2. In VM it present as LIST with BOOL at head fro choose type and value at tail.
+   \item (FUNC1~\$1~\$2)~--- Function type. $FUNC1 = \$1 \rightarrow \$2$.
+   \item (FUNC2~\$1~\$2~\$3)~--- Function type. $FUNC2 = \$1 \rightarrow \$2 \rightarrow \$3$.
+   \item (FUNC3~\$1~\$2~\$3~\$4)~--- Function type. $FUNC3 = \$1 \rightarrow \$2 \rightarrow \$3 \rightarrow \$4$.
+  \end{list}
 
-  }
- }
+ \section{Functions}
+  \begin{tabular}{|l|p{0.3\linewidth}|p{0.4\linewidth}|}
+   \hline
+    Name & Type & Description \\
+   \hline
+    IF & (FUNC3 BOOL \$1 \$1 \$1) & Return 2nd argument if 1st is TRUE or 3rd if 1st is FALSE. \\
+   \hline
+    EQ & (FUNC2 \$1 \$1 BOOL) & Equal check. \\
+   \hline
+    AND, OR & (FUNC2 BOOL BOOL BOOL) & Logical binary operations. \\
+   \hline
+    NOT & (FUNC1 BOOL BOOL) & Logical NOT. \\
+   \hline
+    +, -, * & (FUNC2 INT INT INT) & Ariphmetical operations. \\
+   \hline
+    DIV & (FUNC2 INT INT (ANY~INT~SYM-DIV-BY-ZERO)) & Safe divergense. Return INTEGER if can be evalated or SYM-DIV-BY-ZERO instead. \\
+   \hline
+    <, >, == & (FUNC2 INT INT BOOL) & Comparsion operations. \\
+   \hline
+    MAKE-LIST & (LIST~\$1) & Return empty list. \\
+   \hline
+    PUSH & (FUNC2 (LIST~\$1) \$1 (LIST~\$1)) & Insert value at start of list. \\
+   \hline
+    HEAD & (FUNC1 (LIST~\$1) (ANY~\$1~SYM-EMPTY-LIST)) & Return head of list or SYM-EMPTY-LIST if it empty. \\
+   \hline
+    TAIL & (FUNC1 (LIST~\$1) (ANY~(LIST~\$1)~SYM-EMPTY-LIST)) & Return tail of list or SYM-EMPTY-LIST if it empty. \\
+   \hline
+    MAKE-PAIR & (FUNC2 \$1 \$2 (PAIR~\$1~\$2)) & Make pair from value. \\
+   \hline
+    FIRST & (FUNC1 (PAIR~\$1~\$2) \$1) & Return first element of pair. \\
+   \hline
+    SECOND & (FUNC1 (PAIR~\$1~\$2) \$2) & Return second element of pair. \\
+   \hline
+    MAKE-ANY-FIRST & (FUNC1 \$1 (ANY~\$1~\$2)) & Return ANY type from argument. \\
+   \hline
+    MAKE-ANY-SECOND & (FUNC1 \$2 (ANY~\$1~\$2)) & Return ANY type from argument. \\
+   \hline
+    CHOOSE & (FUNC3 (ANY~\$1~\$2) (FUNC1~\$1~\$3) (FUNC1~\$2~\$3) \$3) & Eval doings by current type of ANY. \\
+   \hline
+    BIND2 & (FUNC2 (FUNC2~\$1~\$2) \$1 (FUNC1~\$2)) & Bind first argument of binary function. \\
+   \hline
+    BIND3 & (FUNC2 (FUNC3~\$1~\$2~\$3) \$1 (FUNC2~\$2~\$3)) & Bind first argument of ternary function. \\
+   \hline
+  \end{tabular}
 \end{document}
