@@ -38,8 +38,14 @@ const size_t MAX_DEPTH = 1536;
 bool Environment::s_Stop = false;
 
 Environment::Environment()
-	:m_Program(0)
+	:m_Program(0),
+	m_Symbols(new std::map<std::string, Object>)
 {
+	m_Symbols->insert(std::make_pair("NIL", Object(*this)));
+	m_Symbols->insert(std::make_pair("$", Object(*this, PARAM)));
+	m_Symbols->insert(std::make_pair("QUOTE", Object(*this, QUOTE)));
+	m_Symbols->insert(std::make_pair("IF", Object(*this, IF)));
+	m_Symbols->insert(std::make_pair("EVAL", Object(*this, EVAL)));
 #if _DEBUG_ENV_
 	std::clog << "Create environment " << this << std::endl;
 #endif
@@ -50,6 +56,7 @@ Environment::~Environment()
 #if _DEBUG_ENV_
 	std::clog << "Destroy environment " << this << std::endl;
 #endif
+	delete m_Symbols;
 }
 
 Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
@@ -315,6 +322,7 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			function.name = name;
 			function.number_param = argc;
 			functions.push_back(function);
+			m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
 		}
 		return NULL;
 	}
@@ -424,4 +432,15 @@ void Environment::DumpStack(const std::deque<Object> &stack) const
 	}
 }
 #endif
+
+bool Environment::GetObject(const std::string& name, Object& obj) const
+{
+	std::map<std::string, Object>::const_iterator it = m_Symbols->find(name);
+	if(it == m_Symbols->end())
+	{
+		return false;
+	}
+	obj = it->second;
+	return true;
+}
 

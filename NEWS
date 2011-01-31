@@ -6,6 +6,7 @@ Snapshot ????-??-?? ToDo
    - Symbol support.
    - Macroses.
    - Own tokenizer.
+   - Reduce types.
  * GP
    - Static types.
    - Program optimization.
@@ -16,6 +17,7 @@ Now
  * VM
    - Throw on wrong function number at minimization.
    - Closure support.
+   - Use symbols map for convert from string to Object.
  * GP
    - Change generation of new population.
    - Remove mutations from crossover.

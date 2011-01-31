@@ -296,48 +296,22 @@ Object str2atom(const std::string& str, Environment &env)
 	{
 		strup += std::toupper(*it, loc);
 	}
-	std::vector<Environment::Func>::iterator ptr = std::find(env.functions.begin(), env.functions.end(), strup);
-	if(ptr != env.functions.end())
+
+	VM::Object obj(env);
+	if(env.GetObject(strup, obj))
 	{
-		return Object(env, FUNC, ptr - env.functions.begin());
+		return obj;
 	}
 	else
 	{
 		switch(strup[0])
 		{
-			case 'E':
-				if(strup == "EVAL")
-				{
-					return Object(env, EVAL);
-				}
-				if(strup == "ERROR")
-				{
-					return Object(env, ERROR);
-				}
-				THROW("Unknown symbol " + strup);
 			case '%':
 				value = atol(strup.c_str() + 1);
 				return Object(env, ADF, value);
-			case '$':
-				return Object(env, PARAM);
-			case 'Q':
-				if(strup == "QUOTE")
-				{
-					return Object(env, QUOTE);
-				}
-				THROW("Unknown symbol " + strup);
-			case 'I':
-				if(strup == "IF")
-				{
-					return Object(env, IF);
-				}
-				THROW("Unknown symbol " + strup);
-			case 'N':
-				if(strup == "NIL")
-				{
-					return Object(env);
-				}
-				THROW("Unknown symbol " + strup);
+			case '#':
+				value = atol(strup.c_str() + 1);
+				return Object(env, FUNC, value);
 			default: // INTEGER
 				if((strup[0] == '-') || ((strup[0] >= '0') && (strup[0] <= '9')))
 				{

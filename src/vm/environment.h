@@ -20,6 +20,7 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
+#include <map>
 #include "heap.h"
 #include "stack.h"
 
@@ -109,6 +110,8 @@ namespace VM
 		{
 			s_Stop = true;
 		}
+
+		bool GetObject(const std::string& name, Object& obj) const;
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -130,6 +133,8 @@ namespace VM
 		Program *m_Program; ///< Program executing in environment.
 
 		static bool s_Stop; ///< Stop all evalations.
+
+		std::map<std::string, Object> *m_Symbols; ///< String to object conversion.
 	};
 }
 

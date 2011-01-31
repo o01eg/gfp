@@ -1,6 +1,6 @@
 (begin
 	(define config (make-hash-table))
-	(hashq-set! config 'population-size 50)
+	(hashq-set! config 'population-size 60)
 	(hashq-set! config 'max-step-unchanged 100000)
 	(hashq-set! config 'max-object-depth 16)
 	(hashq-set! config 'max-individual-adfs 36)
