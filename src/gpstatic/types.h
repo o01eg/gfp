@@ -24,7 +24,7 @@
 #include <vm/object.h>
 
 /// \brief Store type symbols
-struct TypeSymbols
+struct Types
 {
 	VM::Object boolean;
 	VM::Object integer;
@@ -37,24 +37,9 @@ struct TypeSymbols
 	VM::Object sym_div_by_zero;
 	VM::Object sym_empty_list;
 
-	TypeSymbols(VM::Environment& env)
-		:boolean(env),
-		integer(env),
-		list(env),
-		pair(env),
-		any(env),
-		func1(env),
-		func2(env),
-		func3(env),
-		sym_div_by_zero(env),
-		sym_empty_list(env)
-	{
-	}
+	/// \brief Define type symbols
+	Types(VM::Environment& env);
 };
-
-/// \brief Define all type symbols
-/// \param[in,out] env Environment
-void DefineTypes(VM::Environment &env);
 
 #endif
 

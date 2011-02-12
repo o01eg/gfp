@@ -19,17 +19,17 @@
 
 #include "types.h"
 
-void DefineTypes(VM::Environment &env)
+Types::Types(VM::Environment &env)
+	:boolean(env.DefineSymbol("TYPE:BOOLEAN")),
+	integer(env.DefineSymbol("TYPE:INTEGER")),
+	list(env.DefineSymbol("TYPE:LIST")),
+	pair(env.DefineSymbol("TYPE:PAIR")),
+	any(env.DefineSymbol("TYPE:ANY")),
+	func1(env.DefineSymbol("TYPE:FUNC1")),
+	func2(env.DefineSymbol("TYPE:FUNC2")),
+	func3(env.DefineSymbol("TYPE:FUNC3")),
+	sym_div_by_zero(env.DefineSymbol("TYPE:SYM-DIV-BY-ZERO")),
+	sym_empty_list(env.DefineSymbol("TYPE:SYM-EMPTY-LIST"))
 {
-	env.DefineSymbol("TYPE:BOOLEAN");
-	env.DefineSymbol("TYPE:INTEGER");
-	env.DefineSymbol("TYPE:SYM-DIV-BY-ZERO");
-	env.DefineSymbol("TYPE:SYM-EMPTY-LIST");
-	env.DefineSymbol("TYPE:LIST");
-	env.DefineSymbol("TYPE:PAIR");
-	env.DefineSymbol("TYPE:ANY");
-	env.DefineSymbol("TYPE:FUNC1");
-	env.DefineSymbol("TYPE:FUNC2");
-	env.DefineSymbol("TYPE:FUNC3");
 }
 
