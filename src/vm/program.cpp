@@ -33,10 +33,18 @@ Program::Program(const Object &obj)
 	Object ptr = obj.GetTail();
 	while(! ptr.IsNIL())
 	{
-		if((! ptr.GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetType() == ADF))
+		if(! ptr.GetHead().GetHead().IsNIL())
 		{
-			Heap::UInt num = ptr.GetHead().GetHead().GetValue();
-			m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
+			if(ptr.GetHead().GetHead().GetType() == ADF)
+			{
+				Heap::UInt num = ptr.GetHead().GetHead().GetValue();
+				m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
+			}
+			else if((ptr.GetHead().GetHead().GetType() == LIST) && (! ptr.GetHead().GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetHead().GetType() == ADF))
+			{
+				Heap::UInt num = ptr.GetHead().GetHead().GetHead().GetValue();
+				m_ADFs[num] = ptr.GetHead().GetTail().GetHead();				
+			}
 		}
 
 		ptr = ptr.GetTail();

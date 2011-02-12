@@ -71,6 +71,7 @@ AC_CONFIG_FILES([
     doc/Makefile
     m4/Makefile
     src/Makefile
+    src/gpstatic/Makefile
     src/libfunctions/Makefile
     src/scheme/Makefile
     src/vm/Makefile
