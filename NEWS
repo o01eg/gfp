@@ -15,6 +15,7 @@ Snapshot ????-??-?? ToDo
 Now
  * VM
    - Support for LIST in ADF definition.
+   - Support for redefinition symbols.
 
 Version 0.0.2 2011-01-31
  * VM

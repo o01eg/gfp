@@ -312,7 +312,7 @@ Object str2atom(const std::string& str, Environment &env)
 	}
 
 	VM::Object obj(env);
-	if(env.GetObject(strup, obj))
+	if(env.GetObject(strup, &obj))
 	{
 		return obj;
 	}

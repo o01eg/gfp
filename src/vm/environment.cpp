@@ -473,28 +473,50 @@ void Environment::DumpStack(const std::deque<Object> &stack) const
 }
 #endif
 
-bool Environment::GetObject(const std::string& name, Object& obj) const
+bool Environment::GetObject(const std::string& name, Object* obj) const
 {
 	std::map<std::string, Object>::const_iterator it = m_Symbols->find(name);
 	if(it == m_Symbols->end())
 	{
 		return false;
 	}
-	obj = it->second;
+	if(obj)
+	{
+		(*obj) = it->second;
+	}
 	return true;
 }
 
 const Object& Environment::DefineSymbol(const std::string& name, const Object& obj)
 {
-	Heap::UInt index = symbol_names.size();
-	Object sym(*this, SYMBOL, index);
-	std::pair<std::map<std::string, Object>::iterator, bool> res = m_Symbols->insert(std::make_pair(name, sym));
-	m_SymbolValues->push_back(obj);
-	symbol_names.push_back(name);
-	if(! res.second)
+	std::vector<std::string>::iterator it = std::find(symbol_names.begin(), symbol_names.end(), name);
+	std::pair<std::map<std::string, Object>::iterator, bool> res;
+	if(it == symbol_names.end())
 	{
+		Heap::UInt index = symbol_names.size();
+		Object sym(*this, SYMBOL, index);
+		res = m_Symbols->insert(std::make_pair(name, sym));
+		m_SymbolValues->push_back(obj);
+		symbol_names.push_back(name);
+		if(! res.second)
+		{
+			res.first->second = sym;
+		}
+	}
+	else
+	{
+		// if found this name
+		Heap::UInt index = it - symbol_names.begin();
+		Object sym(*this, SYMBOL, index);
+		res = m_Symbols->insert(std::make_pair(name, sym));
+		m_SymbolValues->at(index) = obj;
 		res.first->second = sym;
 	}
 	return res.first->second;
+}
+
+const Object& Environment::DefineSymbol(const std::string& name)
+{
+	return DefineSymbol(name, Object(*this));
 }
 

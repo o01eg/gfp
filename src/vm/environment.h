@@ -115,15 +115,20 @@ namespace VM
 
 		/// \brief Get object from symbols by name.
 		/// \param[in] name Name of symbol.
-		/// \param[out] obj Object.
+		/// \param[out] obj Pointer to object.
 		/// \return True if found name in map.
-		bool GetObject(const std::string& name, Object& obj) const;
+		bool GetObject(const std::string& name, Object* obj) const;
 
 		/// \brief Set symbols with name and value
 		/// \param[in] name Name of symbol.
 		/// \param[in] obj Value of symbol.
 		/// \return SYMBOL object.
 		const Object& DefineSymbol(const std::string& name, const Object& obj);
+
+		/// \brief Define symbol with NIL value.
+		/// \param[in] name Name of symbol.
+		/// \return SYMBOL object.
+		const Object& DefineSymbol(const std::string& name);
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
