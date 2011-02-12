@@ -5,7 +5,7 @@ Snapshot ????-??-?? ToDo
    - Callable EVAL.
    - Macroses.
    - Own tokenizer.
-   - Use SYMBOL from storing FUNC name.
+   - Use SYMBOL for storing FUNC name.
  * GP
    - Static types.
    - Program optimization.
