@@ -17,19 +17,5 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "gpstatic/functions.h"
-#include "gpstatic/types.h"
+#include "functions.h"
 
-int main(int argc, char **argv)
-{
-	try
-	{
-		VM::Environment env;
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
-	}
-	return 0;
-}

@@ -17,19 +17,19 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "gpstatic/functions.h"
-#include "gpstatic/types.h"
+#include "types.h"
 
-int main(int argc, char **argv)
+void DefineTypes(VM::Environment &env)
 {
-	try
-	{
-		VM::Environment env;
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
-	}
-	return 0;
+	env.DefineSymbol("TYPE:BOOLEAN");
+	env.DefineSymbol("TYPE:INTEGER");
+	env.DefineSymbol("TYPE:SYM-DIV-BY-ZERO");
+	env.DefineSymbol("TYPE:SYM-EMPTY-LIST");
+	env.DefineSymbol("TYPE:LIST");
+	env.DefineSymbol("TYPE:PAIR");
+	env.DefineSymbol("TYPE:ANY");
+	env.DefineSymbol("TYPE:FUNC1");
+	env.DefineSymbol("TYPE:FUNC2");
+	env.DefineSymbol("TYPE:FUNC3");
 }
+

@@ -1,1 +1,2 @@
-noinst_HEADERS = 
+noinst_HEADERS = functions.h
+	types.h

@@ -17,19 +17,21 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "gpstatic/functions.h"
-#include "gpstatic/types.h"
+#ifndef _GPSTATIC_FUNCTIONS_H_
+#define _GPSTATIC_FUNCTIONS_H_
 
-int main(int argc, char **argv)
+#include <string>
+#include <vm/environment.h>
+#include <vm/object.h>
+
+/// \brief Typed function data.
+struct GPFunction
 {
-	try
-	{
-		VM::Environment env;
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
-	}
-	return 0;
-}
+	std::string name; ///< Symbols name
+	VM::FunctionPtr ptr; ///< Pointer to code
+	unsigned char param; ///< Number of parameters
+	unsigned char type_param; ///< Number of type parameters
+};
+
+#endif
+

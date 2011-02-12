@@ -19,7 +19,9 @@ gplisp_SOURCES = current_state.cpp \
 	gplisp.cpp \
 	libfunctions/functions.cpp \
 	logbuf.cpp
-gfpstatic_SOURCES = gfpstatic.cpp
+gfpstatic_SOURCES = gfpstatic.cpp \
+	gpstatic/functions.cpp \
+	gpstatic/types.cpp
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
@@ -35,7 +37,7 @@ noinst_HEADERS = conf.h \
 
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
-gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
+gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -I.
 
 gfp_LDADD = scheme/libscheme.a \
 	vm/libvm.a

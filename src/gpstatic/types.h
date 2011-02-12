@@ -17,19 +17,44 @@
  *  along with Genetic Function Programming.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "gpstatic/functions.h"
-#include "gpstatic/types.h"
+#ifndef _GPSTATIC_TYPES_H_
+#define _GPSTATIC_TYPES_H_
 
-int main(int argc, char **argv)
+#include <vm/environment.h>
+#include <vm/object.h>
+
+/// \brief Store type symbols
+struct TypeSymbols
 {
-	try
+	VM::Object boolean;
+	VM::Object integer;
+	VM::Object list;
+	VM::Object pair;
+	VM::Object any;
+	VM::Object func1;
+	VM::Object func2;
+	VM::Object func3;
+	VM::Object sym_div_by_zero;
+	VM::Object sym_empty_list;
+
+	TypeSymbols(VM::Environment& env)
+		:boolean(env),
+		integer(env),
+		list(env),
+		pair(env),
+		any(env),
+		func1(env),
+		func2(env),
+		func3(env),
+		sym_div_by_zero(env),
+		sym_empty_list(env)
 	{
-		VM::Environment env;
 	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
-	}
-	return 0;
-}
+};
+
+/// \brief Define all type symbols
+/// \param[in,out] env Environment
+void DefineTypes(VM::Environment &env);
+
+#endif
+
