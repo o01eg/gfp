@@ -38,6 +38,7 @@ struct Types
 	VM::Object sym_empty_list;
 
 	/// \brief Define type symbols
+	/// \param[in,out] env Environment
 	Types(VM::Environment& env);
 };
 

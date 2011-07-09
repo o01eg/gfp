@@ -24,7 +24,7 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-Wall -Wextra -pedantic $CXXFLAGS"
+CXXFLAGS="-Wall -Wextra -pedantic -Wc++0x-compat -fexceptions -fno-rtti -std=c++0x $CXXFLAGS"
 
 AC_ARG_ENABLE([gprof],
 	[AS_HELP_STRING([--enable-gprof],

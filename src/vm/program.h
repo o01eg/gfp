@@ -80,11 +80,11 @@ namespace VM
 		/// \return Environment.
 		Environment &GetEnv() const
 		{
-			return const_cast<Environment&>(m_Env);
+			return m_Env;
 		}
 	private:
 		std::vector<Object> m_ADFs; ///< List of ADFs in program.
-		Environment &m_Env; ///< Environment.
+		mutable Environment &m_Env; ///< Environment.
 	};
 }
 

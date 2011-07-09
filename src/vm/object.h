@@ -78,7 +78,8 @@ namespace VM
 		/// \return tail.
 		Object GetTail() const;
 
-		/// \brief Get constant environment of object
+		/// \brief Get environment of object.
+		/// \warn const_cast must be exists here because WeakObject cann't store mutable or non-const Environment.
 		/// \return Environment.
 		Environment& GetEnv() const {return const_cast<Environment&>(WeakObject::GetEnv());}
 #if _DEBUG_OBJECT_

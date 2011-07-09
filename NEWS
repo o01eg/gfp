@@ -8,6 +8,9 @@ Snapshot ????-??-?? ToDo
    - Use SYMBOL for storing FUNC name.
  * GP
    - Static types.
+     + Generate ADF.
+     + Mutate ADF.
+     + Crossover ADF.
    - Program optimization.
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
