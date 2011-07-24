@@ -34,11 +34,9 @@ int main(int argc, char **argv)
 	{
 		return -1;
 	}
-	try
 	{
 		VM::Environment env;
 		env.LoadFunctionsFromArray(func_array);
-		try
 		{
 			VM::Program prog(env, argv[1]);
 			env.SetProgram(prog);
@@ -49,14 +47,6 @@ int main(int argc, char **argv)
 			std::cout << "result = " << env.Run(a, &max_circles) << std::endl;
 			std::cout << "use " << (MAX_CIRCLES - max_circles) << " circles" << std::endl;
 		}
-		catch(std::exception &e)
-		{
-			std::cerr << "Catch Glib::Error in environment: " << e.what() << std::endl;
-		}
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
 	}
 
 	return 0;

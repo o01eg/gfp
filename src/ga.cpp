@@ -66,7 +66,6 @@ bool GA::Step()
 
 	Population *new_population = new Population;
 	bool updated = false;
-	try //added here to avoid memory leak with new_population
 	{
 		VM::Environment env;
 		env.LoadFunctionsFromArray(func_array);
@@ -101,11 +100,6 @@ bool GA::Step()
 			}
 		}
 
-	}
-	catch(...)
-	{
-		delete new_population;
-		throw;
 	}
 	delete m_Population;
 	m_Population = new_population;

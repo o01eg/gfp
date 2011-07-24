@@ -39,14 +39,16 @@ void inline THROW_impl_(const std::string& a, const char* func, const char* file
 {
 	std::stringstream ss;
 	ss << "Exception: " << a << " in " << func << " at " << file << ":" << line;
-	throw std::runtime_error(ss.str());
+	exit(-1);
+	//throw std::runtime_error(ss.str());
 }
 
 void inline THROW_impl_(const char *a, const char* func, const char* file, unsigned int line)
 {
 	std::stringstream ss;
 	ss << "Exception: " << a << " in " << func << " at " << file << ":" << line;
-	throw std::runtime_error(ss.str());
+	exit(-1);
+	//throw std::runtime_error(ss.str());
 }
 
 template<class T1, class T2, class T3, class T4, class T5, class T6, class T7>

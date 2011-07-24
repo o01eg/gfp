@@ -176,8 +176,9 @@ public:
 
 	/// \brief Load from file.
 	/// \param[in] filename File name.
-	/// \return Loaded individual.
-	static Individual Load(const char* filename);
+	/// \param[out] Loaded individual.
+	/// \return If loaded successly?
+	static bool Load(const char* filename, Individual *ind);
 
 private:
 	/// \brief Check move.

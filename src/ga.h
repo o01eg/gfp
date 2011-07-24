@@ -60,9 +60,10 @@ public:
 	
 	/// \brief Load population
 	/// \param[in] filename File with saved individual.
-	void Load(const char *filename)
+	/// \return If file successfully loaded?
+	bool Load(const char *filename)
 	{
-		m_Population->at(m_PopulationSize - 1) = Individual::Load(filename);
+		return Individual::Load(filename, &m_Population->at(m_PopulationSize - 1));
 	}
 
 	/// \brief Get individual from population.

@@ -23,15 +23,10 @@
 
 int main(int argc, char **argv)
 {
-	try
 	{
 		VM::Environment env;
 		Types types(env);
 
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << "Catch std::exception: " << e.what() << std::endl;
 	}
 	return 0;
 }

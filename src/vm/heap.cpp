@@ -193,14 +193,11 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #endif
 		blocks.resize(blocks.size() + 1);
 		Heap::UInt last_block = blocks.size() - 1;
-		try
-		{
-			blocks[last_block] = new Heap::Element[BLOCK_SIZE];
-		}
-		catch(std::bad_alloc &e)
+		blocks[last_block] = new (std::nothrow) Heap::Element[BLOCK_SIZE];
+		if(! blocks[last_block])
 		{
 #if _DEBUG_HEAP_
-		std::clog << "Heap " << this << ": Cann't alloc block: " << e.what() << std::endl;
+			std::clog << "Heap " << this << ": Cann't alloc block." << std::endl;
 #endif
 			blocks.resize(blocks.size() - 1);
 			return 0;

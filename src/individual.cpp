@@ -123,8 +123,6 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		bool first_move = true;
 		bool dirs[4] = {false, false, false, false};
 
-		try
-		{
 			// moving in labirint
 			for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); step ++)
 			{
@@ -254,12 +252,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 					result.m_Quality[Result::ST_DIRS] ++;
 				}
 			}
-		}
-		catch(...)
-		{
-			result.m_Quality[0] = -10000;
-			std::cerr << "exception = " << population[i].GetText() << std::endl;
-		}
+		
 		result.m_Result = ss.str();
 		results.push_back(result);
 	}
@@ -323,17 +316,21 @@ VM::Program Individual::GetProgram(VM::Environment &env) const
 	return VM::Program(obj);
 }
 
-Individual Individual::Load(const char* filename)
+bool Individual::Load(const char* filename, Individual *ind)
 {
 	std::ifstream f(filename);
 	if(f.fail())
 	{
-		THROW(std::string("Cann't open file ") + filename);
+		return false;
 	}
 	VM::Environment env;
 	env.LoadFunctionsFromArray(func_array);
 	VM::Object obj(env);
 	f >> obj;
-	return Individual(VM::Program(obj));
+	if(ind)
+	{
+		(*ind) = Individual(VM::Program(obj));
+	}
+	return true;
 }
 

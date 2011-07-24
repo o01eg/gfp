@@ -18,7 +18,7 @@
  */
 
 #include <iostream>
-#include <stdexcept>
+//#include <stdexcept>
 #include "catch.h"
 
 SCM CatchHandle(void *data, SCM key, SCM parameters)
@@ -32,7 +32,8 @@ SCM CatchHandle(void *data, SCM key, SCM parameters)
 	std::cerr.flush();
 	scm_display(parameters, out);
 	std::cerr << std::endl;
-	throw std::runtime_error("Scheme error");
+	exit(-1);
+	//throw std::runtime_error("Scheme error");
 	return SCM_BOOL_F;
 }
 

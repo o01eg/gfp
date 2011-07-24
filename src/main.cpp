@@ -76,8 +76,6 @@ int main(int argc, char **argv)
 	// Start application.
 	std::clog << "Start application" << std::endl;
 	
-	try
-	{
 #if 0
 		VM::Environment env;
 		env.LoadFunctions(DATA_DIR "functions.txt");
@@ -101,13 +99,9 @@ int main(int argc, char **argv)
 		GA ga(Config::Instance().GetSLong("population-size", 10));
 		if(filename)
 		{
-			try
+			if(! ga.Load(filename))
 			{
-				ga.Load(filename);
-			}
-			catch(std::exception &e)
-			{
-				std::clog << "Catch std::exception: " << e.what() << std::endl;
+				std::cout << "Cann't load " << filename << std::endl;
 			}
 		}
 		std::cout << "Start evolution" << std::endl;
@@ -149,12 +143,6 @@ int main(int argc, char **argv)
 			ga.Save(filename);
 		}
 
-	}
-	catch(std::exception &e)
-	{
-		std::clog << "Catch std::exception: " << e.what() << std::endl;
-	}
-	
 	// Finish application.
 	std::clog << "Finish application" << std::endl;
 
