@@ -20,8 +20,10 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <iostream>
-#include "scheme/scheme.h"
+#include <map>
+
+#include "vm/environment.h"
+#include "vm/object.h"
 
 /// \brief Signleton for access to config files.
 class Config
@@ -33,21 +35,17 @@ public:
 		return conf;
 	}
 
-	signed long GetSLong(const char *name, signed long def) const
-	{
-		signed long res = m_Scheme.HashRefSLong(m_HashTable, name, def);
-		std::cout << "Load option " << name << " = " << res << std::endl;
-		return res;
-	}
+	signed long GetSLong(const std::string& name, signed long def) const;
 private:
 	Config();
 	~Config();
 
-	Config(const Config&); ///< 
-	Config& operator=(const Config&);
+	Config(const Config&); ///< Prevent copy-constructor
+	Config& operator=(const Config&); ///< Prevent assing
 
-	SCM m_HashTable;
-	Scheme& m_Scheme;
+	std::map<std::string, VM::WeakObject> m_Options; // Map of options
+	VM::Environment m_Env; // Environment with options
+	VM::Object m_List; // Pointer to options list
 };
 
 #endif

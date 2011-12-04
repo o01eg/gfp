@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 				os << "ERROR ";
 				break;
 			case INTEGER:
-				os << static_cast<int>(obj.GetValue()) << " ";
+				os << static_cast<signed long>(obj.GetValue()) << " ";
 				break;
 			case FUNC:
 #if 0
@@ -338,9 +338,10 @@ Object str2atom(const std::string& str, Environment &env)
 					value = atol(strup.c_str());
 					return Object(env, INTEGER, value);
 				}
-				else // something strange
+				else // something strange, register new SYMBOL with name
 				{
-					THROW("Unknown symbol " + strup);
+					return env.DefineSymbol(strup);
+					//THROW("Unknown symbol " + strup);
 				}
 		}
 	}

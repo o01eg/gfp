@@ -1,3 +1,14 @@
+Version 0.0.3 2011-12-04
+ - Use own interpreter for config.
+ - Remove Guile dependencies.
+ * VM
+   - Support for LIST in ADF definition.
+   - Support for redefinition symbols.
+   - Automatic symbol definition.
+   - Fix work with signed INTEGER.
+ * GP
+   - Start to define types.
+
 Version 0.0.2 2011-01-31
  * VM
    - Throw on wrong function number at minimization.

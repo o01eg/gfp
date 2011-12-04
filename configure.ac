@@ -2,7 +2,7 @@
 
 AC_INIT(
  [Genetic Functional Programming],
- [0.0.2],
+ [0.0.3],
  [o01eg@yandex.ru],
  [gfp])
 
@@ -52,11 +52,6 @@ AS_IF([test "x$enable_multithread" != xno],
 	[])
 AM_CONDITIONAL(MULTITHREAD, test "x$enable_multithread" != xno)
 
-GUILE_FLAGS
-
-CXXFLAGS="$GUILE_CFLAGS $CXXFLAGS"
-LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
-
 # == check for header files ==
 
 # == check for typedefs, structers and compiler characteristics ==
@@ -73,7 +68,6 @@ AC_CONFIG_FILES([
     src/Makefile
     src/gpstatic/Makefile
     src/libfunctions/Makefile
-    src/scheme/Makefile
     src/vm/Makefile
     tools/Makefile
 ])

@@ -489,6 +489,13 @@ bool Environment::GetObject(const std::string& name, Object* obj) const
 
 const Object& Environment::DefineSymbol(const std::string& name, const Object& obj)
 {
+	//check name for wrong symbols: %(ADF), #(FUNC), @(MACRO), &(SYMBOL), '(QUOTE), (, ), "
+	size_t found = name.find_first_of("%#@&\'()\"");
+	if(found != std::string::npos)
+	{
+		THROW("Wrong symbol name " + name);
+	}
+	
 	std::vector<std::string>::iterator it = std::find(symbol_names.begin(), symbol_names.end(), name);
 	std::pair<std::map<std::string, Object>::iterator, bool> res;
 	if(it == symbol_names.end())

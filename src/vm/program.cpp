@@ -113,7 +113,9 @@ void Program::Minimize()
 					}
 					else
 					{
-						THROW(FormatString("Bugly generated program ", this, "."));
+						std::stringstream ss;
+						ss << Save();
+						THROW(FormatString("Bugly generated program " + ss.str()));
 					}
 				}
 				if(temp.GetType() == LIST)

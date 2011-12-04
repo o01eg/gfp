@@ -1,4 +1,4 @@
-EXTRA_DIST = config.scm \
+EXTRA_DIST = config.lsp \
 	1.lsp \
 	2.lsp \
 	3.lsp \

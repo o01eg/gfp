@@ -23,6 +23,7 @@
 #include <string>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 /* nice compile-time debug strings */
 #define STRINGIFY(x) #x
@@ -37,17 +38,15 @@
 
 void inline THROW_impl_(const std::string& a, const char* func, const char* file, unsigned int line)
 {
-	std::stringstream ss;
-	ss << "Exception: " << a << " in " << func << " at " << file << ":" << line;
-	exit(-1);
+	std::cerr << "Exception: " << a << " in " << func << " at " << file << ":" << line << std::endl;
+	abort();
 	//throw std::runtime_error(ss.str());
 }
 
 void inline THROW_impl_(const char *a, const char* func, const char* file, unsigned int line)
 {
-	std::stringstream ss;
-	ss << "Exception: " << a << " in " << func << " at " << file << ":" << line;
-	exit(-1);
+	std::cerr << "Exception: " << a << " in " << func << " at " << file << ":" << line << std::endl;
+	abort();
 	//throw std::runtime_error(ss.str());
 }
 

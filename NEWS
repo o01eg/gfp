@@ -15,10 +15,14 @@ Snapshot ????-??-?? ToDo
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
 
-Now
+Version 0.0.3 2011-12-04
+ - Use own interpreter for config.
+ - Remove Guile dependencies.
  * VM
    - Support for LIST in ADF definition.
    - Support for redefinition symbols.
+   - Automatic symbol definition.
+   - Fix work with signed INTEGER.
  * GP
    - Start to define types.
 

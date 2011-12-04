@@ -227,7 +227,7 @@ void func_11_int_plus(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() + arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, static_cast<signed long>(arg1.GetValue()) + static_cast<signed long>(arg2.GetValue()));
 	}
 	else
 	{
@@ -245,7 +245,7 @@ void func_12_int_minus(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() - arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, static_cast<signed long>(arg1.GetValue()) - static_cast<signed long>(arg2.GetValue()));
 	}
 	else
 	{
@@ -263,7 +263,7 @@ void func_13_int_mult(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() * arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, static_cast<signed long>(arg1.GetValue()) * static_cast<signed long>(arg2.GetValue()));
 	}
 	else
 	{
@@ -281,7 +281,7 @@ void func_14_int_div(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER) && (arg2.GetValue() != 0))
 	{
-		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() / arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, static_cast<signed long>(arg1.GetValue()) / static_cast<signed long>(arg2.GetValue()));
 	}
 	else
 	{
@@ -299,7 +299,7 @@ void func_15_int_mod(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER) && (arg2.GetValue() != 0))
 	{
-		(*result) = Object(args.GetEnv(), INTEGER, arg1.GetValue() % arg2.GetValue());
+		(*result) = Object(args.GetEnv(), INTEGER, static_cast<signed long>(arg1.GetValue()) % static_cast<signed long>(arg2.GetValue()));
 	}
 	else
 	{
@@ -373,7 +373,7 @@ void func_19_int_less(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		if(arg1.GetValue() < arg2.GetValue())
+		if(static_cast<signed long>(arg1.GetValue()) < static_cast<signed long>(arg2.GetValue()))
 		{
 			//true
 			(*result) = Object(args.GetEnv(), INTEGER, 0);
@@ -401,7 +401,7 @@ void func_20_int_greater(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		if(arg1.GetValue() > arg2.GetValue())
+		if(static_cast<signed long>(arg1.GetValue()) > static_cast<signed long>(arg2.GetValue()))
 		{
 			//true
 			(*result) = Object(args.GetEnv(), INTEGER, 0);
@@ -429,7 +429,7 @@ void func_21_int_equal(const Object& args, Object *result)
 	const Object& arg2 = args.GetTail().GetHead();
 	if((! arg1.IsNIL()) && (! arg2.IsNIL()) && (arg1.GetType() == INTEGER) && (arg2.GetType() == INTEGER))
 	{
-		if(arg1.GetValue() == arg2.GetValue())
+		if(static_cast<signed long>(arg1.GetValue()) == static_cast<signed long>(arg2.GetValue()))
 		{
 			//true
 			(*result) = Object(args.GetEnv(), INTEGER, 0);

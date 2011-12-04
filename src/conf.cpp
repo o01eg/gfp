@@ -18,16 +18,62 @@
  */
 
 #include "conf.h"
-#include "scheme/scheme.h"
+
+#include <fstream>
+
+#include "vm/ioobject.h"
 
 Config::Config()
-	:m_Scheme(Scheme::Instance())
+	:m_List(m_Env)
 {
-	m_Scheme.PrimitiveLoad(DATA_DIR "config.scm");
-	m_HashTable = m_Scheme.LookUp("config");
+	std::ifstream f(DATA_DIR "config.lsp");
+	f >> m_List;
+	VM::WeakObject p(m_List);
+	while(! p.IsNIL())
+	{
+		if(p.GetType() != VM::LIST)
+		{
+			break;
+		}
+
+		VM::WeakObject pair = p.GetHead();
+		if(pair.GetType() == VM::LIST)
+		{
+			if(pair.GetHead().GetType() == VM::SYMBOL)
+			{
+				m_Options.insert(std::make_pair(m_Env.symbol_names[pair.GetHead().GetValue()], pair.GetTail().GetHead()));
+			}
+		}
+
+		p = p.GetTail();
+	}
 }
 
 Config::~Config()
 {
 }
+
+signed long Config::GetSLong(const std::string& name, signed long def) const
+{
+	std::locale loc;
+	std::string strup;
+	for(std::string::const_iterator it = name.begin(); it != name.end(); it ++)
+	{
+		strup += std::toupper(*it, loc);
+	}
+
+	std::map<std::string, VM::WeakObject>::const_iterator it = m_Options.find("CONFIG:" + strup);
+	signed long res = def;
+	if((it != m_Options.end()) && (it->second.GetType() == VM::INTEGER))
+	{
+		res = static_cast<signed long>(it->second.GetValue());
+		std::cout << "Load option " << strup << " = " << res << std::endl;
+	}
+	else
+	{
+		std::cout << "Load default option " << strup << " = " << res << std::endl;
+	}
+	return res;
+}
+
 

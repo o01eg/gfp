@@ -1,6 +1,5 @@
 SUBDIRS = gpstatic \
 	libfunctions \
-	scheme \
 	vm
 bin_PROGRAMS = gfp gplisp gfpstatic
 gfp_SOURCES = conf.cpp \
@@ -25,7 +24,6 @@ gfpstatic_SOURCES = gfpstatic.cpp \
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
-	errors.h \
 	ga.h \
 	ga_utils.h \
 	individual.h \
@@ -39,8 +37,7 @@ gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -I.
 
-gfp_LDADD = scheme/libscheme.a \
-	vm/libvm.a
+gfp_LDADD = vm/libvm.a
 
 if DEBUG
 gplisp_LDADD = vm/libvm_d.a
