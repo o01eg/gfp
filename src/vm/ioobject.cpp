@@ -295,7 +295,7 @@ std::istream& operator>>(std::istream& is, Object& obj)
 				break;
 
 		}
-		reading = static_cast<bool>(level);
+		reading = level > 0;
 	}
 	obj = obj_stack.top();
 	return is;

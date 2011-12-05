@@ -15,6 +15,9 @@ Snapshot ????-??-?? ToDo
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
 
+Now
+ - Support for win32.
+
 Version 0.0.3 2011-12-04
  - Use own interpreter for config.
  - Remove Guile dependencies.

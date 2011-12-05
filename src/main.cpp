@@ -21,6 +21,8 @@
 #include <csignal>
 #include <string>
 #include <fstream>
+#include <ctime>
+
 #include "ga.h"
 #include "current_state.h"
 #include "conf.h"
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
 
 	time_t seed = time(NULL);
 	std::cout << "seed = " << seed << std::endl;
-	srand(seed);
+	srand(static_cast<unsigned int>(seed));
 
 	char *filename = NULL;
 	if(argc == 2)

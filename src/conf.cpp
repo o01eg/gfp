@@ -20,6 +20,7 @@
 #include "conf.h"
 
 #include <fstream>
+#include <locale>
 
 #include "vm/ioobject.h"
 

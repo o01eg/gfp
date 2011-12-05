@@ -38,12 +38,30 @@ Program::Program(const Object &obj)
 			if(ptr.GetHead().GetHead().GetType() == ADF)
 			{
 				Heap::UInt num = ptr.GetHead().GetHead().GetValue();
-				m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
+				if(num < m_ADFs.size())
+				{
+					m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
+				}
+				else
+				{
+					std::stringstream ss;
+					ss << obj;
+					THROW("ADF's num out of range in " + ss.str());
+				}
 			}
 			else if((ptr.GetHead().GetHead().GetType() == LIST) && (! ptr.GetHead().GetHead().GetHead().IsNIL()) && (ptr.GetHead().GetHead().GetHead().GetType() == ADF))
 			{
 				Heap::UInt num = ptr.GetHead().GetHead().GetHead().GetValue();
-				m_ADFs[num] = ptr.GetHead().GetTail().GetHead();				
+				if(num < m_ADFs.size())
+				{
+					m_ADFs[num] = ptr.GetHead().GetTail().GetHead();
+				}
+				else
+				{
+					std::stringstream ss;
+					ss << obj;
+					THROW("ADF's num out of range in " + ss.str());
+				}
 			}
 		}
 

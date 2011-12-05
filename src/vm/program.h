@@ -84,7 +84,7 @@ namespace VM
 		}
 	private:
 		std::vector<Object> m_ADFs; ///< List of ADFs in program.
-		mutable Environment &m_Env; ///< Environment.
+		Environment &m_Env; ///< Environment.
 	};
 }
 

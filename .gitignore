@@ -20,3 +20,5 @@ src/gptest
 src/libfunctions/libfunctions.so
 stamp-h1
 tags
+/win32/Release
+/win32/Debug
