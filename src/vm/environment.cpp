@@ -392,7 +392,7 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 #if _DEBUG_EVAL_
 		std::clog << "args " << std::setw(40) << args << std::endl;
 #endif
-	if(args.IsNIL())
+	if(args.IsNIL() || (args.GetType() == ERROR))
 	{
 #if _DEBUG_EVAL_
 		std::clog << " -> ERROR" << std::endl;
@@ -412,9 +412,11 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 	std::deque<Object> &obj_from_calc = *ptr_obj_from_calc;
 	Object args(*this);
 	std::stack<Object> arguments;
-	//check number of parameters and ERROR
+
+	//check number of parameters and ERROR while stay parameters
 	while(param_number)
 	{
+		// if NIL or other type exclude ERROR
 		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != ERROR)))
 		{
 #if _DEBUG_EVAL_
@@ -424,6 +426,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 			obj_from_calc.pop_back();
 			param_number --;
 		}
+		// if obj_from_calc is empty or get ERROR
 		else
 		{
 #if _DEBUG_EVAL_
@@ -436,13 +439,11 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 				std::clog << "arg end " << std::setw(40) << obj_from_calc.back() << std::endl;
 			}
 #endif
-			break;
+			// then return NIL because cann't get right arguments
+			return Object(*this);
 		}
 	}
-	if(param_number)
-	{
-		return Object(*this);
-	}
+
 	while(! arguments.empty())
 	{
 		args = Object(arguments.top(), args);
