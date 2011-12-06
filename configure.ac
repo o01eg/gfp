@@ -70,6 +70,7 @@ AC_CONFIG_FILES([
     src/libfunctions/Makefile
     src/vm/Makefile
     tools/Makefile
+	win32/Makefile
 ])
 
 AC_OUTPUT
