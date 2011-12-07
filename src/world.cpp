@@ -30,7 +30,12 @@ World::World(VM::Environment &env, const char *filename)
 	m_CurrentMap(env),
 	m_IndObject(env)
 {
-	s_File.SetFile(filename);
+	if(! s_File.SetFile(filename))
+	{
+		std::cerr << "Cann't load world file" << std::endl;
+		abort();
+		return;
+	}
 	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
 	{
 		VM::Object line(env);

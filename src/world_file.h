@@ -37,7 +37,7 @@ public:
 
 	/// \brief Change current file.
 	/// \param[in] filename File with world context.
-	void SetFile(const char* filename);
+	bool SetFile(const char* filename);
 
 	/// \brief Read width of map.
 	/// \return Width.

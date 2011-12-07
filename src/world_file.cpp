@@ -18,20 +18,27 @@
  */
 
 #include <fstream>
+
 #include "world_file.h"
 
-void WorldFile::SetFile(const char* filename)
+bool WorldFile::SetFile(const char* filename)
 {
+	// if already loaded.
 	if(m_FileName == filename)
 	{
-		return;
+		return true;
 	}
+
 	m_FileName = filename;
 	if(m_Map)
 	{
 		this->~WorldFile();
 	}
 	std::ifstream f(filename);
+	if(f.fail())
+	{
+		return false;
+	}
 	f >> m_Width;
 	f >> m_Height;
 	m_Map = new char*[m_Height];
@@ -43,6 +50,7 @@ void WorldFile::SetFile(const char* filename)
 			f >> m_Map[h][w];
 		}
 	}
+	return true;
 }
 
 WorldFile::~WorldFile()
