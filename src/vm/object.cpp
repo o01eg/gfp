@@ -26,6 +26,14 @@
 
 using namespace VM;
 
+#if _DEBUG_OBJECT_
+Object::Object(const Environment &env)
+	:WeakObject(env)
+{
+	GetEnv().AllObjectsInstance().insert(this);
+}
+#endif
+
 Object::Object(const Object &obj)
 	:WeakObject(obj)
 {

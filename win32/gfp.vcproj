@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DATA_DIR=\&quot;./\&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DATA_DIR=\&quot;./\&quot;;_DEBUG_OBJECT_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

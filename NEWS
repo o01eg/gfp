@@ -20,6 +20,7 @@ Now
  * VM
    - Fix function calls with ERROR arguments.
    - Make set of objects local for environment.
+   - Fix Object's debugging for Win32.
 
 Version 0.0.3 2011-12-04
  - Use own interpreter for config.

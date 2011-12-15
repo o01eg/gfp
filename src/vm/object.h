@@ -34,13 +34,14 @@ namespace VM
 
 		/// \brief Create NIL object.
 		/// \param env Used environment.
+#if _DEBUG_OBJECT_
+		explicit Object(const Environment &env);
+#else
 		explicit Object(const Environment &env)
 			:WeakObject(env)
 		{
-#if _DEBUG_OBJECT_
-			GetEnv().AllObjectsInstance().insert(this);
-#endif			
 		}
+#endif
 
 		/// \brief Create parameterless object.
 		/// \param env_ Used environment.

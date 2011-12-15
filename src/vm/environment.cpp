@@ -39,9 +39,13 @@ bool Environment::s_Stop = false;
 
 Environment::Environment()
 	:m_Program(0),
-	m_Symbols(new std::map<std::string, Object>),
-	m_SymbolValues(new std::vector<Object>)
+	m_Symbols(new (std::nothrow) std::map<std::string, Object>),
+	m_SymbolValues(new (std::nothrow) std::vector<Object>)
 {
+	if((m_Symbols == NULL) && (m_SymbolValues == NULL))
+	{
+		THROW("Cann't allocate environment.");
+	}
 	m_Symbols->insert(std::make_pair("NIL", Object(*this)));
 	m_Symbols->insert(std::make_pair("$", Object(*this, PARAM)));
 	m_Symbols->insert(std::make_pair("QUOTE", Object(*this, QUOTE)));
