@@ -36,10 +36,10 @@ World::World(VM::Environment &env, const char *filename)
 		abort();
 		return;
 	}
-	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
 		VM::Object line(env);
-		for(int wm = s_File.GetWidth() - 1; wm >= 0; wm --)
+		for(int wm = s_File.GetWidth() - 1; wm >= 0; -- wm)
 		{
 			VM::Object obj(env);
 			switch(s_File.GetMap()[hm][wm])
@@ -132,10 +132,10 @@ void World::UpdateCurrentMap()
 VM::Object World::GetErrorWorld(VM::Environment& env) const
 {
 	VM::Object res(env);
-	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
 		VM::Object line(env);
-		for(int wm = s_File.GetWidth() - 1; wm >= 0; wm --)
+		for(int wm = s_File.GetWidth() - 1; wm >= 0; -- wm)
 		{
 			if(hm || wm)
 			{
@@ -155,7 +155,7 @@ VM::Object World::GetErrorWorld(VM::Environment& env) const
 VM::Object World::GetErrorWorldLines(VM::Environment &env) const
 {
 	VM::Object res(env);
-	for(int hm = s_File.GetHeight() - 1; hm >= 0; hm --)
+	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
 		res = VM::Object(VM::Object(env, VM::ERROR), res);
 	}
@@ -164,9 +164,9 @@ VM::Object World::GetErrorWorldLines(VM::Environment &env) const
 
 std::ostream& operator<<(std::ostream& os, const World& world)
 {
-	for(int hm = -1; hm <= static_cast<int>(world.s_File.GetHeight()); hm ++)
+	for(int hm = -1; hm <= static_cast<int>(world.s_File.GetHeight()); ++ hm)
 	{
-		for(int wm = -1; wm <= static_cast<int>(world.s_File.GetWidth()); wm ++)
+		for(int wm = -1; wm <= static_cast<int>(world.s_File.GetWidth()); ++ wm)
 		{
 			if(world.CheckCell(wm, hm))
 			{

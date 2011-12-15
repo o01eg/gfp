@@ -84,7 +84,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 	std::vector<Individual::Result> results;
 	VM::Environment env;
 	env.LoadFunctionsFromArray(func_array);
-	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); i ++)
+	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); ++ i)
 	{
 		if(population[i].GetResult().IsTested())
 		{
@@ -92,7 +92,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			continue;
 		}
 		bool equal_ind = false;
-		for(size_t j = 0; j < i; j ++)
+		for(size_t j = 0; j < i; ++ j)
 		{
 			if(population[j].GetText() == population[i].GetText())
 			{
@@ -124,7 +124,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		bool dirs[4] = {false, false, false, false};
 
 			// moving in labirint
-			for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); step ++)
+			for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
 			{
 				circle_count = MAX_CIRCLES;
 				bool changes = false;
@@ -245,7 +245,7 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 			{
 				ss << world;
 			}
-			for(size_t i = 0; i < 4; i ++)
+			for(size_t i = 0; i < 4; ++ i)
 			{
 				if(dirs[i])
 				{

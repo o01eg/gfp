@@ -26,15 +26,11 @@
 
 using namespace VM;
 
-#if _DEBUG_OBJECT_
-std::set<Object*> Object::m_AllObjects;
-#endif
-
 Object::Object(const Object &obj)
 	:WeakObject(obj)
 {
 #if _DEBUG_OBJECT_
-	m_AllObjects.insert(this);
+	GetEnv().AllObjectsInstance().insert(this);
 #endif
 	if(m_Pos)
 	{
@@ -46,9 +42,8 @@ Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_
-	m_AllObjects.insert(this);
-#endif
-#if _DEBUG_OBJECT_
+	GetEnv().AllObjectsInstance().insert(this);
+
 	if((type != ERROR) && (type != PARAM) && (type != QUOTE) && (type != IF) && (type != EVAL))
 	{
 		THROW(FormatString("Object 0x", this, ": Non parameterless type ", type, "."));
@@ -65,7 +60,7 @@ Object::Object(const Environment &env, Types type, Heap::UInt value)
 	:WeakObject(env)
 {
 #if _DEBUG_OBJECT_
-	m_AllObjects.insert(this);
+	GetEnv().AllObjectsInstance().insert(this);
 #endif
 #if _DEBUG_OBJECT_
 	if((type != INTEGER) && (type != FUNC) && (type != ADF) && (type != SYMBOL) && (type != MACRO))
@@ -85,7 +80,7 @@ Object::Object(const Object& head, const Object& tail)
 	:WeakObject(head.GetEnv())
 {
 #if _DEBUG_OBJECT_
-	m_AllObjects.insert(this);
+	GetEnv().AllObjectsInstance().insert(this);
 #endif
 #if _DEBUG_OBJECT_
 	if(&GetEnv() != &tail.GetEnv())
@@ -114,14 +109,14 @@ Object::Object(const Object& head, const Object& tail)
 Object::~Object()
 {
 #if _DEBUG_OBJECT_
-	std::set<Object*>::iterator it = m_AllObjects.find(this);
-	if(it != m_AllObjects.end())
+	std::set<Object*>::iterator it = GetEnv().AllObjectsInstance().find(this);
+	if(it != GetEnv().AllObjectsInstance().end())
 	{
-		m_AllObjects.erase(it);
+		GetEnv().AllObjectsInstance().erase(it);
 	}
 	else
 	{
-		std::cout << "Object 0x" << this << " It didn't be added into objects' list." << std::endl;
+		THROW(FormatString("Object 0x", this, " It didn't be added into objects' list."));
 	}
 #endif
 	if(m_Pos)
@@ -240,21 +235,15 @@ Object Object::GetTail() const
 void Object::PrintObjects(Environment &env, std::ostream &os)
 {
 #if _DOT_MEMORY_
-	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
+	for(std::set<Object*>::const_iterator it = env.AllObjectsInstance().begin(); it != env.AllObjectsInstance().end(); ++ it)
 	{
-		if(&env == &((*it)->GetEnv()) && (*it)->m_Pos)
-		{
-			os << "\"" << (*it) << "\" -> " << (*it)->m_Pos << ";" << std::endl;
-		}
+		os << "\"" << (*it) << "\" -> " << (*it)->m_Pos << ";" << std::endl;
 	}
 #else
 	os << "All Objects:" << std::endl;
-	for(std::set<Object*>::const_iterator it = m_AllObjects.begin(); it != m_AllObjects.end(); it ++)
+	for(std::set<Object*>::const_iterator it = env.AllObjectsInstance().begin(); it != env.AllObjectsInstance().end(); ++ it)
 	{
-		if(&env == &((*it)->GetEnv()))
-		{
-			os << "Object: 0x" << (*it) << " pos:" << (*it)->m_Pos << std::endl;
-		}
+		os << "Object: 0x" << (*it) << " pos:" << (*it)->m_Pos << std::endl;
 	}
 #endif
 }

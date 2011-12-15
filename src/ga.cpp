@@ -30,7 +30,7 @@ GA::GA(size_t population_size_)
 	VM::Environment env;
 	env.LoadFunctionsFromArray(func_array);
 	m_Population = new Population;
-	for(size_t i = 0; i < m_PopulationSize; i ++)
+	for(size_t i = 0; i < m_PopulationSize; ++ i)
 	{
 		//std::clog << "Generating " << i << " individual..." << std::endl;
 		m_Population->push_back(Individual::GenerateRand(env));
@@ -45,7 +45,7 @@ GA::Results GA::Examine() const
 	{
 		return res;
 	}
-	for(size_t i = 0; i < m_PopulationSize; i++)
+	for(size_t i = 0; i < m_PopulationSize; ++ i)
 	{
 		(*m_Population)[i].SetResult(res[i]);
 	}
@@ -92,7 +92,7 @@ bool GA::Step()
 			new_population->push_back(Individual::Crossover(env, m_Population->at(parent_pool[rand() % parent_pool.size()]), m_Population->at(parent_pool[rand() % parent_pool.size()])));
 		}
 
-		for(size_t i = 1; i < m_PopulationSize; i ++)
+		for(size_t i = 1; i < m_PopulationSize; ++ i)
 		{
 			if(rand() % 5 == 0)
 			{
@@ -108,7 +108,7 @@ bool GA::Step()
 
 void GA::DumpResults(const Population &population, std::ostream& os)
 {
-	for(size_t i = 0; i < population.size(); i ++)
+	for(size_t i = 0; i < population.size(); ++ i)
 	{
 		population[i].GetResult().Dump(os);
 	}

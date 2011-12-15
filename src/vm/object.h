@@ -22,10 +22,6 @@
 
 #include "weak_object.h"
 
-#if _DEBUG_OBJECT_
-#include <set>
-#endif
-
 namespace VM
 {
 	/// \brief LISP Objects.
@@ -42,7 +38,7 @@ namespace VM
 			:WeakObject(env)
 		{
 #if _DEBUG_OBJECT_
-			m_AllObjects.insert(this);
+			GetEnv().AllObjectsInstance().insert(this);
 #endif			
 		}
 
@@ -93,11 +89,6 @@ namespace VM
 		/// \param pos Position.
 		/// \return Generated object.
 		static Object GetObjectFrom(Environment &env, Heap::UInt pos);
-
-#if _DEBUG_OBJECT_
-		//Object *self; ///< Copy of this (for debugging).
-		static std::set<Object*> m_AllObjects; /// < List of all objects.
-#endif
 	};
 }
 

@@ -21,6 +21,11 @@
 #define _ENVIRONMENT_H_
 
 #include <map>
+
+#if _DEBUG_OBJECT_
+#include <set>
+#endif
+
 #include "heap.h"
 #include "stack.h"
 
@@ -129,6 +134,13 @@ namespace VM
 		/// \param[in] name Name of symbol.
 		/// \return SYMBOL object.
 		const Object& DefineSymbol(const std::string& name);
+
+#if _DEBUG_OBJECT_
+		std::set<Object*>& AllObjectsInstance()
+		{
+			return m_AllObjects;
+		}
+#endif
 	private:
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
@@ -147,6 +159,11 @@ namespace VM
 		/// \param stack Stack of object.
 		void DumpStack(const std::deque<Object> &stack) const;
 #endif
+		
+#if _DEBUG_OBJECT_
+		std::set<Object*> m_AllObjects; /// Set of all objects in this environment.
+#endif
+
 		Program *m_Program; ///< Program executing in environment.
 
 		static bool s_Stop; ///< Stop all evalations.

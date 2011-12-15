@@ -467,7 +467,7 @@ Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 void Environment::DumpStack(const std::deque<Object> &stack) const
 {
 	std::clog << "Size: " << stack.size() << std::endl;
-	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); it ++)
+	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); ++ it)
 	{
 		std::clog << std::setw(40) << (*it) << std::endl;
 	}

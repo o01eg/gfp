@@ -146,7 +146,7 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	default: // call
 		{
 			size_t func_num = rand() % funcs.size();
-			for(size_t param = 0; param < funcs[func_num].second; param ++)
+			for(size_t param = 0; param < funcs[func_num].second; ++ param)
 			{
 				res = VM::Object(GenerateExec(env, funcs, depth + 1), res);
 			}
@@ -235,11 +235,11 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.functions.size(); i ++)
+	for(size_t i = 0 ; i < env.functions.size(); ++ i)
 	{
 		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 	}
-	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf(env);
 		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
@@ -261,11 +261,11 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.functions.size(); i ++)
+	for(size_t i = 0 ; i < env.functions.size(); ++ i)
 	{
 		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
 	}
-	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf = prog.GetADF(adf_index);
 		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
@@ -302,7 +302,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 		THROW("Different environments in crossovered programs");
 	}
 	VM::Program res(env);
-	for(int adf_index = max_funcs; adf_index >= 0; adf_index --)
+	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf(env);
 		if(prog1.GetADF(adf_index).IsNIL())

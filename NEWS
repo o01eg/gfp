@@ -19,6 +19,7 @@ Now
  - Support for win32.
  * VM
    - Fix function calls with ERROR arguments.
+   - Make set of objects local for environment.
 
 Version 0.0.3 2011-12-04
  - Use own interpreter for config.

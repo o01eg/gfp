@@ -58,7 +58,7 @@ signed long Config::GetSLong(const std::string& name, signed long def) const
 {
 	std::locale loc;
 	std::string strup;
-	for(std::string::const_iterator it = name.begin(); it != name.end(); it ++)
+	for(std::string::const_iterator it = name.begin(); it != name.end(); ++ it)
 	{
 		strup += std::toupper(*it, loc);
 	}

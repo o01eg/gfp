@@ -135,7 +135,7 @@ int main(int argc, char **argv)
 		}
 		GA::Results results = ga.Examine();
 		std::ofstream f("population.txt");
-		for(GA::Results::const_iterator it = results.begin(); it != results.end(); it ++)
+		for(GA::Results::const_iterator it = results.begin(); it != results.end(); ++ it)
 		{
 			f << "[" << size_t(it - results.begin()) << "] = " << ga.GetInd(it->GetIndex()).GetText() << std::endl;
 			ga.GetInd(it->GetIndex()).GetResult().Dump(f);

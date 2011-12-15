@@ -42,10 +42,10 @@ bool WorldFile::SetFile(const char* filename)
 	f >> m_Width;
 	f >> m_Height;
 	m_Map = new char*[m_Height];
-	for(size_t h = 0; h < m_Height; h ++)
+	for(size_t h = 0; h < m_Height; ++ h)
 	{
 		m_Map[h] = new char[m_Width];
-		for(size_t w = 0; w < m_Width; w ++)
+		for(size_t w = 0; w < m_Width; ++ w)
 		{
 			f >> m_Map[h][w];
 		}
@@ -57,7 +57,7 @@ WorldFile::~WorldFile()
 {
 	if(m_Map)
 	{
-		for(size_t h = 0; h < m_Height; h ++)
+		for(size_t h = 0; h < m_Height; ++ h)
 		{
 			if(m_Map[h])
 			{

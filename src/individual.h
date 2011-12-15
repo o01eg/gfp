@@ -53,7 +53,7 @@ public:
 		Result(int index)
 			:m_Index(index)
 		{
-			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
+			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
 			{
 				m_Quality[i] = 0;
 			}
@@ -63,7 +63,7 @@ public:
 		}
 		bool operator<(const Result& result) const
 		{
-			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
+			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
 			{
 				if(m_Quality[i] == result.m_Quality[i])
 				{
@@ -87,7 +87,7 @@ public:
 		{
 			m_Index = result.m_Index;
 			m_Result = result.m_Result;
-			for(size_t i = 0; i < STATUS_VARIABLES; i ++)
+			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
 			{
 				m_Quality[i] = result.m_Quality[i];
 			}
@@ -154,7 +154,7 @@ public:
 	Result GetResult(int i) const
 	{
 		Result res(i);
-		for(size_t j = 0; j < Result::STATUS_VARIABLES; j ++)
+		for(size_t j = 0; j < Result::STATUS_VARIABLES; ++ j)
 		{
 			res.m_Quality[j] = m_Result.m_Quality[j];
 		}
