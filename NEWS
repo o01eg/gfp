@@ -7,7 +7,7 @@ Snapshot ????-??-?? ToDo
    - Own tokenizer.
    - Use SYMBOL for storing FUNC name.
  * GP
-   - Static types.
+   * Static types.
      + Generate ADF.
      + Mutate ADF.
      + Crossover ADF.
@@ -21,6 +21,9 @@ Now
    - Fix function calls with ERROR arguments.
    - Make set of objects local for environment.
    - Fix Object's debugging for Win32.
+ * GP
+   * Static types
+     + Move types to file.
 
 Version 0.0.3 2011-12-04
  - Use own interpreter for config.

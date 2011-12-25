@@ -1,5 +1,4 @@
-SUBDIRS = gpstatic \
-	libfunctions \
+SUBDIRS = libfunctions \
 	vm
 bin_PROGRAMS = gfp gplisp gfpstatic
 gfp_SOURCES = conf.cpp \
@@ -18,9 +17,7 @@ gplisp_SOURCES = current_state.cpp \
 	gplisp.cpp \
 	libfunctions/functions.cpp \
 	logbuf.cpp
-gfpstatic_SOURCES = gfpstatic.cpp \
-	gpstatic/functions.cpp \
-	gpstatic/types.cpp
+gfpstatic_SOURCES = gfpstatic.cpp 
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
