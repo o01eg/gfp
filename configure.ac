@@ -34,7 +34,7 @@ AC_ARG_ENABLE([gprof],
 
 AC_ARG_ENABLE([debug],
 	[AS_HELP_STRING([--enable-debug],
-		[suppurt for debugging @<:@default=no@:>@])],
+		[support for debugging @<:@default=no@:>@])],
 	[CXXFLAGS="-fno-inline -ggdb3 -O0 `echo $CXXFLAGS | sed \"s/-O.//\"`"],
 	[enable_debug=no])
 AM_CONDITIONAL(DEBUG, test "x$enable_debug" != xno)
@@ -66,7 +66,6 @@ AC_CONFIG_FILES([
     doc/Makefile
     m4/Makefile
     src/Makefile
-    src/gpstatic/Makefile
     src/libfunctions/Makefile
     src/vm/Makefile
     tools/Makefile
