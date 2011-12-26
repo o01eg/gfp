@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DATA_DIR=\&quot;./\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../src/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DATA_DIR=\&quot;./\&quot;"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -173,15 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\gpstatic\functions.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\gfpstatic.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\gpstatic\types.cpp"
 				>
 			</File>
 		</Filter>
@@ -190,14 +182,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\src\gpstatic\functions.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\gpstatic\types.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

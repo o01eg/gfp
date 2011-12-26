@@ -34,14 +34,7 @@ namespace VM
 
 		/// \brief Create NIL object.
 		/// \param env Used environment.
-#if _DEBUG_OBJECT_
 		explicit Object(const Environment &env);
-#else
-		explicit Object(const Environment &env)
-			:WeakObject(env)
-		{
-		}
-#endif
 
 		/// \brief Create parameterless object.
 		/// \param env_ Used environment.
@@ -79,11 +72,11 @@ namespace VM
 		/// \warn const_cast must be exists here because WeakObject cann't store mutable or non-const Environment.
 		/// \return Environment.
 		Environment& GetEnv() const {return const_cast<Environment&>(WeakObject::GetEnv());}
+	private:
 #if _DEBUG_OBJECT_
 		/// \brief Print all exist objects.
 		static void PrintObjects(Environment &env, std::ostream &os);
 #endif
-	private:
 		/// \brief Create object by position.
 		/// \sa GetHead GetTail
 		/// \param env Environment.

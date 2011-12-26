@@ -32,6 +32,11 @@ Object::Object(const Environment &env)
 {
 	GetEnv().AllObjectsInstance().insert(this);
 }
+#else
+Object::Object(const Environment &env)
+	:WeakObject(env)
+{
+}
 #endif
 
 Object::Object(const Object &obj)
