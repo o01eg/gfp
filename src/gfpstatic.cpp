@@ -24,6 +24,61 @@
 #include <vm/ioobject.h>
 #include <vm/logger.h>
 
+std::pair<VM::Object, size_t> get_unbindes(const VM::Object& obj)
+{
+	std::pair<VM::Object, size_t> res = std::make_pair(obj, 0);
+	if(! obj.IsNIL())
+	{
+		// if type is MACRO, then it self undinded
+		if(obj.GetType() == VM::MACRO)
+		{
+			res.second = 1;
+		}
+		// if type is LIST then it possible unbinded type
+		else if(obj.GetType() == VM::LIST)
+		{
+			size_t unbinded_parameters = 0;
+
+			// search on the all tree for MACRO, check for single use it
+			std::stack<VM::WeakObject> stack;
+			stack.push(obj);
+			size_t num_macros = 0;
+			while(! stack.empty())
+			{
+				VM::WeakObject p = stack.top();
+				stack.pop();
+
+				if(! p.IsNIL())
+				{
+					if(p.GetType() == VM::MACRO)
+					{
+						if(p.GetValue() == unbinded_parameters)
+						{
+							THROW(FormatString("Duplicate MACRO &", unbinded_parameters, " in ", obj));
+						}
+						else if(p.GetValue() > unbinded_parameters)
+						{
+							unbinded_parameters = p.GetValue();	
+						}
+						++ num_macros;
+					}
+					else if(p.GetType() == VM::LIST)
+					{
+						stack.push(p.GetHead());
+						stack.push(p.GetTail());
+					}
+				}
+			}
+			if(num_macros != unbinded_parameters)
+			{
+				THROW(FormatString("Wrong MACRO in ", obj));
+			}
+			res.second = num_macros;
+		}
+	}
+	return res;
+}
+
 int main(int argc, char **argv)
 {
 	{
@@ -46,62 +101,16 @@ int main(int argc, char **argv)
 		while((! p.IsNIL()) && (p.GetType() == VM::LIST))
 		{
 			VM::Object t = p.GetHead();
-			if(! t.IsNIL())
+			std::pair<VM::Object, size_t> unbind = get_unbindes(t);
+			if(unbind.second > 0)
 			{
-				// if type is SYMBOL, then it defined type
-				if(t.GetType() == VM::SYMBOL)
-				{
-					defined_types.push_back(t);
-				}
-				// if type is LIST then it possible unbinded type
-				else if(t.GetType() == VM::LIST)
-				{
-					size_t unbinded_parameters = 0;
-
-					// search on the all tree fo MACRO, check for single use it
-					std::stack<VM::WeakObject> stack;
-					stack.push(t);
-					size_t num_macros = 0;
-					while(! stack.empty())
-					{
-						VM::WeakObject p = stack.top();
-						stack.pop();
-
-						if(! p.IsNIL())
-						{
-							if(p.GetType() == VM::MACRO)
-							{
-								if(p.GetValue() == unbinded_parameters)
-								{
-									THROW(FormatString("Duplicate MACRO &", unbinded_parameters, " in ", t));
-								}
-								else if(p.GetValue() > unbinded_parameters)
-								{
-									unbinded_parameters = p.GetValue();	
-								}
-								++ num_macros;
-							}
-							else if(p.GetType() == VM::LIST)
-							{
-								stack.push(p.GetHead());
-								stack.push(p.GetTail());
-							}
-						}
-					}
-					if(num_macros != unbinded_parameters)
-					{
-						THROW(FormatString("Wrong MACRO in ", t));
-					}
-					if(num_macros > 0)
-					{
-						unbinded_types.push_back(std::make_pair(t, num_macros));
-					}
-					else
-					{
-						defined_types.push_back(t);
-					}
-				}
+				unbinded_types.push_back(unbind);
 			}
+			else
+			{
+				defined_types.push_back(t);
+			}
+
 			p = p.GetTail();
 		}
 
