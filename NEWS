@@ -14,6 +14,7 @@ Snapshot ????-??-?? ToDo
    - Program optimization.
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
+   - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
 Now
  - Support for win32.
