@@ -2,7 +2,7 @@
 
 AC_INIT(
  [Genetic Functional Programming],
- [0.0.3],
+ [0.0.4],
  [o01eg@yandex.ru],
  [gfp])
 
@@ -10,7 +10,7 @@ AC_CONFIG_SRCDIR([src/main.cpp])
 
 AC_CONFIG_HEADERS([config.h])
 
-AM_INIT_AUTOMAKE([-Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([-Wall -Werror dist-bzip2 foreign])
 
 # == basic compiler settings ==
 

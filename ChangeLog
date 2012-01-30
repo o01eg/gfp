@@ -1,3 +1,14 @@
+Version 0.0.4 2012-01-30
+ - Support for win32.
+ - Relicense as MIT.
+ * VM
+   - Fix function calls with ERROR arguments.
+   - Make set of objects local for environment.
+   - Fix Object's debugging for Win32.
+ * GP
+   * Static types
+     + Move types to file.
+
 Version 0.0.3 2011-12-04
  - Use own interpreter for config.
  - Remove Guile dependencies.

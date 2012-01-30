@@ -16,8 +16,9 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
-Now
+Version 0.0.4 2012-01-30
  - Support for win32.
+ - Relicense as MIT.
  * VM
    - Fix function calls with ERROR arguments.
    - Make set of objects local for environment.
