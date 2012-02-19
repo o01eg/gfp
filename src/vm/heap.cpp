@@ -40,7 +40,10 @@ const char *type_str[] = {
 	"PARAM",
 	"QUOTE",
 	"IF",
-	"LIST"
+	"LIST",
+	"EVAL",
+	"SYMBOL",
+	"MACRO"
 };
 #endif
 
