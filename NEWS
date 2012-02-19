@@ -18,7 +18,11 @@ Snapshot ????-??-?? ToDo
 
 Now
  * VM
-   - Add comparator for WeakObject and Object to use with STL containers
+   - Add comparator for WeakObject and Object to use with STL containers.
+ * GP
+   * Static types
+     + Remove types in file.
+     + Add type <-> expression converters for atoms (integers, booleans, symbols).
 
 Version 0.0.4 2012-01-30
  - Support for win32.
