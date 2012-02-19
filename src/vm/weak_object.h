@@ -49,6 +49,12 @@ namespace VM
 	class WeakObject
 	{
 	public:
+		/// \brief Comparator for std::set
+		struct Comparator
+		{
+			bool operator()(const WeakObject& a, const WeakObject& b) const;
+		};
+
 		/// \brief Copy constructor.
 		/// \param obj Object.
 		WeakObject(const WeakObject& obj)
