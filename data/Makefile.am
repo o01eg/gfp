@@ -6,8 +6,7 @@ EXTRA_DIST = config.lsp \
 	ackermann.lsp \
 	closure.lsp \
 	symbol.lsp \
-	labirint.txt \
-	static_types.lsp
+	labirint.txt
 dist_DATA = $(EXTRA_DIST)
 distdir = $(pkgdatadir)
 
