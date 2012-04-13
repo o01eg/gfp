@@ -30,6 +30,11 @@
 /// \brief GP-related stuff.
 namespace GP
 {
+	/// \brief Check if object contain evalable PARAM
+	/// \param Object.
+	/// \return Is PARAM contained.
+	bool IsContainParam(const VM::WeakObject &obj);
+
 	/// \brief Check for using params in function.
 	/// \param func Function.
 	/// \return Is have any params.
@@ -41,6 +46,12 @@ namespace GP
 	/// \param depth Depth.
 	/// \return Generated object.
 	VM::Object GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
+
+	/// \brief Reduce all constant parts.
+	/// \param obj Object to reduction.
+	/// \param prog Context of evalation.
+	/// \return Optimized object.
+	VM::Object Optimize(const VM::Object& obj, VM::Program& prog);
 
 	/// \brief Generate any object.
 	/// \param env Environment.

@@ -29,6 +29,47 @@
 #include "conf.h"
 
 const size_t MAX_DEPTH = Config::Instance().GetSLong("max-object-depth", 8);
+const size_t MAX_OPT_LOOPS = Config::Instance().GetSLong("max-opt-loops", 512);
+
+bool GP::IsContainParam(const VM::WeakObject &obj)
+{
+	std::stack<VM::WeakObject> stack;
+	bool result = false;
+	stack.push(obj);
+	while(! stack.empty())
+	{
+		VM::WeakObject t = stack.top();
+		stack.pop();
+
+		if(! t.IsNIL())
+		{
+			switch(t.GetType())
+			{
+			case VM::LIST: // get list
+				if(! t.GetHead().IsNIL())
+				{
+					if(t.GetHead().GetType() == VM::QUOTE)
+					{
+						break; // doesn't store ( QUOTE ... )
+					}
+				}
+				// fill stack
+				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+				{
+					stack.push(t.GetHead());
+
+					t = t.GetTail();
+				}
+				break;
+			case VM::PARAM:
+				return true;
+			default:
+				break; //do nothing
+			}
+		}
+	}
+	return result;
+}
 
 bool GP::CheckForParam(const VM::WeakObject &func)
 {
@@ -162,6 +203,64 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	return res;
 }
 
+VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
+{
+	VM::Environment &env = obj.GetEnv();
+	VM::Object res(env);
+	env.SetProgram(prog);
+
+	if(GP::IsContainParam(obj))
+	{
+		// something containg PARAM not in QUOTE
+		if(obj.GetType() == VM::PARAM)
+		{
+			return obj;
+		}
+		else
+		{
+			// obj is LIST not ( QUOTE ... )
+			VM::Object t = obj;
+			std::stack<VM::Object> stack;
+			while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+			{
+				stack.push(GP::Optimize(t.GetHead(), prog));
+
+				t = t.GetTail();
+			}
+
+			t = VM::Object(env);
+			while(! stack.empty())
+			{
+				t = VM::Object(stack.top(), t);
+				stack.pop();
+			}
+			return t;
+		}
+	}
+	else
+	{
+		size_t circle_count = MAX_OPT_LOOPS;
+		res = env.Eval(obj, &circle_count);
+		if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
+		{
+			return obj;
+		}
+		else
+		{
+			if(res.IsNIL() || (res.GetType() == VM::INTEGER))
+			{
+				return res;
+			}
+			else
+			{
+				return VM::Object(VM::Object(env, VM::QUOTE), VM::Object(res, VM::Object(env)));
+			}
+		}
+	}
+
+	return res;
+}
+
 VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
 {
 	VM::Object res(obj.GetEnv());
@@ -254,6 +353,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 		}
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res));
 	}
 	res.Minimize();
 	return res;
@@ -281,7 +381,6 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 				adf = GP::GenerateExec(env, funcs, 0);
 			}
 			while(! GP::CheckForParam(adf));
-			res.SetADF(adf_index, adf);
 		}
 		else
 		{
@@ -294,6 +393,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res));
 	}
 	res.Minimize();
 	return res;
@@ -339,6 +439,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 			}
 		}
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res));
 	}
 	res.Minimize();
 	return res;

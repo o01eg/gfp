@@ -20,6 +20,7 @@ Now
  * VM
    - Add comparator for WeakObject and Object to use with STL containers.
  * GP
+   - Add optimization.
    * Static types
      + Remove types in file.
      + Add type <-> expression converters for atoms (integers, booleans, symbols).
