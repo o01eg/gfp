@@ -24,18 +24,24 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-Wall -Wextra -pedantic -Wc++0x-compat -fno-exceptions -fno-rtti -std=c++0x $CXXFLAGS"
+CXXFLAGS="-Wall -Wextra -Wc++0x-compat -fno-exceptions -fno-rtti -std=c++0x $CXXFLAGS"
+LDFLAGS="$LDFLAGS"
+
+AC_ARG_ENABLE([lto],
+	[AS_HELP_STRING([--enable-lto], [Enable Link-Time Optimization @<:@default=no@:>@])],
+	[CXXFLAGS="-flto $CXXFLAGS";LDFLAGS="-flto $LDFLAGS"],
+	[])
 
 AC_ARG_ENABLE([gprof],
 	[AS_HELP_STRING([--enable-gprof],
-		[suppurt for profiling @<:@default=no@:>@])],
+		[support for profiling @<:@default=no@:>@])],
 	[CXXFLAGS="-pg $CXXFLAGS";LDFLAGS="-pg $LDFLAGS"],
 	[])
 
 AC_ARG_ENABLE([debug],
 	[AS_HELP_STRING([--enable-debug],
 		[support for debugging @<:@default=no@:>@])],
-	[CXXFLAGS="-fno-inline -ggdb3 -O0 `echo $CXXFLAGS | sed \"s/-O.//\"`"],
+	[CXXFLAGS="-fno-inline -ggdb3 -O0 `echo $CXXFLAGS | sed \"s/-O.//\"`";LGFLAGS="-O0 `echo $LDFLAGS | sed \"s/-O.//\"`"],
 	[enable_debug=no])
 AM_CONDITIONAL(DEBUG, test "x$enable_debug" != xno)
 
@@ -73,4 +79,8 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
+
+echo "CXX: $CXX"
+echo "CXXFLAGS: $CXXFLAGS"
+echo "LDFLAGS: $LDFLAGS"
 
