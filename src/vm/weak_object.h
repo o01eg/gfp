@@ -48,6 +48,7 @@ namespace VM
 	/// \brief Object for unchanging reference counter.
 	class WeakObject
 	{
+		friend struct std::hash<WeakObject>;
 	public:
 		/// \brief Copy constructor.
 		/// \param obj Object.
@@ -126,6 +127,19 @@ namespace VM
 	protected:
 		Heap::UInt m_Pos; ///< Position in heap.
 	};
+}
+
+namespace std // allow for specializations
+{
+	template<> struct hash<VM::WeakObject> : public unary_function<VM::WeakObject, size_t>
+	{
+	public:
+		size_t inline operator()(const VM::WeakObject &obj) const
+		{
+			return obj.m_Pos ? obj.m_Env.heap.At(obj.m_Pos).hash : 0;
+		}
+	};
+
 }
 
 #endif

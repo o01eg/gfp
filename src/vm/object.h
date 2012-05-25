@@ -95,5 +95,18 @@ namespace VM
 	};
 }
 
+namespace std // allow for specializations
+{
+	template<> struct hash<VM::Object> : public unary_function<VM::Object, size_t>
+	{
+	public:
+		size_t inline operator()(const VM::Object &obj) const
+		{
+			return hash<VM::WeakObject>()(obj);
+		}
+	};
+
+}
+
 #endif 
 
