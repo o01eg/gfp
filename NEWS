@@ -24,7 +24,6 @@ Now
    - Add optimization.
    * Static types
      + Remove types in file.
-     + Add type <-> expression converters for atoms (integers, booleans, symbols).
 
 Version 0.0.4 2012-01-30
  - Support for win32.
