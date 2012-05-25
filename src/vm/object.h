@@ -37,6 +37,10 @@ namespace VM
 		/// \param obj Object.
 		Object(const Object& obj);
 
+		/// \breif Move constructor.
+		/// \param obj Other object.
+		Object(Object &&obj);
+
 		/// \brief Create NIL object.
 		/// \param env Used environment.
 		explicit Object(const Environment &env);

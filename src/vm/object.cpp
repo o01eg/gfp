@@ -56,6 +56,15 @@ Object::Object(const Object &obj)
 	}
 }
 
+Object::Object(Object &&obj)
+	:WeakObject(obj) // this.m_Pos = obj.m_Pos
+{
+#if _DEBUG_OBJECT_
+	GetEnv().AllObjectsInstance().insert(this);
+#endif
+	obj.m_Pos = 0;
+}
+
 Object::Object(const Environment &env, Types type)
 	:WeakObject(env)
 {
