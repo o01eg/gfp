@@ -25,7 +25,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <map>
+#include <unordered_map>
 
 #include "vm/environment.h"
 #include "vm/object.h"
@@ -48,7 +48,7 @@ private:
 	Config(const Config&); ///< Prevent copy-constructor
 	Config& operator=(const Config&); ///< Prevent assing
 
-	std::map<std::string, VM::WeakObject> m_Options; // Map of options
+	std::unordered_map<std::string, VM::WeakObject> m_Options; // Map of options
 	VM::Environment m_Env; // Environment with options
 	VM::Object m_List; // Pointer to options list
 };

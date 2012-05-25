@@ -25,7 +25,7 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
-#include <map>
+#include <unordered_map>
 
 #if _DEBUG_OBJECT_
 #include <set>
@@ -173,7 +173,7 @@ namespace VM
 
 		static bool s_Stop; ///< Stop all evalations.
 
-		std::map<std::string, Object> *m_Symbols; ///< String to object conversion.
+		std::unordered_map<std::string, Object> *m_Symbols; ///< String to object conversion.
 		std::vector<Object> *m_SymbolValues; ///< List of symbols values.
 	};
 }

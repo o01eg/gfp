@@ -44,7 +44,7 @@ bool Environment::s_Stop = false;
 
 Environment::Environment()
 	:m_Program(0),
-	m_Symbols(new (std::nothrow) std::map<std::string, Object>),
+	m_Symbols(new (std::nothrow) std::unordered_map<std::string, Object>),
 	m_SymbolValues(new (std::nothrow) std::vector<Object>)
 {
 	if((m_Symbols == NULL) && (m_SymbolValues == NULL))
@@ -485,7 +485,7 @@ void Environment::DumpStack(const std::deque<Object> &stack) const
 
 bool Environment::GetObject(const std::string& name, Object* obj) const
 {
-	std::map<std::string, Object>::const_iterator it = m_Symbols->find(name);
+	std::unordered_map<std::string, Object>::const_iterator it = m_Symbols->find(name);
 	if(it == m_Symbols->end())
 	{
 		return false;
@@ -507,7 +507,7 @@ const Object& Environment::DefineSymbol(const std::string& name, const Object& o
 	}
 	
 	std::vector<std::string>::iterator it = std::find(symbol_names.begin(), symbol_names.end(), name);
-	std::pair<std::map<std::string, Object>::iterator, bool> res;
+	std::pair<std::unordered_map<std::string, Object>::iterator, bool> res;
 	if(it == symbol_names.end())
 	{
 		Heap::UInt index = symbol_names.size();

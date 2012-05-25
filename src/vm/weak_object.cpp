@@ -27,54 +27,6 @@
 
 using namespace VM;
 
-bool WeakObject::Comparator::operator()(const WeakObject& a, const WeakObject& b) const
-{
-	if(b.IsNIL())
-	{
-		//each not less that NIL
-		return false;
-	}
-	// b not NIL
-	if(a.IsNIL())
-	{
-		// NIL less than not NIL
-		return true;
-	}
-	// a not NIL
-	if(a.GetType() == b.GetType())
-	{
-		switch(a.GetType())
-		{
-			case ERROR:
-			case PARAM:
-			case QUOTE:
-			case IF:
-			case EVAL:
-				// without value, equal
-				return false;
-
-			case INTEGER:
-				return static_cast<signed long>(a.GetValue()) < static_cast<signed long>(b.GetValue());
-
-			case FUNC:
-			case ADF:
-			case SYMBOL:
-			case MACRO:
-				// with value, compare
-				return a.GetValue() < b.GetValue();
-
-			case LIST:
-				/// @todo rewrite to stack;
-				if(a.GetHead() == b.GetHead())
-				{
-					return this->operator()(a.GetTail(),b.GetTail());
-				}
-				return this->operator()(a.GetHead(),b.GetHead());
-		}
-	}
-	return a.GetType() < b.GetType();
-}
-
 WeakObject& WeakObject::operator=(const WeakObject& obj)
 {
 	if(this != &obj)

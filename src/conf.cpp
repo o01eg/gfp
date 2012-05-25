@@ -68,7 +68,7 @@ signed long Config::GetSLong(const std::string& name, signed long def) const
 		strup += std::toupper(*it, loc);
 	}
 
-	std::map<std::string, VM::WeakObject>::const_iterator it = m_Options.find("CONFIG:" + strup);
+	std::unordered_map<std::string, VM::WeakObject>::const_iterator it = m_Options.find("CONFIG:" + strup);
 	signed long res = def;
 	if((it != m_Options.end()) && (it->second.GetType() == VM::INTEGER))
 	{

@@ -58,13 +58,19 @@ AS_IF([test "x$enable_multithread" != xno],
 	[])
 AM_CONDITIONAL(MULTITHREAD, test "x$enable_multithread" != xno)
 
+AC_LANG_PUSH(C++)
+
 # == check for header files ==
+
+AC_CHECK_HEADERS([unordered_map], [], [AC_MSG_ERROR([Header <unordered_map> not found])])
 
 # == check for typedefs, structers and compiler characteristics ==
 
 # == check for library functions ==
 
 # == generate files ==
+
+AC_LANG_POP(C++)
 
 AC_CONFIG_FILES([
     Makefile

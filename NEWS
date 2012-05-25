@@ -17,6 +17,7 @@ Snapshot ????-??-?? ToDo
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
 Now
+ - Support for C++0x (GCC 4.5.3)
  * VM
    - Add comparator for WeakObject and Object to use with STL containers.
  * GP
