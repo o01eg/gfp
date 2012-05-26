@@ -45,8 +45,9 @@ private:
 	Config();
 	~Config();
 
-	Config(const Config&); ///< Prevent copy-constructor
-	Config& operator=(const Config&); ///< Prevent assing
+	Config(const Config&) = delete; ///< Prevent copy-constructor.
+	Config(Config&&) = delete; ///< Prevent move-constructor.
+	Config& operator=(const Config&) = delete; ///< Prevent assing.
 
 	std::unordered_map<std::string, VM::WeakObject> m_Options; // Map of options
 	VM::Environment m_Env; // Environment with options

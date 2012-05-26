@@ -26,13 +26,13 @@
 #define _ENVIRONMENT_H_
 
 #include <unordered_map>
+#include <stack>
 
 #if _DEBUG_OBJECT_
 #include <set>
 #endif
 
 #include "heap.h"
-#include "stack.h"
 
 namespace VM
 {
@@ -80,7 +80,6 @@ namespace VM
 		};
 
 		Heap heap; ///< Heap of objects.
-		Stack stack; ///< Stack.
 		std::vector<Func> functions; ///< Functions' list.
 		std::vector<std::string> symbol_names; ///< Symbols' list.
 
@@ -147,22 +146,26 @@ namespace VM
 		}
 #endif
 	private:
+		Environment(const Environment&) = delete; //Prevent copy-constructor.
+		Environment(Environment&&) = delete; //Prevent move-constructor.
+		Environment& operator=(const Environment&) = delete; //Prevent assign.
+
 		/// \brief Execute Function.
 		/// \param func_number Number of function in functions.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return Result of execution.
-		Object CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const;
+		Object CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc) const;
 
 		/// \brief Generate list of arguments.
 		/// \param param_number Nuber of parameters.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
 		/// \return List of arguments or NIL if error.
-		Object GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc) const;
+		Object GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const;
 
 #if _DEBUG_EVAL_
 		/// \brief Dump content of stack.
 		/// \param stack Stack of object.
-		void DumpStack(const std::deque<Object> &stack) const;
+		void DumpStack(const std::stack<Object> &stack) const;
 #endif
 		
 #if _DEBUG_OBJECT_

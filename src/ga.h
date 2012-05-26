@@ -102,6 +102,10 @@ public:
 	/// \param[in] os Output stream.
 	static void DumpResults(const Population& population, std::ostream& os);
 private:
+	GA(const GA&) = delete; //Prevent copy-constructor.
+	GA(GA&&) = delete; //Prevent move-constructor.
+	GA& operator=(const GA&) = delete; //Prevent assign.
+
 	size_t m_PopulationSize; ///< Size of population.
 	Population *m_Population; ///< Auto pointer to population.
 };

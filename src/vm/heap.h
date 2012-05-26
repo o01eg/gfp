@@ -122,14 +122,10 @@ namespace VM
 
 		std::vector<Element*> blocks; ///< Blocks of elements.
 
-		/// \brief Block for copy-constructor.
-		/// \param heap Another heap.
-		Heap(const Heap& heap);
+		Heap(const Heap&) = delete; //Prevent copy-constructor.
+		Heap(Heap&&) = delete; //Prevent move-constructor.
+		Heap& operator=(const Heap&) = delete; //Prevent assign.
 
-		/// \brief Block for copying heap.
-		/// \param heap Another heap.
-		/// \return Reference to heap.
-		Heap& operator=(const Heap& heap);
 	};
 }
 

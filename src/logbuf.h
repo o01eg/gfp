@@ -36,8 +36,9 @@ class LogBuf: public std::streambuf
 {
 private:
 	LogBuf(); ///< Default constructor.
-	LogBuf(const LogBuf&); ///< Avoid autogenerating public constructor.
-	LogBuf& operator=(const LogBuf&); ///< Avoid autogenerating public operator.
+	LogBuf(const LogBuf&) = delete; //Prevent copy-constructor.
+	LogBuf(LogBuf&&) = delete; //Prevent move-constructor.
+	LogBuf& operator=(const LogBuf&) = delete; //Prevent assign.
 	~LogBuf(); ///< Destructor.
 
 	/// \brief Overloaded std::streambuf::overflow.

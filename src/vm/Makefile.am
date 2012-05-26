@@ -4,7 +4,6 @@ noinst_HEADERS = environment.h \
 	logger.h \
 	object.h \
 	program.h \
-	stack.h \
 	weak_object.h
 
 if DEBUG

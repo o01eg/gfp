@@ -79,11 +79,11 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #endif
 	// create all needed stacks
 	std::stack<Object> adf_params_obj;
-	std::deque<Object> obj_to_calc, obj_from_calc;
+	std::stack<Object> obj_to_calc, obj_from_calc;
 	std::stack<Heap::UInt> adf_depth;
 	bool is_in_adf = false;
 
-	obj_to_calc.push_back(arg1);
+	obj_to_calc.push(arg1);
 
 	size_t circle_count = *p_circle_counter;
 
@@ -120,12 +120,12 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #endif
 			return Object(*this, ERROR);
 		}
-		Object obj = obj_to_calc.back();
-		obj_to_calc.pop_back();
+		Object obj = obj_to_calc.top();
+		obj_to_calc.pop();
 
 		if(obj.IsNIL() || (obj.GetType() == ERROR) || (obj.GetType() == INTEGER))
 		{
-			obj_from_calc.push_back(obj);
+			obj_from_calc.push(obj);
 		}
 		else
 		{
@@ -135,7 +135,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					{
 						// make arguments list and call
 						Object res = CallFunction(obj.GetValue(), &obj_from_calc);
-						obj_from_calc.push_back(res);
+						obj_from_calc.push(res);
 					}
 					break;
 				case LIST:
@@ -155,14 +155,14 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push_back(head);
+										obj_to_calc.push(head);
 										obj = obj.GetTail();
 									}
 									break;
 								case QUOTE:
 									if((! obj.GetTail().IsNIL()) && (obj.GetTail().GetType() == LIST))
 									{
-										obj_from_calc.push_back(obj.GetTail().GetHead());
+										obj_from_calc.push(obj.GetTail().GetHead());
 									}
 									else
 									{
@@ -175,10 +175,10 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 										Object cond = obj.GetTail().GetHead();
 										Object otrue = obj.GetTail().GetTail().GetHead();
 										Object ofalse = obj.GetTail().GetTail().GetTail().GetHead();
-										obj_to_calc.push_back(ofalse);
-										obj_to_calc.push_back(otrue);
-										obj_to_calc.push_back(head);
-										obj_to_calc.push_back(cond);
+										obj_to_calc.push(ofalse);
+										obj_to_calc.push(otrue);
+										obj_to_calc.push(head);
+										obj_to_calc.push(cond);
 									}
 									break;
 								case EVAL:
@@ -186,8 +186,8 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									{
 										// move arg into to-calc stack.
 										Object arg = obj.GetTail().GetHead();
-										obj_to_calc.push_back(head);
-										obj_to_calc.push_back(arg);
+										obj_to_calc.push(head);
+										obj_to_calc.push(arg);
 									}
 									else
 									{
@@ -195,19 +195,19 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									break;
 								case SYMBOL:
-									obj_to_calc.push_back(m_SymbolValues->at(head.GetValue()));
+									obj_to_calc.push(m_SymbolValues->at(head.GetValue()));
 									obj = obj.GetTail();
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push_back(head);
+										obj_to_calc.push(head);
 										obj = obj.GetTail();
 									}
 									break;
 								case PARAM:
 									if(is_in_adf)
 									{
-										obj_to_calc.push_back(adf_params_obj.top());
+										obj_to_calc.push(adf_params_obj.top());
 									}
 									else
 									{
@@ -217,7 +217,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push_back(head);
+										obj_to_calc.push(head);
 										obj = obj.GetTail();
 									}
 									break;
@@ -231,16 +231,16 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case IF:
 					if((! obj_from_calc.empty()) && (obj_to_calc.size() >= 2))
 					{
-						Object cond = obj_from_calc.back();
-						obj_from_calc.pop_back();
-						Object otrue = obj_to_calc.back();
-						obj_to_calc.pop_back();
-						Object ofalse = obj_to_calc.back();
-						obj_to_calc.pop_back();
+						Object cond = obj_from_calc.top();
+						obj_from_calc.pop();
+						Object otrue = obj_to_calc.top();
+						obj_to_calc.pop();
+						Object ofalse = obj_to_calc.top();
+						obj_to_calc.pop();
 						if(cond.IsNIL())
 						{
 							// false
-							obj_to_calc.push_back(ofalse);
+							obj_to_calc.push(ofalse);
 						}
 						else
 						{
@@ -249,7 +249,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 								return cond;
 							}
 							// true
-							obj_to_calc.push_back(otrue);
+							obj_to_calc.push(otrue);
 						}
 					}
 					else
@@ -260,9 +260,9 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case EVAL:
 					if(! obj_from_calc.empty())
 					{
-						Object arg = obj_from_calc.back();
-						obj_from_calc.pop_back();
-						obj_to_calc.push_back(arg);
+						Object arg = obj_from_calc.top();
+						obj_from_calc.pop();
+						obj_to_calc.push(arg);
 					}
 					else
 					{
@@ -281,8 +281,8 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						adf_params_obj.push(obj_from_calc.back());
-						obj_from_calc.pop_back();
+						adf_params_obj.push(obj_from_calc.top());
+						obj_from_calc.pop();
 						adf_depth.push(obj_to_calc.size());
 #if _DEBUG_EVAL_
 						std::clog << "Enter " << adf_depth.top() << std::endl;
@@ -291,13 +291,13 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 						{
 							return Object(*this, ERROR);
 						}
-						obj_to_calc.push_back(m_Program->GetADF(obj.GetValue()));
+						obj_to_calc.push(m_Program->GetADF(obj.GetValue()));
 					}
 					break;
 				case PARAM:
 					if(is_in_adf)
 					{
-						obj_from_calc.push_back(adf_params_obj.top());
+						obj_from_calc.push(adf_params_obj.top());
 					}
 					else
 					{
@@ -305,7 +305,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					break;
 				case SYMBOL:
-					obj_from_calc.push_back(m_SymbolValues->at(obj.GetValue()));
+					obj_from_calc.push(m_SymbolValues->at(obj.GetValue()));
 					break;
 				case QUOTE:
 				default:
@@ -330,17 +330,14 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	if((obj_from_calc.size() == 1) && circle_count)
 	{
 #if _DEBUG_ENV_
-		std::clog << "Result of evalatuon is " << std::setw(40) << obj_from_calc.back() << std::endl;
+		std::clog << "Result of evalatuon is " << std::setw(40) << obj_from_calc.top() << std::endl;
 #endif
-		return obj_from_calc.back();
+		return obj_from_calc.top();
 	}
-	else
-	{
 #if _DEBUG_ENV_
-		std::clog << "Error in evalation" << std::endl;
+	std::clog << "Error in evalation" << std::endl;
 #endif
-		return Object(*this, ERROR);
-	}
+	return Object(*this, ERROR);
 }
 
 void Environment::LoadFunctionsFromArray(Func* array)
@@ -391,7 +388,7 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 	return NULL;
 }
 
-Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr_obj_from_calc) const
+Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc) const
 {
 	const Func &function = functions[func_number];
 #if _DEBUG_EVAL_
@@ -416,9 +413,9 @@ Object Environment::CallFunction(Heap::UInt func_number, std::deque<Object> *ptr
 	return result;
 }
 
-Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Object> *ptr_obj_from_calc) const
+Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const
 {
-	std::deque<Object> &obj_from_calc = *ptr_obj_from_calc;
+	std::stack<Object> &obj_from_calc = *ptr_obj_from_calc;
 	Object args(*this);
 	std::stack<Object> arguments;
 
@@ -426,13 +423,13 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 	while(param_number)
 	{
 		// if NIL or other type exclude ERROR
-		if((! obj_from_calc.empty()) && (obj_from_calc.back().IsNIL() || (obj_from_calc.back().GetType() != ERROR)))
+		if((! obj_from_calc.empty()) && (obj_from_calc.top().IsNIL() || (obj_from_calc.top().GetType() != ERROR)))
 		{
 #if _DEBUG_EVAL_
-			std::clog << "arg " << std::setw(40) << obj_from_calc.back() << std::endl;
+			std::clog << "arg " << std::setw(40) << obj_from_calc.top() << std::endl;
 #endif
-			arguments.push(obj_from_calc.back());
-			obj_from_calc.pop_back();
+			arguments.push(obj_from_calc.top());
+			obj_from_calc.pop();
 			param_number --;
 		}
 		// if obj_from_calc is empty or get ERROR
@@ -445,7 +442,7 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::deque<Obje
 			}
 			else
 			{
-				std::clog << "arg end " << std::setw(40) << obj_from_calc.back() << std::endl;
+				std::clog << "arg end " << std::setw(40) << obj_from_calc.top() << std::endl;
 			}
 #endif
 			// then return NIL because cann't get right arguments
@@ -473,10 +470,10 @@ Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 }
 
 #if _DEBUG_EVAL_
-void Environment::DumpStack(const std::deque<Object> &stack) const
+void Environment::DumpStack(const std::stack<Object> &stack) const
 {
 	std::clog << "Size: " << stack.size() << std::endl;
-	for(std::deque<Object>::const_iterator it = stack.begin(); it != stack.end(); ++ it)
+	for(std::stack<Object>::const_iterator it = stack.begin(); it != stack.end(); ++ it)
 	{
 		std::clog << std::setw(40) << (*it) << std::endl;
 	}

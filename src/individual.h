@@ -197,7 +197,7 @@ private:
 	/// \param prog LISP-program.
 	Individual(const VM::Program &prog);
 
-	Individual(); ///< Block for contsructor.
+	Individual() = delete; ///< Block for contsructor.
 
 	std::string m_ProgramText; ///< Text of program.
 	Result m_Result; ///< Result of last testing.

@@ -66,8 +66,9 @@ public:
 	}
 private:
 
-	WorldFile(const WorldFile&); ///< To avoid copying.
-	WorldFile& operator=(const WorldFile&); ///< To avoid copying.
+	WorldFile(const WorldFile&) = delete; //Prevent copy-constructor.
+	WorldFile(WorldFile&&) = delete; //Prevent move-constructor.
+	WorldFile& operator=(const WorldFile&) = delete; //Prevent assign.
 
 	char **m_Map; ///< Map of world.
 	size_t m_Width; ///< Width of world.
