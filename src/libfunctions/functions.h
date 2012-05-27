@@ -29,27 +29,27 @@
 
 using namespace VM;
 
-void func_01_cons(const Object& args, Object *result);
-void func_02_car(const Object& args, Object *result);
-void func_03_cdr(const Object& args, Object *result);
-void func_04_is_nil(const Object& args, Object *result);
-void func_05_is_int(const Object& args, Object *result);
-void func_06_is_func(const Object& args, Object *result);
-void func_07_is_adf(const Object& args, Object *result);
-void func_08_is_param(const Object& args, Object *result);
-void func_09_is_quote(const Object& args, Object *result);
-void func_10_is_list(const Object& args, Object *result);
-void func_11_int_plus(const Object& args, Object *result);
-void func_12_int_minus(const Object& args, Object *result);
-void func_13_int_mult(const Object& args, Object *result);
-void func_14_int_div(const Object& args, Object *result);
-void func_15_int_mod(const Object& args, Object *result);
-void func_16_equal(const Object& args, Object *result);
-void func_17_and(const Object& args, Object *result);
-void func_18_or(const Object& args, Object *result);
-void func_19_int_less(const Object& args, Object *result);
-void func_20_int_greater(const Object& args, Object *result);
-void func_21_int_equal(const Object& args, Object *result);
+void func_01_cons(const std::vector<Object>& args, Object *result);
+void func_02_car(const std::vector<Object>& args, Object *result);
+void func_03_cdr(const std::vector<Object>& args, Object *result);
+void func_04_is_nil(const std::vector<Object>& args, Object *result);
+void func_05_is_int(const std::vector<Object>& args, Object *result);
+void func_06_is_func(const std::vector<Object>& args, Object *result);
+void func_07_is_adf(const std::vector<Object>& args, Object *result);
+void func_08_is_param(const std::vector<Object>& args, Object *result);
+void func_09_is_quote(const std::vector<Object>& args, Object *result);
+void func_10_is_list(const std::vector<Object>& args, Object *result);
+void func_11_int_plus(const std::vector<Object>& args, Object *result);
+void func_12_int_minus(const std::vector<Object>& args, Object *result);
+void func_13_int_mult(const std::vector<Object>& args, Object *result);
+void func_14_int_div(const std::vector<Object>& args, Object *result);
+void func_15_int_mod(const std::vector<Object>& args, Object *result);
+void func_16_equal(const std::vector<Object>& args, Object *result);
+void func_17_and(const std::vector<Object>& args, Object *result);
+void func_18_or(const std::vector<Object>& args, Object *result);
+void func_19_int_less(const std::vector<Object>& args, Object *result);
+void func_20_int_greater(const std::vector<Object>& args, Object *result);
+void func_21_int_equal(const std::vector<Object>& args, Object *result);
 
 extern Environment::Func func_array[];
 

@@ -394,11 +394,8 @@ Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr
 #if _DEBUG_EVAL_
 	std::clog << "Function " << function.name << " with " << static_cast<int>(function.number_param) << " args" << std::endl;
 #endif
-	Object args = GenerateArgsList(function.number_param, ptr_obj_from_calc);
-#if _DEBUG_EVAL_
-		std::clog << "args " << std::setw(40) << args << std::endl;
-#endif
-	if(args.IsNIL() || (args.GetType() == ERROR))
+	std::vector<Object> args = GenerateArgsList(function.number_param, ptr_obj_from_calc);
+	if(args.empty())
 	{
 #if _DEBUG_EVAL_
 		std::clog << " -> ERROR" << std::endl;
@@ -413,14 +410,13 @@ Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr
 	return result;
 }
 
-Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const
+std::vector<Object> Environment::GenerateArgsList(const unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const
 {
 	std::stack<Object> &obj_from_calc = *ptr_obj_from_calc;
-	Object args(*this);
-	std::stack<Object> arguments;
+	std::vector<Object> arguments(param_number, Object(*this));
 
 	//check number of parameters and ERROR while stay parameters
-	while(param_number)
+	for(unsigned char idx = 0; idx < param_number; ++ idx)
 	{
 		// if NIL or other type exclude ERROR
 		if((! obj_from_calc.empty()) && (obj_from_calc.top().IsNIL() || (obj_from_calc.top().GetType() != ERROR)))
@@ -428,9 +424,8 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Obje
 #if _DEBUG_EVAL_
 			std::clog << "arg " << std::setw(40) << obj_from_calc.top() << std::endl;
 #endif
-			arguments.push(obj_from_calc.top());
+			arguments[idx] = obj_from_calc.top();
 			obj_from_calc.pop();
-			param_number --;
 		}
 		// if obj_from_calc is empty or get ERROR
 		else
@@ -446,16 +441,12 @@ Object Environment::GenerateArgsList(unsigned char param_number, std::stack<Obje
 			}
 #endif
 			// then return NIL because cann't get right arguments
-			return Object(*this);
+			arguments.clear();
+			return arguments;
 		}
 	}
 
-	while(! arguments.empty())
-	{
-		args = Object(arguments.top(), args);
-		arguments.pop();
-	}
-	return args;
+	return arguments;
 }
 
 Object Environment::Run(const Object& param, size_t *p_circle_counter) const

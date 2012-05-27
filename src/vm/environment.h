@@ -40,7 +40,7 @@ namespace VM
 	class WeakObject;
 	class Program;
 
-	typedef void (*FunctionPtr)(const Object& args, Object *result); ///< Pointer to LISP function.
+	typedef void (*FunctionPtr)(const std::vector<Object>& args, Object *result); ///< Pointer to LISP function.
 
 	/// \brief Environment of execution.
 	/// \todo Add hash table for functions name.
@@ -159,8 +159,8 @@ namespace VM
 		/// \brief Generate list of arguments.
 		/// \param param_number Nuber of parameters.
 		/// \param ptr_obj_from_calc Pointer to stack of calculated expressions.
-		/// \return List of arguments or NIL if error.
-		Object GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const;
+		/// \return Array of arguments which empty if error.
+		std::vector<Object> GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const;
 
 #if _DEBUG_EVAL_
 		/// \brief Dump content of stack.
