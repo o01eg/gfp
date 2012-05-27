@@ -410,13 +410,13 @@ Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr
 	return result;
 }
 
-std::vector<Object> Environment::GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const
+std::vector<Object> Environment::GenerateArgsList(const unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const
 {
 	std::stack<Object> &obj_from_calc = *ptr_obj_from_calc;
 	std::vector<Object> arguments(param_number, Object(*this));
 
 	//check number of parameters and ERROR while stay parameters
-	while(param_number)
+	for(unsigned char idx = 0; idx < param_number; ++ idx)
 	{
 		// if NIL or other type exclude ERROR
 		if((! obj_from_calc.empty()) && (obj_from_calc.top().IsNIL() || (obj_from_calc.top().GetType() != ERROR)))
@@ -424,9 +424,8 @@ std::vector<Object> Environment::GenerateArgsList(unsigned char param_number, st
 #if _DEBUG_EVAL_
 			std::clog << "arg " << std::setw(40) << obj_from_calc.top() << std::endl;
 #endif
-			arguments[param_number - 1] = obj_from_calc.top();
+			arguments[idx] = obj_from_calc.top();
 			obj_from_calc.pop();
-			param_number --;
 		}
 		// if obj_from_calc is empty or get ERROR
 		else
