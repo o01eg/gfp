@@ -225,6 +225,34 @@ Object& Object::operator=(const Object& obj)
 	return *this;
 }
 
+Object& Object::operator=(Object&& obj)
+{
+	if(this != &obj)
+	{
+#if _DEBUG_OBJECT_
+		if(&GetEnv() != &obj.GetEnv())
+		{
+			THROW(FormatString("Object 0x", this, " and 0x", &obj, ": Different environments."));
+		}
+#endif
+		if(m_Pos && GetType() == LIST) // If LIST before then use recursive desroing at destructor
+		{
+			this->~Object();
+			new (this) Object(obj); //move-constructor
+		}
+		else
+		{
+			if(m_Pos)
+			{
+				GetEnv().heap.Detach(m_Pos);
+			}
+			m_Pos = obj.m_Pos;
+			obj.m_Pos = 0;
+		}
+	}
+	return *this;
+}
+
 Object Object::GetObjectFrom(Environment &env, Heap::UInt pos)
 {
 	Object res(env); // create NIL object.

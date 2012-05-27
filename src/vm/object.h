@@ -69,6 +69,11 @@ namespace VM
 		/// \return l-value object.
 		Object& operator=(const Object& obj);
 
+		/// \brief Moving.
+		/// \param[in] obj Right value.
+		/// \return l-value object.
+		Object& operator=(Object&& obj);
+
 		/// \brief Get head of LIST
 		/// \return head.
 		Object GetHead() const;
