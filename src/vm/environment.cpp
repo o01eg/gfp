@@ -473,9 +473,10 @@ Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 void Environment::DumpStack(const std::stack<Object> &stack) const
 {
 	std::clog << "Size: " << stack.size() << std::endl;
-	for(std::stack<Object>::const_iterator it = stack.begin(); it != stack.end(); ++ it)
+	//for(std::stack<Object>::const_iterator it = stack.begin(); it != stack.end(); ++ it)
+	if(! stack.empty())
 	{
-		std::clog << std::setw(40) << (*it) << std::endl;
+		std::clog << "Top: " << std::setw(40) << stack.top() << std::endl;
 	}
 }
 #endif
