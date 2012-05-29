@@ -27,7 +27,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
-#include <thread>
+//#include <thread>
 
 #include "ga.h"
 #include "current_state.h"
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 	signal(SIGINT, interrupt_handler);
 #endif
 
-#if 1
+#if 0
 	std::thread thr(close_handler);
 #endif
 
@@ -134,7 +134,10 @@ int main(int argc, char **argv)
 
 	// Finish application.
 	std::clog << "Finish application" << std::endl;
+#if 0
+	std::cin.setstate(std::ios_base::eofbit);
 	thr.join();
+#endif
 
 	return 0;
 }
