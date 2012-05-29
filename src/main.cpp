@@ -27,6 +27,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <thread>
 
 #include "ga.h"
 #include "current_state.h"
@@ -66,8 +67,8 @@ int main(int argc, char **argv)
 	signal(SIGINT, interrupt_handler);
 #endif
 
-#if 0
-	Glib::Thread::create(sigc::ptr_fun(close_handler), false);
+#if 1
+	std::thread thr(close_handler);
 #endif
 
 	time_t seed = time(NULL);
@@ -83,25 +84,6 @@ int main(int argc, char **argv)
 	// Start application.
 	std::clog << "Start application" << std::endl;
 	
-#if 0
-		VM::Environment env;
-		env.LoadFunctions(DATA_DIR "functions.txt");
-		try
-		{
-			VM::Program prog(env, DATA_DIR "2.lsp");
-			env.program = &prog;
-			const size_t MAX_CIRCLES = 1000;
-			VM::Object a(env);
-			std::cin >> a;
-			env.circle_count = MAX_CIRCLES;
-			std::cout << "result = " << env.Run(a) << std::endl;
-			std::cout << "use " << (MAX_CIRCLES - env.circle_count) << " circles" << std::endl;
-		}
-		catch(Glib::Error &e)
-		{
-			std::clog << "Catch Glib::Error in environment: " << e.what() << std::endl;
-		}
-#endif
 		// Genetic programming
 		GA ga(Config::Instance().GetSLong("population-size", 10));
 		if(filename)
@@ -152,6 +134,7 @@ int main(int argc, char **argv)
 
 	// Finish application.
 	std::clog << "Finish application" << std::endl;
+	thr.join();
 
 	return 0;
 }

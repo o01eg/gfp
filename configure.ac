@@ -24,8 +24,12 @@ AC_LANG(C++)
 
 AC_TYPE_SIZE_T
 
-CXXFLAGS="-Wall -Wextra -Wc++0x-compat -fno-exceptions -fno-rtti -std=c++0x $CXXFLAGS"
+CXXFLAGS="-Wall -Wextra -fno-exceptions -fno-rtti $CXXFLAGS"
 LDFLAGS="$LDFLAGS"
+
+AX_CHECK_COMPILE_FLAG([-std=c++11],[CXXFLAGS="-std=c++11 -Wc++11-compat $CXXFLAGS"],[
+	AX_CHECK_COMPILE_FLAG([-std=c++0x],[CXXFLAGS="-std=c++0x -Wc++0x-compat $CXXFLAGS"],[AC_MSG_ERROR([Compiler not support C++11])])
+])
 
 AC_ARG_ENABLE([lto],
 	[AS_HELP_STRING([--enable-lto], [Enable Link-Time Optimization @<:@default=no@:>@])],
@@ -47,26 +51,18 @@ AM_CONDITIONAL(DEBUG, test "x$enable_debug" != xno)
 
 # == check for libraries ==
 
-AC_ARG_ENABLE([multithread],
-	[AS_HELP_STRING([--enable-multithread],
-		[support for miltithreading, dependence on pthread @<:@default=no@:>@])],
-	[],
-	[enable_multithread=no])
-
-AS_IF([test "x$enable_multithread" != xno],
-	[AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS";CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"], [AC_MSG_ERROR([Sorry, but you need pthread for multithread support.])])],
-	[])
-AM_CONDITIONAL(MULTITHREAD, test "x$enable_multithread" != xno)
-
 AC_LANG_PUSH(C++)
 
 # == check for header files ==
 
 AC_CHECK_HEADERS([unordered_map], [], [AC_MSG_ERROR([Header <unordered_map> not found])])
+AC_CHECK_HEADERS([thread], [], [AC_MSG_ERROR([Header <thread> not found])])
 
 # == check for typedefs, structers and compiler characteristics ==
 
 # == check for library functions ==
+
+AX_PTHREAD([LDFLAGS="$PTHREAD_LIBS $LDFLAGS";CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"])
 
 # == generate files ==
 
