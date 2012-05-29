@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <cstdlib>
 
 /* nice compile-time debug strings */
 #define STRINGIFY(x) #x
