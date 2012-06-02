@@ -22,6 +22,7 @@ Now
    - Add comparator for WeakObject and Object to use with STL containers.
  * GP
    - Add optimization.
+   - Show parents of winner individual.
    * Static types
      + Remove types in file.
 

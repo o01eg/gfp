@@ -23,12 +23,10 @@
  */
 
 #include <iostream>
-#include <sstream>
 #include <algorithm>
 #include <iomanip>
 #include <fstream>
 #include "individual.h"
-#include "vm/ioobject.h"
 #include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"
@@ -48,19 +46,11 @@ const size_t MAX_STOPS = Config::Instance().GetSLong("max-stop-moves", 1); ///< 
 const size_t MAX_CIRCLES = Config::Instance().GetSLong("max-evalation-loops", 1000); ///< Maximum of eval circles.
 const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 1); ///< Maximum of any moves.
 
-Individual::Individual(const VM::Program &prog)
-	:m_Result(-1) // new, not yet tested
-{
-	std::stringstream ss;
-	ss << prog.Save();
-	m_ProgramText = ss.str();
-}
-
 Individual Individual::GenerateRand(VM::Environment &env)
 {
 	VM::Program prog = GP::GenerateProg(env, MAX_FUNCTIONS);
 	//std::clog << "Individual random program created." << std::endl;
-	return Individual(prog);
+	return Individual(prog, {});
 }
 
 Individual Individual::Mutation(VM::Environment &env, const Individual& ind)
@@ -69,7 +59,7 @@ Individual Individual::Mutation(VM::Environment &env, const Individual& ind)
 	VM::Object obj(env);
 	ss >> obj;
 	VM::Program prog(obj);
-	return Individual(GP::MutateProg(prog, MAX_FUNCTIONS));
+	return Individual(GP::MutateProg(prog, MAX_FUNCTIONS), ind.m_Parents);
 }
 
 Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2)
@@ -81,7 +71,7 @@ Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, c
 	std::stringstream ss2(ind2.m_ProgramText);
 	ss2 >> obj;
 	VM::Program prog2(obj);	
-	return Individual(GP::CrossoverProg(prog1, prog2, MAX_FUNCTIONS));
+	return Individual(GP::CrossoverProg(prog1, prog2, MAX_FUNCTIONS), {ind1, ind2});
 }
 
 std::vector<Individual::Result> Individual::Execute(const std::vector<Individual> &population)
@@ -334,7 +324,7 @@ bool Individual::Load(const char* filename, Individual *ind)
 	f >> obj;
 	if(ind)
 	{
-		(*ind) = Individual(VM::Program(obj));
+		(*ind) = Individual(VM::Program(obj), {});
 	}
 	return true;
 }

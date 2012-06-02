@@ -28,7 +28,9 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include "vm/program.h"
+#include "vm/ioobject.h"
 
 class Individual
 {
@@ -90,11 +92,27 @@ public:
 		}
 		Result& operator=(const Result& result)
 		{
-			m_Index = result.m_Index;
-			m_Result = result.m_Result;
-			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
+			if(this != &result)
 			{
-				m_Quality[i] = result.m_Quality[i];
+				m_Index = result.m_Index;
+				m_Result = result.m_Result;
+				for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
+				{
+					m_Quality[i] = result.m_Quality[i];
+				}
+			}
+			return *this;
+		}
+		Result& operator=(Result&& result)
+		{
+			if(this != &result)
+			{
+				m_Index = result.m_Index;
+				m_Result = std::move(result.m_Result);
+				for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
+				{
+					m_Quality[i] = result.m_Quality[i];
+				}
 			}
 			return *this;
 		}
@@ -126,12 +144,19 @@ public:
 		std::string m_Result;
 	private:
 		int m_Index;
-		
 	};
 
 	Individual(const Individual& ind)
-		:m_ProgramText(ind.m_ProgramText),
-		m_Result(ind.m_Result)
+		: m_ProgramText(ind.m_ProgramText)
+		, m_Result(ind.m_Result)
+		, m_Parents(ind.m_Parents)
+	{
+	}
+
+	Individual(Individual&& ind)
+		: m_ProgramText(std::move(ind.m_ProgramText))
+		, m_Result(std::move(ind.m_Result))
+		, m_Parents(std::move(ind.m_Parents))
 	{
 	}
 
@@ -142,8 +167,23 @@ public:
 
 	Individual& operator=(const Individual& ind)
 	{
-		m_ProgramText = ind.m_ProgramText;
-		m_Result = ind.m_Result;
+		if(this != &ind)
+		{
+			m_ProgramText = ind.m_ProgramText;
+			m_Result = ind.m_Result;
+			m_Parents = ind.m_Parents;
+		}
+		return *this;
+	}
+
+	Individual& operator=(Individual&& ind)
+	{
+		if(this != &ind)
+		{
+			m_ProgramText = std::move(ind.m_ProgramText);
+			m_Result = std::move(ind.m_Result);
+			m_Parents = std::move(ind.m_Parents);
+		}
 		return *this;
 	}
 
@@ -155,6 +195,10 @@ public:
 	const Result& GetResult() const
 	{
 		return m_Result;
+	}
+	const std::vector<Individual>& GetParents() const
+	{
+		return m_Parents;
 	}
 	Result GetResult(int i) const
 	{
@@ -195,12 +239,40 @@ private:
 
 	/// \brief Create individual from program.
 	/// \param prog LISP-program.
-	Individual(const VM::Program &prog);
+	/// \param parents Parents of this individual.
+	Individual(const VM::Program& prog, const std::vector<Individual>& parents)
+	: m_Result(-1) // new, not yet tested
+	, m_Parents(parents)
+	{
+		Init(prog);
+	}
+
+	/// \brief Create individual from program.
+	/// \param prog LISP-program.
+	/// \param parents Parents of this individual.
+	Individual(const VM::Program& prog, std::vector<Individual>&& parents)
+	: m_Result(-1) // new, not yet tested
+	, m_Parents(parents)
+	{
+		Init(prog);
+	}
+
+	void Init(const VM::Program &prog)
+	{
+		for(std::vector<Individual>::iterator parent = m_Parents.begin(); parent != m_Parents.end(); ++ parent)
+		{
+			parent->m_Parents.clear(); //don't store older parents.
+		}
+		std::stringstream ss;
+		ss << prog.Save();
+		m_ProgramText = ss.str();
+	}
 
 	Individual() = delete; ///< Block for contsructor.
 
 	std::string m_ProgramText; ///< Text of program.
 	Result m_Result; ///< Result of last testing.
+	std::vector<Individual> m_Parents; ///< Parents of individual.
 };
 
 #endif

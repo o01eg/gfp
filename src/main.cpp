@@ -105,6 +105,12 @@ int main(int argc, char **argv)
 			{
 				std::clog << std::endl << "Better." << std::endl;
 				remain_steps = MAX_STEP_UNCHANGED;
+				for(std::vector<Individual>::const_iterator parent = ga.GetInd(0).GetParents().begin(); parent != ga.GetInd(0).GetParents().end(); ++ parent)
+				{
+					std::clog << "parent = " << parent->GetText() << std::endl;
+					parent->GetResult().Dump(std::clog);
+					std::clog << "   =====" << std::endl;
+				}
 				std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
 				ga.GetInd(0).GetResult().Dump(std::clog);
 				std::clog << "generation = " << generation << std::endl << std::endl;
