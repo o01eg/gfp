@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#include <stack>
-#include <cstdlib>
 #include "ga_utils.h"
 #include "vm/program.h"
 #include "conf.h"

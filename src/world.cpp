@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#include <stack>
 #include <algorithm>
 #include "world.h"
 #include "vm/ioobject.h"

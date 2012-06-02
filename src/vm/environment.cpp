@@ -28,12 +28,8 @@
 #include "ioobject.h"
 #endif
 #include <fstream>
-#include <cstdlib>
-#include <stack>
 #include <deque>
 #include <algorithm>
-#include "environment.h"
-#include "object.h"
 #include "program.h"
 
 using namespace VM;

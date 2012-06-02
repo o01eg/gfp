@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-#include <sstream>
 #include <fstream>
 #include "ga.h"
 

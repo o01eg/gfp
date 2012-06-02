@@ -25,9 +25,7 @@
 #ifndef _PROGRAM_H_
 #define _PROGRAM_H_
 
-#include <vector>
 #include "object.h"
-#include "environment.h"
 
 namespace VM
 {

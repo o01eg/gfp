@@ -25,9 +25,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <unordered_map>
-
-#include "vm/environment.h"
 #include "vm/object.h"
 
 /// \brief Signleton for access to config files.

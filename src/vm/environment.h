@@ -43,8 +43,6 @@ namespace VM
 	typedef void (*FunctionPtr)(const std::vector<Object>& args, Object *result); ///< Pointer to LISP function.
 
 	/// \brief Environment of execution.
-	/// \todo Add hash table for functions name.
-	/// \todo Fix memory leaks in heap.
 	class Environment
 	{
 	public:

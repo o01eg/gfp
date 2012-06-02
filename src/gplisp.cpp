@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-#include "vm/environment.h"
 #include "vm/program.h"
-#include "vm/object.h"
 #include "vm/ioobject.h"
 #include "libfunctions/functions.h"
 

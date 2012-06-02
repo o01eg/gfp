@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-#include <iostream>
 #include <csignal>
-#include <string>
 #include <fstream>
 #include <ctime>
 //#include <thread>

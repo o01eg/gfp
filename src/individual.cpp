@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-#include <iostream>
 #include <algorithm>
-#include <iomanip>
 #include <fstream>
 #include "individual.h"
 #include "ga_utils.h"

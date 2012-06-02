@@ -25,7 +25,6 @@
 #ifndef _IO_OBJECT_H_
 #define _IO_OBJECT_H_
 
-#include <iostream>
 #include "object.h"
 
 /// \brief Dump object data

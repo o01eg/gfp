@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#include <stack>
 #include "weak_object.h"
 
 using namespace VM;

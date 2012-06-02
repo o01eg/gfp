@@ -25,10 +25,7 @@
 #ifndef _INDIVIDUAL_H_
 #define _INDIVIDUAL_H_
 
-#include <vector>
 #include <iomanip>
-#include <iostream>
-#include <sstream>
 #include "vm/program.h"
 #include "vm/ioobject.h"
 

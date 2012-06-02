@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#include <stack>
 #include "object.h"
 
 #if _DEBUG_OBJECT_
@@ -150,7 +149,6 @@ Object::~Object()
 	{
 		if((GetType() == LIST) && (GetEnv().heap.At(m_Pos).count == 1))
 		{
-			/// \todo Use normal stack.
 			std::stack<Heap::UInt> stack;
 			stack.push(m_Pos);
 			while(! stack.empty())

@@ -22,16 +22,10 @@
  * SOFTWARE.
  */
 
-#include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <ctime>
 #include <set>
-#include <vm/environment.h>
-#include <vm/object.h>
 #include <vm/ioobject.h>
-#include <vm/logger.h>
-#include <unordered_map>
 
 int main(int argc, char **argv)
 {

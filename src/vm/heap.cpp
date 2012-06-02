@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-//#if _DEBUG_HEAP_
-#include <iostream>
-//#endif
 #include <new>
 #include <string.h>
 #include "heap.h"

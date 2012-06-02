@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#include <stack>
 #include "object_utils.h"
 
 VM::Object EditList(const VM::Object& list, size_t pos, const VM::Object& obj)

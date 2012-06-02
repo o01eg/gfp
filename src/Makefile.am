@@ -6,7 +6,6 @@ gfp_SOURCES = conf.cpp \
 	ga.cpp \
 	ga_utils.cpp \
 	individual.cpp \
-	jobthread.cpp \
 	libfunctions/functions.cpp \
 	logbuf.cpp \
 	main.cpp \
@@ -24,7 +23,6 @@ noinst_HEADERS = conf.h \
 	ga.h \
 	ga_utils.h \
 	individual.h \
-	jobthread.h \
 	logbuf.h \
 	object_utils.h \
 	world.h \

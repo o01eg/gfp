@@ -22,11 +22,8 @@
  * SOFTWARE.
  */
 
-#include <cstdlib>
-#include <string>
 #include <algorithm>
 #include <locale>
-#include <sstream>
 #include <iomanip>
 #include "ioobject.h"
 
@@ -44,7 +41,6 @@ std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
 	bool not_width = width ? false : true;
 	ostr.width(0);
 	std::stringstream os;
-	/// \todo Use normal stack.
 	if(! obj.IsNIL())
 	{
 		//const Environment& env = obj.GetEnv();
@@ -210,8 +206,6 @@ void dump_object(const WeakObject& obj, std::streamsize width)
 
 std::istream& operator>>(std::istream& is, Object& obj)
 {
-	/// \todo Use normal stack.
-	/// \todo Add check for empty stacks.
 	Environment& env = obj.GetEnv();
 	std::stack<Object> obj_stack;
 	std::stack<size_t> stack;
