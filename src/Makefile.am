@@ -17,7 +17,10 @@ gplisp_SOURCES = current_state.cpp \
 	libfunctions/functions.cpp \
 	logbuf.cpp
 gfpstatic_SOURCES = gfpstatic.cpp
-gpoptimize_SOURCES = gpoptimize.cpp
+gpoptimize_SOURCES = conf.cpp \
+	ga_utils.cpp \
+	gpoptimize.cpp \
+	libfunctions/functions.cpp
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
@@ -32,14 +35,14 @@ noinst_HEADERS = conf.h \
 gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -I.
+gpoptimize_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 
 gfp_LDADD = vm/libvm.a
-
 if DEBUG
 gplisp_LDADD = vm/libvm_d.a
-gfpstatic_LDADD = vm/libvm_d.a
+gpoptimize_LDADD = vm/libvm_d.a
 else
 gplisp_LDADD = vm/libvm.a
-gfpstatic_LDADD = vm/libvm.a
+gpoptimize_LDADD = vm/libvm.a
 endif
 

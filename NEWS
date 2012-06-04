@@ -18,6 +18,7 @@ Snapshot ????-??-?? ToDo
 
 Now
  - Support for C++0x (GCC 4.5.3)
+ - Add optimization program.
  * VM
    - Add comparator for WeakObject and Object to use with STL containers.
  * GP

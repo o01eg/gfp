@@ -59,7 +59,7 @@ namespace VM
 		void Minimize();
 
 		/// \brief Get ADF.
-		/// \param num Number of ADF.
+		/// \param num Index of ADF.
 		/// \return ADF.
 		Object GetADF(size_t num) const
 		{
@@ -68,6 +68,13 @@ namespace VM
 				return m_ADFs[num];
 			}
 			return Object(m_Env, ERROR);
+		}
+
+		/// \brief Get size.
+		/// \return Number of ADFs.
+		size_t GetSize() const
+		{
+			return m_ADFs.size();
 		}
 
 		/// \brief Set ADF.
