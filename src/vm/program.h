@@ -67,7 +67,7 @@ namespace VM
 			{
 				return m_ADFs[num];
 			}
-			return Object(m_Env);
+			return Object(m_Env, ERROR);
 		}
 
 		/// \brief Set ADF.

@@ -29,6 +29,46 @@
 const size_t MAX_DEPTH = Config::Instance().GetSLong("max-object-depth", 8);
 const size_t MAX_OPT_LOOPS = Config::Instance().GetSLong("max-opt-loops", 512);
 
+size_t GP::CountIFs(const VM::WeakObject& obj)
+{
+	std::stack<VM::WeakObject> stack;
+	size_t result = 0;
+	stack.push(obj);
+	while(! stack.empty())
+	{
+		VM::WeakObject t = stack.top();
+		stack.pop();
+
+		if(! t.IsNIL())
+		{
+			switch(t.GetType())
+			{
+			case VM::LIST:
+				if(! t.GetHead().IsNIL())
+				{
+					if(t.GetHead().GetType() == VM::QUOTE)
+					{
+						break; //switch(t.GetType()): doesn't count IFs in ( QUOTE ... )
+					}
+				}
+				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+				{
+					stack.push(t.GetHead());
+
+					t = t.GetTail();
+				}
+				break;
+			case VM::IF:
+				++ result;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	return result;
+}
+
 bool GP::IsContainParam(const VM::WeakObject &obj)
 {
 	std::stack<VM::WeakObject> stack;

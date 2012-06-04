@@ -111,6 +111,11 @@ std::vector<Individual::Result> Individual::Execute(const std::vector<Individual
 		bool active = true;
 		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
+		result.m_Quality[Result::ST_IF_TOTAL] = 0;
+		for(size_t f = 0; f < MAX_FUNCTIONS; ++ f)
+		{
+			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(prog.GetADF(f));
+		}
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
 		bool first_move = true;

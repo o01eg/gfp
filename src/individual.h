@@ -51,6 +51,7 @@ public:
 			ST_NEG_CIRCLES, ///< Sum of least circles.
 			ST_MOVE_DIFF, ///< Different from 0 in move code. (Aggregate by move)
 			ST_DIR_DIFF, ///< Different from 1-4 in direction. (Aggrerage by move)
+			ST_IF_TOTAL, ///< Count of IFs in program.
 			STATUS_VARIABLES
 		};
 
@@ -132,6 +133,7 @@ public:
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
 			os << "result[MOVE_DIFF] = " << m_Quality[ST_MOVE_DIFF] << std::endl;
 			os << "result[DIR_DIFF] = " << m_Quality[ST_DIR_DIFF] << std::endl;
+			os << "result[IF_TOTAL] = " << m_Quality[ST_IF_TOTAL] << std::endl;
 		}
 		bool IsTested() const
 		{

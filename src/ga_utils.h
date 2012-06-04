@@ -30,8 +30,13 @@
 /// \brief GP-related stuff.
 namespace GP
 {
+	/// \brief Count IFs in object exclude quoted.
+	/// \param obj Object.
+	/// \return Count of IFs.
+	size_t CountIFs(const VM::WeakObject& obj);
+
 	/// \brief Check if object contain evalable PARAM
-	/// \param Object.
+	/// \param obj Object.
 	/// \return Is PARAM contained.
 	bool IsContainParam(const VM::WeakObject &obj);
 

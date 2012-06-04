@@ -1,6 +1,6 @@
 SUBDIRS = libfunctions \
 	vm
-bin_PROGRAMS = gfp gplisp gfpstatic
+bin_PROGRAMS = gfp gplisp gfpstatic gpoptimize
 gfp_SOURCES = conf.cpp \
 	current_state.cpp \
 	ga.cpp \
@@ -16,7 +16,8 @@ gplisp_SOURCES = current_state.cpp \
 	gplisp.cpp \
 	libfunctions/functions.cpp \
 	logbuf.cpp
-gfpstatic_SOURCES = gfpstatic.cpp 
+gfpstatic_SOURCES = gfpstatic.cpp
+gpoptimize_SOURCES = gpoptimize.cpp
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
