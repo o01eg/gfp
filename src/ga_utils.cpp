@@ -48,7 +48,15 @@ bool GP::IsContainParam(const VM::WeakObject &obj)
 				{
 					if(t.GetHead().GetType() == VM::QUOTE)
 					{
-						break; // doesn't store ( QUOTE ... )
+						break; //switch(t.GetType()): doesn't store ( QUOTE ... )
+					}
+					if(t.GetHead().GetType() == VM::IF)
+					{
+						if((! t.GetTail().IsNIL()) && (t.GetTail().GetType() == VM::LIST))
+						{
+							stack.push(t.GetTail().GetHead());
+						}
+						break; //switch(t.GetType()): check only condition
 					}
 				}
 				// fill stack
