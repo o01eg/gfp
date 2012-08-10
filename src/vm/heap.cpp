@@ -227,6 +227,12 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 	}
 	else
 	{
+#if _DEBUG_HEAP_
+		if((elem.tail >> BLOCK_ADDRESS_OFFSET) >= blocks.size())
+		{
+			THROW(FormatString("Heap 0x", this, ": Try to set free out of array at position ", elem.tail, ", block ", elem.tail >> BLOCK_ADDRESS_OFFSET, "."));
+		}
+#endif
 		blocks[0][0].tail = elem.tail;
 	}
 	elem.hash = hash;
