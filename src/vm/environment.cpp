@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include "environment.h"
+
 #if _DEBUG_ENV_ || _DEBUG_EVAL_
 #include <iostream>
 #include <iomanip>
@@ -43,7 +45,7 @@ Environment::Environment()
 	m_Symbols(new (std::nothrow) std::unordered_map<std::string, Object>),
 	m_SymbolValues(new (std::nothrow) std::vector<Object>)
 {
-	if((m_Symbols == NULL) && (m_SymbolValues == NULL))
+	if((! m_Symbols) && (! m_SymbolValues))
 	{
 		THROW("Cann't allocate environment.");
 	}
@@ -64,8 +66,6 @@ Environment::~Environment()
 #if _DEBUG_ENV_
 	std::clog << "Destroy environment " << this << std::endl;
 #endif
-	delete m_SymbolValues;
-	delete m_Symbols;
 }
 
 Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const

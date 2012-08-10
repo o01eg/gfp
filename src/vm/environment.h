@@ -25,8 +25,11 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
+#include <config.h>
+
 #include <unordered_map>
 #include <stack>
+#include <memory>
 
 #if _DEBUG_OBJECT_
 #include <set>
@@ -174,8 +177,8 @@ namespace VM
 
 		static bool s_Stop; ///< Stop all evalations.
 
-		std::unordered_map<std::string, Object> *m_Symbols; ///< String to object conversion.
-		std::vector<Object> *m_SymbolValues; ///< List of symbols values.
+		std::unique_ptr<std::unordered_map<std::string, Object> > m_Symbols; ///< String to object conversion.
+		std::unique_ptr<std::vector<Object> > m_SymbolValues; ///< List of symbols values.
 	};
 }
 
