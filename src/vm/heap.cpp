@@ -78,6 +78,7 @@ Heap::~Heap()
 #if _DEBUG_HEAP_
 void Heap::CheckLeaks(std::ostream &os) const
 {
+	bool is_leak = false;
 	Heap::UInt i, j;
 #if _DOT_MEMORY_
 	for(i = 0; i < blocks.size(); i ++)
@@ -96,6 +97,7 @@ void Heap::CheckLeaks(std::ostream &os) const
 				{
 					os << pos << ":tail -> " << blocks[i][j].tail << ";" << std::endl;
 				}
+				is_leak = true;
 			}
 		}
 	}
@@ -107,6 +109,7 @@ void Heap::CheckLeaks(std::ostream &os) const
 			if(blocks[i][j].hash && ((blocks[i][j].hash & 0xf) != 7))
 			{
 				os << pos << " [shape = record, label = \"" << pos << " " << type_str[blocks[i][j].hash & 0xf] << ":" << blocks[i][j].value << "\"];" << std::endl;
+				is_leak = true;
 			}
 		}
 	}
@@ -125,10 +128,15 @@ void Heap::CheckLeaks(std::ostream &os) const
 				os << " value:" << blocks[i][j].value;
 				os << " tail:" << blocks[i][j].tail;
 				os << " " << blocks[i][j].at << std::endl;
+				is_leak = true;
 			}
 		}
 	}
 #endif
+	if(is_leak)
+	{
+		THROW("Leaks found.");
+	}
 }
 #endif
 
