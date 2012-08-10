@@ -385,9 +385,9 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.functions.size(); ++ i)
+	for(size_t i = 0 ; i < env.GetFunctionSize(); ++ i)
 	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.GetFunction(i).number_param));
 	}
 	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
 	{
@@ -412,9 +412,9 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 	std::vector<std::pair<VM::Object, size_t> > funcs;
 	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
 	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.functions.size(); ++ i)
+	for(size_t i = 0 ; i < env.GetFunctionSize(); ++ i)
 	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.functions[i].number_param));
+		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.GetFunction(i).number_param));
 	}
 	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
 	{

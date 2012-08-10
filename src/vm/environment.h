@@ -48,8 +48,12 @@ namespace VM
 	/// \brief Environment of execution.
 	class Environment
 	{
+		friend class WeakObject;
+		friend struct ::std::hash<WeakObject>;
+		friend class Object;
+		friend struct ::std::hash<Object>;
+		friend ::std::ostream& operator<<(::std::ostream&, const VM::WeakObject&);
 	public:
-
 		/// \brief Function data.
 		struct Func
 		{
@@ -80,10 +84,10 @@ namespace VM
 			}
 		};
 
-		Heap heap; ///< Heap of objects.
-		std::vector<Func> functions; ///< Functions' list.
-		std::vector<std::string> symbol_names; ///< Symbols' list.
-
+		/// \brief Load Functions from array.
+		/// \param[in] array Pointer into array of functions (must be default ended)
+		void LoadFunctionsFromArray(Func* array);
+	
 		Environment(); ///< Constructor of environment.
 		~Environment(); ///< Destructor of environment.
 		
@@ -92,10 +96,6 @@ namespace VM
 		/// \param[in,out] p_circle_counter Circle counter.
 		/// \return Result of evalation or ERROR.
 		Object Eval(const Object &arg1, size_t *p_circle_counter) const;
-
-		/// \brief Load Functions from array.
-		/// \param[in] array Pointer into array of functions (must be default ended)
-		void LoadFunctionsFromArray(Func* array);
 
 		/// \brief Load or replace function.
 		/// \param[in] name Function name
@@ -140,6 +140,24 @@ namespace VM
 		/// \return SYMBOL object.
 		const Object& DefineSymbol(const std::string& name);
 
+		/// \brief Get name of SYMBOL.
+		const std::string& GetSymbolName(size_t value) const
+		{
+			return symbol_names[value];
+		}
+
+		/// \brief Get number of loaded functions.
+		size_t GetFunctionSize() const
+		{
+			return functions.size();
+		}
+
+		/// \brief Get function.
+		const Func& GetFunction(size_t index) const
+		{
+			return functions[index];
+		}
+
 #if _DEBUG_OBJECT_
 		std::set<Object*>& AllObjectsInstance()
 		{
@@ -147,6 +165,10 @@ namespace VM
 		}
 #endif
 	private:
+		Heap heap; ///< Heap of objects.
+		std::vector<Func> functions; ///< Functions' list.
+		std::vector<std::string> symbol_names; ///< Symbols' list.
+
 		Environment(const Environment&) = delete; //Prevent copy-constructor.
 		Environment(Environment&&) = delete; //Prevent move-constructor.
 		Environment& operator=(const Environment&) = delete; //Prevent assign.

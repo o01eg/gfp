@@ -30,11 +30,13 @@
 /// \brief Dump object data
 /// \param[in] obj Object.
 /// \param[in] width Width of string.
-void dump_object(const VM::WeakObject& obj, std::streamsize width);
 
-std::ostream& operator<<(std::ostream& ostr, const VM::WeakObject& obj);
-
-std::istream& operator>>(std::istream& is, VM::Object& obj);
+namespace VM
+{
+	void dump_object(const VM::WeakObject& obj, std::streamsize width);
+	std::ostream& operator<<(std::ostream& ostr, const VM::WeakObject& obj);
+	std::istream& operator>>(std::istream& is, VM::Object& obj);
+}
 
 #endif
 

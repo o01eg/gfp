@@ -47,7 +47,7 @@ Config::Config()
 		{
 			if(pair.GetHead().GetType() == VM::SYMBOL)
 			{
-				m_Options.insert(std::make_pair(m_Env.symbol_names[pair.GetHead().GetValue()], pair.GetTail().GetHead()));
+				m_Options.insert(std::make_pair(m_Env.GetSymbolName(pair.GetHead().GetValue()), pair.GetTail().GetHead()));
 			}
 		}
 

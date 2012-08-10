@@ -35,7 +35,7 @@ using namespace VM;
 /// \return Atomic object.
 Object str2atom(const std::string& str, Environment &env);
 
-std::ostream& operator<<(std::ostream& ostr, const WeakObject& obj)
+std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 {
 	std::streamsize width = ostr.width();
 	bool not_width = width ? false : true;
@@ -204,7 +204,7 @@ void dump_object(const WeakObject& obj, std::streamsize width)
 	std::cout << std::setw(width) << obj << std::endl;
 }
 
-std::istream& operator>>(std::istream& is, Object& obj)
+std::istream& VM::operator>>(std::istream& is, Object& obj)
 {
 	Environment& env = obj.GetEnv();
 	std::stack<Object> obj_stack;
