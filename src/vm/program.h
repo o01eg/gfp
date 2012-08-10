@@ -39,8 +39,60 @@ namespace VM
 		/// \brief Construct empty program.
 		/// \param env Environment.
 		Program(Environment &env)
-			:m_Env(env)
+			: m_Env(env)
 		{
+		}
+
+		/// \brief Copy-constructor for program.
+		/// \param prog Program.
+		Program(const Program& prog)
+			: m_Env(prog.m_Env)
+			, m_ADFs(prog.m_ADFs)
+		{
+		}
+
+		/// \brief Move-constructor for program.
+		/// \param prog Program.
+		Program(Program&& prog)
+			: m_Env(prog.m_Env)
+			, m_ADFs(prog.m_ADFs)
+		{
+		}
+
+		/// \brief Copy-assignment
+		/// \param prog Program.
+		/// \return Program.
+		Program& operator=(const Program& prog)
+		{
+#if _DEBUG_OBJECT_
+			if(&this->m_Env != &prog.m_Env)
+			{
+				THROW("Programs have different environments.");
+			}
+#endif
+			if(this != &prog)
+			{
+				m_ADFs = prog.m_ADFs;
+			}
+			return *this;
+		}
+
+		/// \brief Copy-assignment
+		/// \param prog Program.
+		/// \return Program.
+		Program& operator=(Program&& prog)
+		{
+#if _DEBUG_OBJECT_
+			if(&this->m_Env != &prog.m_Env)
+			{
+				THROW("Programs have different environments.");
+			}
+#endif
+			if(this != &prog)
+			{
+				m_ADFs = prog.m_ADFs;
+			}
+			return *this;
 		}
 
 		/// \brief Construct program from file.
@@ -93,8 +145,8 @@ namespace VM
 			return m_Env;
 		}
 	private:
-		std::vector<Object> m_ADFs; ///< List of ADFs in program.
 		Environment &m_Env; ///< Environment.
+		std::vector<Object> m_ADFs; ///< List of ADFs in program.
 	};
 }
 
