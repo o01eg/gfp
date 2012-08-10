@@ -345,7 +345,7 @@ void Environment::LoadFunctionsFromArray(Func* array)
 	}
 }
 
-FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
+void Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
 {
 	std::vector<Func>::iterator it = std::find(functions.begin(), functions.end(), name);
 	if(it == functions.end())
@@ -363,11 +363,9 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 			//DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
 #endif
 		}
-		return NULL;
 	}
 	else
 	{
-		FunctionPtr old_ptr = it->func;
 		// exist
 		if(ptr)
 		{
@@ -377,11 +375,11 @@ FunctionPtr Environment::LoadFunction(const std::string &name, size_t argc, Func
 		}
 		else
 		{
-			functions.erase(it);
+			// functions.erase(it); cann't erase for keeping function indexes.
+			it->func = NULL;
+			it->number_param = 0;
 		}
-		return old_ptr;
 	}
-	return NULL;
 }
 
 Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc) const
@@ -395,6 +393,13 @@ Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr
 	{
 #if _DEBUG_EVAL_
 		std::clog << " -> ERROR" << std::endl;
+#endif
+		return Object(*this, ERROR);
+	}
+	if(function.func == NULL)
+	{
+#if _DEBUG_EVAL_
+		std::clog << " -> ERROR (not defined)" << std::endl;
 #endif
 		return Object(*this, ERROR);
 	}

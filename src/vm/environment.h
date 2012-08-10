@@ -100,9 +100,8 @@ namespace VM
 		/// \brief Load or replace function.
 		/// \param[in] name Function name
 		/// \param[in] argc Number of agruments.
-		/// \param[in] ptr Pointer tofunction.
-		/// \return Old pointer or NULL.
-		FunctionPtr LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
+		/// \param[in] ptr Pointer to function.
+		void LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
 
 		/// \brief Run program with parameter.
 		/// \param[in] param Parameter.
