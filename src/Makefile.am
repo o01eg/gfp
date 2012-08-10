@@ -37,12 +37,8 @@ gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -I.
 gpoptimize_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 
+gfpstatic_LDADD = vm/libvm.a
 gfp_LDADD = vm/libvm.a
-if DEBUG
-gplisp_LDADD = vm/libvm_d.a
-gpoptimize_LDADD = vm/libvm_d.a
-else
 gplisp_LDADD = vm/libvm.a
 gpoptimize_LDADD = vm/libvm.a
-endif
 
