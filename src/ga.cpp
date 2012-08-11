@@ -129,23 +129,12 @@ Individual GA::GenerateRand() const
 
 Individual GA::Mutation(const Individual& ind) const
 {
-	std::stringstream ss(ind.GetText());
-	VM::Object obj(m_Env);
-	ss >> obj;
-	VM::Program prog(obj);
-	return Individual(GP::MutateProg(prog, m_Funcs), ind.GetParents());
+	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs), ind.GetParents());
 }
 
 Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
 {
-	std::stringstream ss1(ind1.GetText());
-	VM::Object obj(m_Env);
-	ss1 >> obj;
-	VM::Program prog1(obj);
-	std::stringstream ss2(ind2.GetText());
-	ss2 >> obj;
-	VM::Program prog2(obj);	
-	return Individual(GP::CrossoverProg(prog1, prog2), {ind1, ind2});
+	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram()), {ind1, ind2});
 }
 
 bool GA::Load(const char* filename, Individual *ind) const

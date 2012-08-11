@@ -108,7 +108,7 @@ namespace VM
 
 		/// \brief Set current program.
 		/// \param[in] prog Program.
-		void SetProgram(VM::Program &prog)
+		void SetProgram(const VM::Program &prog)
 		{
 			m_Program = &prog;
 		}
@@ -179,7 +179,7 @@ namespace VM
 		std::set<Object*> m_AllObjects; /// Set of all objects in this environment.
 #endif
 
-		Program *m_Program; ///< Program executing in environment.
+		const Program *m_Program; ///< Program executing in environment.
 
 		static bool s_Stop; ///< Stop all evalations.
 

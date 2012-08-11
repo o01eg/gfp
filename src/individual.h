@@ -146,14 +146,14 @@ public:
 	};
 
 	Individual(const Individual& ind)
-		: m_ProgramText(ind.m_ProgramText)
+		: m_Program(ind.m_Program)
 		, m_Result(ind.m_Result)
 		, m_Parents(ind.m_Parents)
 	{
 	}
 
 	Individual(Individual&& ind)
-		: m_ProgramText(std::move(ind.m_ProgramText))
+		: m_Program(std::move(ind.m_Program))
 		, m_Result(std::move(ind.m_Result))
 		, m_Parents(std::move(ind.m_Parents))
 	{
@@ -163,20 +163,22 @@ public:
 	/// \param prog LISP-program.
 	/// \param parents Parents of this individual.
 	Individual(const VM::Program& prog, const std::vector<Individual>& parents)
-	: m_Result(-1) // new, not yet tested
+	: m_Program(prog)
+	, m_Result(-1) // new, not yet tested
 	, m_Parents(parents)
 	{
-		Init(prog);
+		Init();
 	}
 
 	/// \brief Create individual from program.
 	/// \param prog LISP-program.
 	/// \param parents Parents of this individual.
 	Individual(const VM::Program& prog, std::vector<Individual>&& parents)
-	: m_Result(-1) // new, not yet tested
+	: m_Program(prog)
+	, m_Result(-1) // new, not yet tested
 	, m_Parents(parents)
 	{
-		Init(prog);
+		Init();
 	}
 
 	/// \brief Desctructor.
@@ -188,7 +190,7 @@ public:
 	{
 		if(this != &ind)
 		{
-			m_ProgramText = ind.m_ProgramText;
+			m_Program = ind.m_Program;
 			m_Result = ind.m_Result;
 			m_Parents = ind.m_Parents;
 		}
@@ -199,17 +201,23 @@ public:
 	{
 		if(this != &ind)
 		{
-			m_ProgramText = std::move(ind.m_ProgramText);
+			m_Program = std::move(ind.m_Program);
 			m_Result = std::move(ind.m_Result);
 			m_Parents = std::move(ind.m_Parents);
 		}
 		return *this;
 	}
 
-	VM::Program GetProgram(VM::Environment &env) const;
-	const std::string& GetText() const
+	const VM::Program& GetProgram() const
 	{
-		return m_ProgramText;
+		return m_Program;
+	}
+
+	std::string GetText() const
+	{
+		std::stringstream ss;
+		ss << m_Program.Save();
+		return ss.str();
 	}
 	const Result& GetResult() const
 	{
@@ -245,20 +253,17 @@ private:
 	/// \return Quality of move.
 	static size_t CheckMove(const VM::WeakObject &result, signed long *code, signed long *direction);
 
-	void Init(const VM::Program &prog)
+	void Init()
 	{
 		for(std::vector<Individual>::iterator parent = m_Parents.begin(); parent != m_Parents.end(); ++ parent)
 		{
 			parent->m_Parents.clear(); //don't store older parents.
 		}
-		std::stringstream ss;
-		ss << prog.Save();
-		m_ProgramText = ss.str();
 	}
 
 	Individual() = delete; ///< Block for contsructor.
 
-	std::string m_ProgramText; ///< Text of program.
+	VM::Program m_Program; ///< Text of program.
 	Result m_Result; ///< Result of last testing.
 	std::vector<Individual> m_Parents; ///< Parents of individual.
 };

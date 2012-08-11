@@ -46,9 +46,9 @@ const char *type_str[] = {
 
 using namespace VM;
 
-const Heap::UInt BLOCK_ADDRESS_OFFSET = 6; ///< Number of bits in position pointed to block.
+const Heap::UInt BLOCK_ADDRESS_OFFSET = 8; ///< Number of bits in position pointed to block.
 const Heap::UInt BLOCK_SIZE = 1 << BLOCK_ADDRESS_OFFSET; ///< Size of blocks in elements.
-const size_t MAX_BLOCKS = 256;//1 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UInt)); ///< Maximum blocks count.
+const size_t MAX_BLOCKS = 1024;//1 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UInt)); ///< Maximum blocks count.
 
 Heap::Heap()
 	:blocks(1)

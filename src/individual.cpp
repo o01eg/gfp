@@ -69,8 +69,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			continue;
 		}
 		World world(env, DATA_DIR "labirint.txt");
-		VM::Program prog = population[i].GetProgram(env);
-		env.SetProgram(prog);
+		env.SetProgram(population[i].GetProgram());
 		CurrentState::s_Program = population[i].GetText();
 		VM::Object memory(env);
 		VM::Object prev_res(env);
@@ -82,7 +81,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		result.m_Quality[Result::ST_IF_TOTAL] = 0;
 		for(size_t f = 0; f < MAX_FUNCTIONS; ++ f)
 		{
-			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(prog.GetADF(f));
+			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
 		}
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
@@ -272,13 +271,5 @@ size_t Individual::CheckMove(const VM::WeakObject &move, signed long *code, sign
 		(*direction) = static_cast<signed long>(dir_obj.GetValue());
 	}
 	return 8;
-}
-
-VM::Program Individual::GetProgram(VM::Environment &env) const
-{
-	std::stringstream ss(m_ProgramText);
-	VM::Object obj(env);
-	ss >> obj;
-	return VM::Program(obj);
 }
 
