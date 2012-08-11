@@ -55,7 +55,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		bool equal_ind = false;
 		for(size_t j = 0; j < i; ++ j)
 		{
-			if(population[j].GetText() == population[i].GetText())
+			if(population[j].GetProgram().Save() == population[i].GetProgram().Save())
 			{
 				equal_ind = true;
 				break;
@@ -70,7 +70,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		}
 		World world(env, DATA_DIR "labirint.txt");
 		env.SetProgram(population[i].GetProgram());
-		CurrentState::s_Program = population[i].GetText();
+		CurrentState::s_Program = &population[i].GetProgram();
 		VM::Object memory(env);
 		VM::Object prev_res(env);
 		VM::Object prev_move(env);
@@ -220,6 +220,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		
 		result.m_Result = ss.str();
 		results.push_back(result);
+		CurrentState::s_Program = NULL;
 	}
 	//std::sort(results.begin(), results.end());
 #if 0	

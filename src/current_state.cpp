@@ -24,7 +24,7 @@
 
 #include "current_state.h"
 
-std::string CurrentState::s_Program;
+const VM::Program* CurrentState::s_Program = NULL;
 size_t CurrentState::s_Generation = 0;
 bool CurrentState::s_AppIsRun = true;
 

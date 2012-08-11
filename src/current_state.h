@@ -28,6 +28,8 @@
 #include <string>
 #include <iostream>
 #include <assert.h>
+#include "vm/program.h"
+#include "vm/ioobject.h"
 
 /// \brief Save current state of evalation
 class CurrentState
@@ -38,7 +40,10 @@ public:
 	{
 		std::cerr << "Dump state:" << std::endl;
 		std::cerr << " Generation: " << s_Generation << std::endl;
-		std::cerr << " Program Text: " << s_Program << std::endl;
+		if(s_Program)
+		{
+			std::cerr << " Program Text: " << s_Program->Save() << std::endl;
+		}
 		std::cerr << std::endl;
 	}
 
@@ -55,7 +60,7 @@ public:
 		return s_AppIsRun;
 	}
 
-	static std::string s_Program; ///< Current evalating program.
+	static const VM::Program *s_Program; ///< Current evalating program.
 	static size_t s_Generation; ///< Current generation.
 private:
 	static bool s_AppIsRun; ///< Run flag.
