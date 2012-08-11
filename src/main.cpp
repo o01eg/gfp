@@ -91,7 +91,8 @@ int main(int argc, char **argv)
 				std::cout << "Cann't load " << filename << std::endl;
 			}
 		}
-		std::cout << "Start evolution" << std::endl;
+		time_t st_time = time(NULL);
+		std::cout << "Start evolution time=" << st_time << std::endl;
 		size_t remain_steps = MAX_STEP_UNCHANGED;
 		size_t generation = 0;
 
@@ -111,7 +112,9 @@ int main(int argc, char **argv)
 				}
 				std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
 				ga.GetInd(0).GetResult().Dump(std::clog);
-				std::clog << "generation = " << generation << std::endl << std::endl;
+				time_t cur = time(NULL);
+				std::clog << "generation = " << generation << " (" << static_cast<double>(generation)/(cur - st_time) << "g/s)" << std::endl << std::endl;
+				std::cout.flush();
 			}
 			else
 			{
@@ -120,7 +123,8 @@ int main(int argc, char **argv)
 			}
 			if(generation % 10 == 0)
 			{
-				std::cout << "\x1b[0`generation = " << generation << "(" << (remain_steps * 100 / MAX_STEP_UNCHANGED) << "%)            ";
+				time_t cur = time(NULL);
+				std::cout << "\x1b[0`generation = " << generation << " (" << static_cast<double>(generation)/(cur - st_time) << "g/s) (" << (remain_steps * 100 / MAX_STEP_UNCHANGED) << "%)            ";
 				std::cout.flush();
 			}
 		}
