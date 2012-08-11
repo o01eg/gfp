@@ -26,6 +26,7 @@
 #define _GA_H_
 
 #include <algorithm>
+#include <memory>
 #include "individual.h"
 
 /// \class GA
@@ -48,7 +49,6 @@ public:
 	
 	~GA() ///< GA Desctructor
 	{
-		delete m_Population;
 	}
 
 	/// \brief Step.
@@ -68,7 +68,7 @@ public:
 	/// \return If file successfully loaded?
 	bool Load(const char *filename)
 	{
-		return Individual::Load(filename, &m_Population->at(m_PopulationSize - 1));
+		return Individual::Load(filename, &m_Population[m_PopulationSize - 1]);
 	}
 
 	/// \brief Get individual from population.
@@ -77,7 +77,7 @@ public:
 	/// \return individual.
 	const Individual& GetInd(size_t index) const
 	{
-		return m_Population->at(index);
+		return m_Population[index];
 	}
 
 	/// \brief Mutation.
@@ -107,7 +107,7 @@ private:
 	GA& operator=(const GA&) = delete; //Prevent assign.
 
 	size_t m_PopulationSize; ///< Size of population.
-	Population *m_Population; ///< Auto pointer to population.
+	Population m_Population; ///< Auto pointer to population.
 };
 
 #endif

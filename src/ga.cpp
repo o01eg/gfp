@@ -28,53 +28,46 @@
 #include "libfunctions/functions.h"
 
 GA::GA(size_t population_size_)
-	:m_PopulationSize(population_size_)
+	: m_PopulationSize(population_size_)
 {
 	VM::Environment env;
 	env.LoadFunctionsFromArray(func_array);
-	m_Population = new Population;
 	for(size_t i = 0; i < m_PopulationSize; ++ i)
 	{
 		//std::clog << "Generating " << i << " individual..." << std::endl;
-		m_Population->push_back(Individual::GenerateRand(env));
+		m_Population.push_back(Individual::GenerateRand(env));
 		//std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
 
 GA::Results GA::Examine() const
 {
-	Results res = Individual::Execute(*m_Population);
-	if(m_PopulationSize != res.size())
-	{
-		return res;
-	}
-	for(size_t i = 0; i < m_PopulationSize; ++ i)
-	{
-		(*m_Population)[i].SetResult(res[i]);
-	}
-//	std::stringstream ss;
-//	ss << "before:" << std::endl;
-//	DumpResults(*m_Population, ss);
-	std::stable_sort(res.begin(), res.end());
+	Results res = Individual::Execute(m_Population);
 	return res;
 }
 
 bool GA::Step()
 {
 	Results results = Examine();
+
 	if(m_PopulationSize != results.size())
 	{
 		return false;
 	}
+	for(size_t i = 0; i < m_PopulationSize; ++ i)
+	{
+		m_Population[i].SetResult(results[i]);
+	}
+	std::stable_sort(results.begin(), results.end());
 
-	Population *new_population = new Population;
+	Population new_population;
 	bool updated = false;
 	{
 		VM::Environment env;
 		env.LoadFunctionsFromArray(func_array);
 
 		// add elite individual
-		new_population->push_back(m_Population->at(results[0].GetIndex()));
+		new_population.push_back(m_Population[results[0].GetIndex()]);
 
 		if(results[0].GetIndex() != 0)
 		{
@@ -90,22 +83,21 @@ bool GA::Step()
 			parent_pool.push_back(std::min(results[i1], results[i2]).GetIndex());
 		}
 
-		while(new_population->size() < m_PopulationSize)
+		while(new_population.size() < m_PopulationSize)
 		{
-			new_population->push_back(Individual::Crossover(env, m_Population->at(parent_pool[rand() % parent_pool.size()]), m_Population->at(parent_pool[rand() % parent_pool.size()])));
+			new_population.push_back(Individual::Crossover(env, m_Population[parent_pool[rand() % parent_pool.size()]], m_Population[parent_pool[rand() % parent_pool.size()]]));
 		}
 
 		for(size_t i = 1; i < m_PopulationSize; ++ i)
 		{
 			if(rand() % 5 == 0)
 			{
-				new_population->at(i) = Individual::Mutation(env, new_population->at(i));
+				new_population[i] = Individual::Mutation(env, new_population[i]);
 			}
 		}
 
 	}
-	delete m_Population;
-	m_Population = new_population;
+	m_Population = std::move(new_population);
 	return updated;
 }
 
