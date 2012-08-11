@@ -72,11 +72,9 @@ Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, c
 	return Individual(GP::CrossoverProg(prog1, prog2, MAX_FUNCTIONS), {ind1, ind2});
 }
 
-std::vector<Individual::Result> Individual::Execute(const std::vector<Individual>& population)
+std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const std::vector<Individual>& population)
 {
 	std::vector<Individual::Result> results;
-	VM::Environment env;
-	env.LoadFunctionsFromArray(func_array);
 	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); ++ i)
 	{
 		if(population[i].GetResult().IsTested())

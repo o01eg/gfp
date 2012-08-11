@@ -30,19 +30,18 @@
 GA::GA(size_t population_size_)
 	: m_PopulationSize(population_size_)
 {
-	VM::Environment env;
-	env.LoadFunctionsFromArray(func_array);
+	m_Env.LoadFunctionsFromArray(func_array);
 	for(size_t i = 0; i < m_PopulationSize; ++ i)
 	{
 		//std::clog << "Generating " << i << " individual..." << std::endl;
-		m_Population.push_back(Individual::GenerateRand(env));
+		m_Population.push_back(Individual::GenerateRand(m_Env));
 		//std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
 
 GA::Results GA::Examine() const
 {
-	Results res = Individual::Execute(m_Population);
+	Results res = Individual::Execute(m_Env, m_Population);
 	return res;
 }
 
@@ -63,9 +62,6 @@ bool GA::Step()
 	Population new_population;
 	bool updated = false;
 	{
-		VM::Environment env;
-		env.LoadFunctionsFromArray(func_array);
-
 		// add elite individual
 		new_population.push_back(m_Population[results[0].GetIndex()]);
 
@@ -85,14 +81,14 @@ bool GA::Step()
 
 		while(new_population.size() < m_PopulationSize)
 		{
-			new_population.push_back(Individual::Crossover(env, m_Population[parent_pool[rand() % parent_pool.size()]], m_Population[parent_pool[rand() % parent_pool.size()]]));
+			new_population.push_back(Individual::Crossover(m_Env, m_Population[parent_pool[rand() % parent_pool.size()]], m_Population[parent_pool[rand() % parent_pool.size()]]));
 		}
 
 		for(size_t i = 1; i < m_PopulationSize; ++ i)
 		{
 			if(rand() % 5 == 0)
 			{
-				new_population[i] = Individual::Mutation(env, new_population[i]);
+				new_population[i] = Individual::Mutation(m_Env, new_population[i]);
 			}
 		}
 

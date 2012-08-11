@@ -220,7 +220,7 @@ public:
 	static Individual Mutation(VM::Environment &env, const Individual& ind);
 
 	static Individual Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2);
-	static std::vector<Result> Execute(const std::vector<Individual>& population);
+	static std::vector<Result> Execute(VM::Environment &env, const std::vector<Individual>& population);
 
 	/// \brief Load from file.
 	/// \param[in] filename File name.

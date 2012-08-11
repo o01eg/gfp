@@ -106,6 +106,7 @@ private:
 	GA(GA&&) = delete; //Prevent move-constructor.
 	GA& operator=(const GA&) = delete; //Prevent assign.
 
+	mutable VM::Environment m_Env; ///< Environment.
 	size_t m_PopulationSize; ///< Size of population.
 	Population m_Population; ///< Auto pointer to population.
 };
