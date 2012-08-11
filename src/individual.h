@@ -159,6 +159,26 @@ public:
 	{
 	}
 
+	/// \brief Create individual from program.
+	/// \param prog LISP-program.
+	/// \param parents Parents of this individual.
+	Individual(const VM::Program& prog, const std::vector<Individual>& parents)
+	: m_Result(-1) // new, not yet tested
+	, m_Parents(parents)
+	{
+		Init(prog);
+	}
+
+	/// \brief Create individual from program.
+	/// \param prog LISP-program.
+	/// \param parents Parents of this individual.
+	Individual(const VM::Program& prog, std::vector<Individual>&& parents)
+	: m_Result(-1) // new, not yet tested
+	, m_Parents(parents)
+	{
+		Init(prog);
+	}
+
 	/// \brief Desctructor.
 	~Individual()
 	{
@@ -215,18 +235,7 @@ public:
 		m_Result = res;
 	}
 
-	static Individual GenerateRand(VM::Environment &env);
-
-	static Individual Mutation(VM::Environment &env, const Individual& ind);
-
-	static Individual Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2);
 	static std::vector<Result> Execute(VM::Environment &env, const std::vector<Individual>& population);
-
-	/// \brief Load from file.
-	/// \param[in] filename File name.
-	/// \param[out] Loaded individual.
-	/// \return If loaded successly?
-	static bool Load(const char* filename, Individual *ind);
 
 private:
 	/// \brief Check move.
@@ -235,26 +244,6 @@ private:
 	/// \param[out] direction Direction of move.
 	/// \return Quality of move.
 	static size_t CheckMove(const VM::WeakObject &result, signed long *code, signed long *direction);
-
-	/// \brief Create individual from program.
-	/// \param prog LISP-program.
-	/// \param parents Parents of this individual.
-	Individual(const VM::Program& prog, const std::vector<Individual>& parents)
-	: m_Result(-1) // new, not yet tested
-	, m_Parents(parents)
-	{
-		Init(prog);
-	}
-
-	/// \brief Create individual from program.
-	/// \param prog LISP-program.
-	/// \param parents Parents of this individual.
-	Individual(const VM::Program& prog, std::vector<Individual>&& parents)
-	: m_Result(-1) // new, not yet tested
-	, m_Parents(parents)
-	{
-		Init(prog);
-	}
 
 	void Init(const VM::Program &prog)
 	{

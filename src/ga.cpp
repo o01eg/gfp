@@ -24,17 +24,27 @@
 
 #include <fstream>
 #include "ga.h"
-
+#include "conf.h"
+#include "ga_utils.h"
 #include "libfunctions/functions.h"
 
 GA::GA(size_t population_size_)
 	: m_PopulationSize(population_size_)
 {
-	m_Env.LoadFunctionsFromArray(func_array);
+	m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::IF), 3));
+	m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::EVAL), 1));
+	VM::Environment::Func* array = func_array;
+	while(array->func)
+	{
+		size_t index = m_Env.LoadFunction(array->name, array->number_param, array->func);
+		m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::FUNC, index), array->number_param));
+		++ array;
+	}
+
 	for(size_t i = 0; i < m_PopulationSize; ++ i)
 	{
 		//std::clog << "Generating " << i << " individual..." << std::endl;
-		m_Population.push_back(Individual::GenerateRand(m_Env));
+		m_Population.push_back(GenerateRand());
 		//std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
@@ -81,14 +91,14 @@ bool GA::Step()
 
 		while(new_population.size() < m_PopulationSize)
 		{
-			new_population.push_back(Individual::Crossover(m_Env, m_Population[parent_pool[rand() % parent_pool.size()]], m_Population[parent_pool[rand() % parent_pool.size()]]));
+			new_population.push_back(Crossover(m_Population[parent_pool[rand() % parent_pool.size()]], m_Population[parent_pool[rand() % parent_pool.size()]]));
 		}
 
 		for(size_t i = 1; i < m_PopulationSize; ++ i)
 		{
 			if(rand() % 5 == 0)
 			{
-				new_population[i] = Individual::Mutation(m_Env, new_population[i]);
+				new_population[i] = Mutation(new_population[i]);
 			}
 		}
 
@@ -109,5 +119,48 @@ void GA::Save(const char *filename)
 {
 	std::ofstream f(filename);
 	f << GetInd(0).GetText();
+}
+
+Individual GA::GenerateRand() const
+{
+	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs);
+	return Individual(prog, {});
+}
+
+Individual GA::Mutation(const Individual& ind) const
+{
+	std::stringstream ss(ind.GetText());
+	VM::Object obj(m_Env);
+	ss >> obj;
+	VM::Program prog(obj);
+	return Individual(GP::MutateProg(prog, m_Funcs), ind.GetParents());
+}
+
+Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
+{
+	std::stringstream ss1(ind1.GetText());
+	VM::Object obj(m_Env);
+	ss1 >> obj;
+	VM::Program prog1(obj);
+	std::stringstream ss2(ind2.GetText());
+	ss2 >> obj;
+	VM::Program prog2(obj);	
+	return Individual(GP::CrossoverProg(prog1, prog2), {ind1, ind2});
+}
+
+bool GA::Load(const char* filename, Individual *ind) const
+{
+	std::ifstream f(filename);
+	if(f.fail())
+	{
+		return false;
+	}
+	VM::Object obj(m_Env);
+	f >> obj;
+	if(ind)
+	{
+		(*ind) = Individual(VM::Program(obj), {});
+	}
+	return true;
 }
 

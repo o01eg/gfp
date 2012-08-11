@@ -29,6 +29,8 @@
 
 #include "vm/ioobject.h"
 
+const size_t MAX_FUNCTIONS = Config::Instance().GetSLong("max-individual-adfs", 1); ///< Maximum size of program.
+
 Config::Config()
 	:m_List(m_Env)
 {

@@ -25,11 +25,10 @@
 #include <algorithm>
 #include <fstream>
 #include "individual.h"
-#include "ga_utils.h"
 #include "world.h"
 #include "current_state.h"
 #include "conf.h"
-#include "libfunctions/functions.h"
+#include "ga_utils.h"
 
 inline signed long antioverflow_plus(signed long x, signed long y)
 {
@@ -39,38 +38,9 @@ inline signed long antioverflow_plus(signed long x, signed long y)
 	return (z & (f | f1)) | (x & (~(f | f1)));
 }
 
-const size_t MAX_FUNCTIONS = Config::Instance().GetSLong("max-individual-adfs", 1); ///< Maximum size of program.
 const size_t MAX_STOPS = Config::Instance().GetSLong("max-stop-moves", 1); ///< Maximum of stop moves.
 const size_t MAX_CIRCLES = Config::Instance().GetSLong("max-evalation-loops", 1000); ///< Maximum of eval circles.
 const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 1); ///< Maximum of any moves.
-
-Individual Individual::GenerateRand(VM::Environment &env)
-{
-	VM::Program prog = GP::GenerateProg(env, MAX_FUNCTIONS);
-	//std::clog << "Individual random program created." << std::endl;
-	return Individual(prog, {});
-}
-
-Individual Individual::Mutation(VM::Environment &env, const Individual& ind)
-{
-	std::stringstream ss(ind.m_ProgramText);
-	VM::Object obj(env);
-	ss >> obj;
-	VM::Program prog(obj);
-	return Individual(GP::MutateProg(prog, MAX_FUNCTIONS), ind.m_Parents);
-}
-
-Individual Individual::Crossover(VM::Environment &env, const Individual& ind1, const Individual& ind2)
-{
-	std::stringstream ss1(ind1.m_ProgramText);
-	VM::Object obj(env);
-	ss1 >> obj;
-	VM::Program prog1(obj);
-	std::stringstream ss2(ind2.m_ProgramText);
-	ss2 >> obj;
-	VM::Program prog2(obj);	
-	return Individual(GP::CrossoverProg(prog1, prog2, MAX_FUNCTIONS), {ind1, ind2});
-}
 
 std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const std::vector<Individual>& population)
 {
@@ -310,23 +280,5 @@ VM::Program Individual::GetProgram(VM::Environment &env) const
 	VM::Object obj(env);
 	ss >> obj;
 	return VM::Program(obj);
-}
-
-bool Individual::Load(const char* filename, Individual *ind)
-{
-	std::ifstream f(filename);
-	if(f.fail())
-	{
-		return false;
-	}
-	VM::Environment env;
-	env.LoadFunctionsFromArray(func_array);
-	VM::Object obj(env);
-	f >> obj;
-	if(ind)
-	{
-		(*ind) = Individual(VM::Program(obj), {});
-	}
-	return true;
 }
 

@@ -84,10 +84,6 @@ namespace VM
 			}
 		};
 
-		/// \brief Load Functions from array.
-		/// \param[in] array Pointer into array of functions (must be default ended)
-		void LoadFunctionsFromArray(Func* array);
-	
 		Environment(); ///< Constructor of environment.
 		~Environment(); ///< Destructor of environment.
 		
@@ -101,7 +97,8 @@ namespace VM
 		/// \param[in] name Function name
 		/// \param[in] argc Number of agruments.
 		/// \param[in] ptr Pointer to function.
-		void LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
+		/// \return Index of function.
+		size_t LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr);
 
 		/// \brief Run program with parameter.
 		/// \param[in] param Parameter.
@@ -143,18 +140,6 @@ namespace VM
 		const std::string& GetSymbolName(size_t value) const
 		{
 			return symbol_names[value];
-		}
-
-		/// \brief Get number of loaded functions.
-		size_t GetFunctionSize() const
-		{
-			return functions.size();
-		}
-
-		/// \brief Get function.
-		const Func& GetFunction(size_t index) const
-		{
-			return functions[index];
 		}
 
 #if _DEBUG_OBJECT_

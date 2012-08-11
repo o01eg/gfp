@@ -190,9 +190,9 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 	return result;
 }
 
-VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
+VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
-	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 5 : 6); // don't choose LIST on more depth.
+	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 6 : 7); // don't choose LIST on more depth.
 	VM::Object res(env);
 	switch(choose)
 	{
@@ -210,14 +210,17 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	case 4: // quote
 		res = VM::Object(env, VM::QUOTE);
 		break;
-	case 5: // list
-		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), GP::GenerateObj(env, funcs, depth + 1));
+	case 5: // ADF
+		res = VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1));
+		break;
+	case 6: // list
+		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), GP::GenerateObj(env, funcs, depth + 1, current_adf));
 		break;
 	}
 	return res;
 }
 
-VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
+VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
 	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 3 : 8); // don't choose LIST on more depth.
 	VM::Object res(env);
@@ -232,15 +235,19 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 		res = VM::Object(env, VM::PARAM);
 		break;
 	case 3: // ( ' object )
-		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1), res);
+		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), res);
 		res = VM::Object(VM::Object(env, VM::QUOTE), res);
+		break;
+	case 4: // ( %ADF arg )
+		res = VM::Object(GP::GenerateExec(env, funcs, depth + 1, current_adf), res); // ( arg )
+		res = VM::Object(VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1)), res);
 		break;
 	default: // call
 		{
 			size_t func_num = rand() % funcs.size();
 			for(size_t param = 0; param < funcs[func_num].second; ++ param)
 			{
-				res = VM::Object(GenerateExec(env, funcs, depth + 1), res);
+				res = VM::Object(GenerateExec(env, funcs, depth + 1, current_adf), res);
 			}
 			res = VM::Object(funcs[func_num].first, res);
 		}
@@ -307,14 +314,14 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 	return res;
 }
 
-VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth)
+VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
 	VM::Object res(obj.GetEnv());
 	if(is_exec)
 	{
 		if((rand() % 100) > 90)
 		{
-			res = GP::GenerateExec(obj.GetEnv(), funcs, depth);
+			res = GP::GenerateExec(obj.GetEnv(), funcs, depth, current_adf);
 		}
 		else
 		{
@@ -330,7 +337,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 				if(head.GetType() == VM::QUOTE)
 				{
 					// it's quote, make argument as non executable
-					res = GP::Mutation(obj.GetTail().GetHead(), false, funcs, depth + 1);
+					res = GP::Mutation(obj.GetTail().GetHead(), false, funcs, depth + 1, current_adf);
 					res = VM::Object(res, VM::Object(obj.GetEnv()));
 				}
 				else
@@ -344,7 +351,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 					}
 					while(! stack.empty())
 					{
-						res = VM::Object(GP::Mutation(stack.top(), true, funcs, depth + 1), res);
+						res = VM::Object(GP::Mutation(stack.top(), true, funcs, depth + 1, current_adf), res);
 						stack.pop();
 					}
 				}
@@ -361,14 +368,14 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 		// non exec mutation
 		if((rand() % 100) > 90)
 		{
-			res = GP::GenerateObj(obj.GetEnv(), funcs, depth);
+			res = GP::GenerateObj(obj.GetEnv(), funcs, depth, current_adf);
 		}
 		else
 		{
 			// no change or go deeper
 			if((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
 			{
-				res = VM::Object(GP::Mutation(obj.GetHead(), false, funcs, depth + 1), GP::Mutation(obj.GetTail(), false, funcs, depth + 1));
+				res = VM::Object(GP::Mutation(obj.GetHead(), false, funcs, depth + 1, current_adf), GP::Mutation(obj.GetTail(), false, funcs, depth + 1, current_adf));
 			}
 			else
 			{
@@ -379,23 +386,15 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	return res;
 }
 
-VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
+VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs)
 {
 	VM::Program res(env);
-	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
-	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.GetFunctionSize(); ++ i)
-	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.GetFunction(i).number_param));
-	}
-	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
+	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf(env);
-		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		do
 		{
-			adf = GP::GenerateExec(env, funcs, 0);
+			adf = GP::GenerateExec(env, funcs, 0, adf_index);
 		}
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
@@ -405,26 +404,18 @@ VM::Program GP::GenerateProg(VM::Environment &env, size_t max_funcs)
 	return res;
 }
 
-VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
+VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs)
 {
 	VM::Environment& env = prog.GetEnv();
 	VM::Program res(env);
-	std::vector<std::pair<VM::Object, size_t> > funcs;
-	funcs.push_back(std::make_pair(VM::Object(env, VM::IF), 3));
-	funcs.push_back(std::make_pair(VM::Object(env, VM::EVAL), 1));
-	for(size_t i = 0 ; i < env.GetFunctionSize(); ++ i)
-	{
-		funcs.push_back(std::make_pair(VM::Object(env, VM::FUNC, i), env.GetFunction(i).number_param));
-	}
-	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
+	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf = prog.GetADF(adf_index);
-		funcs.push_back(std::make_pair(VM::Object(env, VM::ADF, adf_index), 1));
 		if(adf.IsNIL())
 		{
 			do
 			{
-				adf = GP::GenerateExec(env, funcs, 0);
+				adf = GP::GenerateExec(env, funcs, 0, adf_index);
 			}
 			while(! GP::CheckForParam(adf));
 		}
@@ -433,7 +424,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 			VM::Object new_adf(env);
 			do
 			{
-				new_adf = GP::Mutation(adf, true, funcs, 0);
+				new_adf = GP::Mutation(adf, true, funcs, 0, adf_index);
 			}
 			while((! GP::CheckForParam(new_adf)));
 			adf = new_adf;
@@ -445,7 +436,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, size_t max_funcs)
 	return res;
 }
 
-VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, size_t max_funcs)
+VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2)
 {
 	VM::Environment &env = prog1.GetEnv();
 	if(&env != &prog2.GetEnv())
@@ -453,7 +444,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 		THROW("Different environments in crossovered programs");
 	}
 	VM::Program res(env);
-	for(int adf_index = max_funcs; adf_index >= 0; -- adf_index)
+	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
 	{
 		VM::Object adf(env);
 		if(prog1.GetADF(adf_index).IsNIL())

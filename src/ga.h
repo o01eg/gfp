@@ -68,7 +68,7 @@ public:
 	/// \return If file successfully loaded?
 	bool Load(const char *filename)
 	{
-		return Individual::Load(filename, &m_Population[m_PopulationSize - 1]);
+		return Load(filename, &m_Population[m_PopulationSize - 1]);
 	}
 
 	/// \brief Get individual from population.
@@ -80,23 +80,6 @@ public:
 		return m_Population[index];
 	}
 
-	/// \brief Mutation.
-	/// \param i Index of individual.
-	/// \return Genetic operation.
-	static Operation Mutation(int i)
-	{
-		return Operation(-1, i);
-	}
-
-	/// \brief Crossover.
-	/// \param i Index of first individual.
-	/// \param j Index of second individual.
-	/// \return Genetic operation.
-	static Operation Crossover(int i, int j)
-	{
-		return Operation(i, j);
-	}
-
 	/// \brief Dump results.
 	/// \param[in] population Array of individuals.
 	/// \param[in] os Output stream.
@@ -106,9 +89,20 @@ private:
 	GA(GA&&) = delete; //Prevent move-constructor.
 	GA& operator=(const GA&) = delete; //Prevent assign.
 
+	Individual GenerateRand() const;
+	Individual Mutation(const Individual& ind) const;
+	Individual Crossover(const Individual& ind1, const Individual& ind2) const;
+
+	/// \brief Load from file.
+	/// \param[in] filename File name.
+	/// \param[out] Loaded individual.
+	/// \return If loaded successly?
+	bool Load(const char* filename, Individual *ind) const;
+
 	mutable VM::Environment m_Env; ///< Environment.
 	size_t m_PopulationSize; ///< Size of population.
 	Population m_Population; ///< Auto pointer to population.
+	std::vector<std::pair<VM::Object, size_t> > m_Funcs; ///< Functions for GA.
 };
 
 #endif

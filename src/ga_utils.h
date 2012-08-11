@@ -49,8 +49,9 @@ namespace GP
 	/// \param env Environment.
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
+	/// \param current_adf Current ADF.
 	/// \return Generated object.
-	VM::Object GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
+	VM::Object GenerateExec(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf);
 
 	/// \brief Reduce all constant parts.
 	/// \param obj Object to reduction.
@@ -62,35 +63,36 @@ namespace GP
 	/// \param env Environment.
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
+	/// \param current_adf Current ADF.
 	/// \return Generated object.
-	VM::Object GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
+	VM::Object GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf);
 
 	/// \brief Mutation of objects.
 	/// \param obj Object.
 	/// \param is_exec Execatable object.
 	/// \param funcs Array of callable objects.
 	/// \param depth Depth.
+	/// \param current_adf Current ADF.
 	/// \return New object.
-	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth);
+	VM::Object Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf);
 
 	/// \brief Generate new program.
 	/// \param env Environment.
-	/// \param max_funcs Maximum number of functions.
+	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program GenerateProg(VM::Environment &env, size_t max_funcs);
+	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs);
 
 	/// \brief Mutate program.
 	/// \param prog Program.
-	/// \param max_funcs Maximum number of function.
+	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program MutateProg(const VM::Program &prog, size_t max_funcs);
+	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs);
 
 	/// \brief Crossover programs.
 	/// \param prog1 First program.
 	/// \param prog2 Second program.
-	/// \param max_funcs Maximum number of function.
 	/// \return Generated program.
-	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, size_t max_funcs);
+	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2);
 }
 
 #endif

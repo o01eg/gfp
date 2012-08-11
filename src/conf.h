@@ -51,5 +51,7 @@ private:
 	VM::Object m_List; // Pointer to options list
 };
 
+extern const size_t MAX_FUNCTIONS;
+
 #endif
 

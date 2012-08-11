@@ -336,50 +336,39 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 	return Object(*this, ERROR);
 }
 
-void Environment::LoadFunctionsFromArray(Func* array)
-{
-	while(array->func)
-	{
-		LoadFunction(array->name, array->number_param, array->func);
-		array ++;
-	}
-}
-
-void Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
+size_t Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
 {
 	std::vector<Func>::iterator it = std::find(functions.begin(), functions.end(), name);
 	if(it == functions.end())
 	{
 		// not exist.
-		if(ptr)
-		{
-			Environment::Func function;
-			function.func = ptr;
-			function.name = name;
-			function.number_param = argc;
-			functions.push_back(function);
-			m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
+		Environment::Func function;
+		function.func = ptr;
+		function.name = name;
+		function.number_param = argc;
+		functions.push_back(function);
+		m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
 #if _DEBUG_ENV_ // use only for test aim
-			//DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
+		//DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
+		
 #endif
-		}
+		return functions.size() - 1;
+	}
+
+	// exist
+	if(ptr)
+	{
+		// replace
+		it->func = ptr;
+		it->number_param = argc;
 	}
 	else
 	{
-		// exist
-		if(ptr)
-		{
-			// replace
-			it->func = ptr;
-			it->number_param = argc;
-		}
-		else
-		{
-			// functions.erase(it); cann't erase for keeping function indexes.
-			it->func = NULL;
-			it->number_param = 0;
-		}
+		// functions.erase(it); cann't erase for keeping function indexes.
+		it->func = NULL;
+		it->number_param = 0;
 	}
+	return (it - functions.begin());
 }
 
 Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr_obj_from_calc) const
