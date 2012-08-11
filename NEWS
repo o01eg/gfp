@@ -25,6 +25,7 @@ Now
    - Add optimization.
    - Show parents of winner individual.
    - Add IF_TOTAL criteria (count of IFs in program).
+   - Store Program instead its text (good speedup).
    * Static types
      + Remove types in file.
 

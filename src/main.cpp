@@ -25,7 +25,7 @@
 #include <csignal>
 #include <fstream>
 #include <ctime>
-//#include <thread>
+#include <thread>
 
 #include "ga.h"
 #include "current_state.h"
@@ -33,18 +33,6 @@
 
 /// \brief Maximum step for persistent best individuals.
 const size_t MAX_STEP_UNCHANGED = Config::Instance().GetSLong("max-step-unchanged", 100);
-
-/// Handler of Ctrl+D event.
-void close_handler()
-{
-	while(! std::cin.eof())
-	{
-		char c;
-		std::cin >> c;
-	}
-	CurrentState::Shutdown();
-	VM::Environment::Stop();
-}
 
 /// \brief Handler of Ctrl+C event.
 /// \param signum Number of signal.
@@ -61,13 +49,7 @@ void interrupt_handler(int signum)
 /// \return Exit code.
 int main(int argc, char **argv)
 {
-#if 1
 	signal(SIGINT, interrupt_handler);
-#endif
-
-#if 0
-	std::thread thr(close_handler);
-#endif
 
 	time_t seed = time(NULL);
 	std::cout << "seed = " << seed << std::endl;
@@ -142,10 +124,6 @@ int main(int argc, char **argv)
 
 	// Finish application.
 	std::clog << "Finish application" << std::endl;
-#if 0
-	std::cin.setstate(std::ios_base::eofbit);
-	thr.join();
-#endif
 
 	return 0;
 }

@@ -219,7 +219,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			}
 		
 		result.m_Result = ss.str();
-		results.push_back(result);
+		results.push_back(std::move(result));
 		CurrentState::s_Program = NULL;
 	}
 	//std::sort(results.begin(), results.end());

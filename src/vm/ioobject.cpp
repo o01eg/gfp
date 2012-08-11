@@ -234,7 +234,7 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				{
 					if((! stack.empty()) && (stack.top() == level))
 					{
-						obj_temp = obj_stack.top();
+						obj_temp = std::move(obj_stack.top());
 						obj_stack.pop();
 						stack.pop();
 					}
@@ -296,7 +296,7 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 		}
 		reading = level > 0;
 	}
-	obj = obj_stack.top();
+	obj = std::move(obj_stack.top());
 	return is;
 }
 

@@ -116,7 +116,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #endif
 			return Object(*this, ERROR);
 		}
-		Object obj = obj_to_calc.top();
+		Object obj = std::move(obj_to_calc.top());
 		obj_to_calc.pop();
 
 		if(obj.IsNIL() || (obj.GetType() == ERROR) || (obj.GetType() == INTEGER))
@@ -130,8 +130,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case FUNC:
 					{
 						// make arguments list and call
-						Object res = CallFunction(obj.GetValue(), &obj_from_calc);
-						obj_from_calc.push(res);
+						obj_from_calc.push(CallFunction(obj.GetValue(), &obj_from_calc));
 					}
 					break;
 				case LIST:
@@ -150,8 +149,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 								case LIST: // closure
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
-										head = obj.GetHead();
-										obj_to_calc.push(head);
+										obj_to_calc.push(obj.GetHead());
 										obj = obj.GetTail();
 									}
 									break;
@@ -171,10 +169,10 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 										Object cond = obj.GetTail().GetHead();
 										Object otrue = obj.GetTail().GetTail().GetHead();
 										Object ofalse = obj.GetTail().GetTail().GetTail().GetHead();
-										obj_to_calc.push(ofalse);
-										obj_to_calc.push(otrue);
-										obj_to_calc.push(head);
-										obj_to_calc.push(cond);
+										obj_to_calc.push(std::move(ofalse));
+										obj_to_calc.push(std::move(otrue));
+										obj_to_calc.push(std::move(head));
+										obj_to_calc.push(std::move(cond));
 									}
 									break;
 								case EVAL:
@@ -183,7 +181,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 										// move arg into to-calc stack.
 										Object arg = obj.GetTail().GetHead();
 										obj_to_calc.push(head);
-										obj_to_calc.push(arg);
+										obj_to_calc.push(std::move(arg));
 									}
 									else
 									{
@@ -196,7 +194,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push(head);
+										obj_to_calc.push(std::move(head));
 										obj = obj.GetTail();
 									}
 									break;
@@ -213,7 +211,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
 										head = obj.GetHead();
-										obj_to_calc.push(head);
+										obj_to_calc.push(std::move(head));
 										obj = obj.GetTail();
 									}
 									break;
@@ -227,16 +225,16 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case IF:
 					if((! obj_from_calc.empty()) && (obj_to_calc.size() >= 2))
 					{
-						Object cond = obj_from_calc.top();
+						Object cond = std::move(obj_from_calc.top());
 						obj_from_calc.pop();
-						Object otrue = obj_to_calc.top();
+						Object otrue = std::move(obj_to_calc.top());
 						obj_to_calc.pop();
-						Object ofalse = obj_to_calc.top();
+						Object ofalse = std::move(obj_to_calc.top());
 						obj_to_calc.pop();
 						if(cond.IsNIL())
 						{
 							// false
-							obj_to_calc.push(ofalse);
+							obj_to_calc.push(std::move(ofalse));
 						}
 						else
 						{
@@ -245,7 +243,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 								return cond;
 							}
 							// true
-							obj_to_calc.push(otrue);
+							obj_to_calc.push(std::move(otrue));
 						}
 					}
 					else
@@ -256,9 +254,9 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case EVAL:
 					if(! obj_from_calc.empty())
 					{
-						Object arg = obj_from_calc.top();
+						Object arg = std::move(obj_from_calc.top());
 						obj_from_calc.pop();
-						obj_to_calc.push(arg);
+						obj_to_calc.push(std::move(arg));
 					}
 					else
 					{
@@ -277,7 +275,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						adf_params_obj.push(obj_from_calc.top());
+						adf_params_obj.push(std::move(obj_from_calc.top()));
 						obj_from_calc.pop();
 						adf_depth.push(obj_to_calc.size());
 #if _DEBUG_EVAL_
@@ -346,7 +344,7 @@ size_t Environment::LoadFunction(const std::string &name, size_t argc, FunctionP
 		function.func = ptr;
 		function.name = name;
 		function.number_param = argc;
-		functions.push_back(function);
+		functions.push_back(std::move(function));
 		m_Symbols->insert(std::make_pair(name, Object(*this, FUNC, functions.size() - 1)));
 #if _DEBUG_ENV_ // use only for test aim
 		//DefineSymbol("__" + name, Object(*this, FUNC, functions.size() - 1));
@@ -414,7 +412,7 @@ std::vector<Object> Environment::GenerateArgsList(const unsigned char param_numb
 #if _DEBUG_EVAL_
 			std::clog << "arg " << std::setw(40) << obj_from_calc.top() << std::endl;
 #endif
-			arguments[idx] = obj_from_calc.top();
+			arguments[idx] = std::move(obj_from_calc.top());
 			obj_from_calc.pop();
 		}
 		// if obj_from_calc is empty or get ERROR
@@ -496,7 +494,7 @@ const Object& Environment::DefineSymbol(const std::string& name, const Object& o
 		symbol_names.push_back(name);
 		if(! res.second)
 		{
-			res.first->second = sym;
+			res.first->second = std::move(sym);
 		}
 	}
 	else
@@ -506,7 +504,7 @@ const Object& Environment::DefineSymbol(const std::string& name, const Object& o
 		Object sym(*this, SYMBOL, index);
 		res = m_Symbols->insert(std::make_pair(name, sym));
 		m_SymbolValues->at(index) = obj;
-		res.first->second = sym;
+		res.first->second = std::move(sym);
 	}
 	return res.first->second;
 }
