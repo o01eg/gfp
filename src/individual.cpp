@@ -83,140 +83,153 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		{
 			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
 		}
+		if(result.m_Quality[Result::ST_IF_TOTAL] > 3)
+		{
+			result.m_Quality[Result::ST_IF_TOTAL] = 3;
+		}
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
-		bool first_move = true;
 		bool dirs[4] = {false, false, false, false};
 
-			// moving in labirint
-			for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
+		// static check (memory)
+		VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), VM::Object(env, VM::ERROR)), &circle_count);
+		if((! res.IsNIL()) && (res.GetType() == VM::ERROR) && circle_count)
+		{
+			result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 1;
+		}
+
+		circle_count = MAX_CIRCLES;
+		res = env.Run(VM::Object(world.GetErrorWorld(env), VM::Object(env)), &circle_count);
+		if((! res.IsNIL()) && (res.GetType() == VM::ERROR) && circle_count)
+		{
+			result.m_Quality[Result::ST_STATIC_WORLD_ACCESS] = 1;
+		}
+
+		// moving in labirint
+		circle_count = MAX_CIRCLES;
+		for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
+		{
+			circle_count = MAX_CIRCLES;
+			bool changes = false;
+			res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
+			if(! prev_res.IsNIL())
+			{
+				if(res != prev_res)
+				{
+					result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
+				}
+			}
+				
+			if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
+			{
+				// it's simply bugged program
+				result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 0;
+				result.m_Quality[Result::ST_STATIC_WORLD_ACCESS] = 0;
+				active = false;
+			}
+			
+			prev_res = res;
+			if(circle_count >= MAX_CIRCLES - 1000)
 			{
 				circle_count = MAX_CIRCLES;
-				bool changes = false;
-				VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
-				if(! prev_res.IsNIL())
+			}
+			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count - MAX_CIRCLES;
+			ss << std::setw(70) << res << std::endl;
+			if(! res.IsNIL())
+			{
+				switch(res.GetType())
 				{
-					if(res != prev_res)
+				case VM::LIST:
 					{
-						result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
-					}
-				}
-				if(first_move)
-				{
-					if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
-					{
-						// it's simply bugged program
-						active = false;
-					}
-				}
-				prev_res = res;
-				if(circle_count >= MAX_CIRCLES - 1000)
-				{
-					circle_count = MAX_CIRCLES;
-				}
-				result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count - MAX_CIRCLES;
-				ss << std::setw(70) << res << std::endl;
-				if(! res.IsNIL())
-				{
-					switch(res.GetType())
-					{
-					case VM::LIST:
+						VM::Object new_mem = res.GetTail();
+						if(new_mem != memory)
 						{
-							VM::Object new_mem = res.GetTail();
-							if(new_mem != memory)
+							changes = true;
+							memory = new_mem;
+						}
+						VM::Object move = res.GetHead();
+						if(! prev_move.IsNIL())
+						{
+							if(move != prev_move)
 							{
-								changes = true;
-								memory = new_mem;
-							}
-							VM::Object move = res.GetHead();
-							if(! prev_move.IsNIL())
-							{
-								if(move != prev_move)
-								{
-									result.m_Quality[Result::ST_MOVE_CHANGES] ++;
-								}
-							}
-							prev_move = move;
-							signed long code = 0, direction = 0;
-							size_t quality = CheckMove(move, &code, &direction);
-							
-							if(quality >= 6) // got code
-							{
-								const signed long CODE_VALUE = -15000;
-								result.m_Quality[Result::ST_MOVE_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_MOVE_DIFF], (((code - CODE_VALUE) >= 0) ? -1L : 1L) * (code - CODE_VALUE));
-								if(quality == 8) // got direction
-								{
-									const signed long MIN_DIR = 10000;
-									const signed long MAX_DIR = MIN_DIR + 3;
-									result.m_Quality[Result::ST_DIR_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_DIR_DIFF], (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0));
-									if(prev_dir)
-									{
-										if((direction % 4 + 1) != prev_dir)
-										{
-											result.m_Quality[Result::ST_DIR_CHANGES] ++;
-										}
-									}
-									prev_dir = direction % 4 + 1;
-	
-									if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR))
-									{
-										quality = 100;
-									}
-									if(world.Move(direction % 4 + 1))
-									{
-										dirs[direction % 4] = true;
-										changes = true;
-										max_stops = MAX_STOPS;
-										result.m_Quality[Result::ST_GOOD_MOVES] ++;
-									}
-									result.m_Quality[Result::ST_SUM_MOVES] ++;
-								}
-							}
-							result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
-							if(quality < 8)
-							{
-								// Individual must return good moves.
-								active = false;
+								result.m_Quality[Result::ST_MOVE_CHANGES] ++;
 							}
 						}
-						break;
-					case VM::ERROR:
-						break;
-					default:
-						result.m_Quality[Result::ST_ANSWER_QUALITY] += 1;
-						break;
-					}
-				}
+						prev_move = move;
+						signed long code = 0, direction = 0;
+						size_t quality = CheckMove(move, &code, &direction);
+						
+						if(quality >= 6) // got code
+						{
+							const signed long CODE_VALUE = -15000;
+							result.m_Quality[Result::ST_MOVE_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_MOVE_DIFF], (((code - CODE_VALUE) >= 0) ? -1L : 1L) * (code - CODE_VALUE));
+							if(quality == 8) // got direction
+							{
+								const signed long MIN_DIR = 10000;
+								const signed long MAX_DIR = MIN_DIR + 3;
+								result.m_Quality[Result::ST_DIR_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_DIR_DIFF], (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0));
+								if(prev_dir)
+								{
+									if((direction % 4 + 1) != prev_dir)
+									{
+										result.m_Quality[Result::ST_DIR_CHANGES] ++;
+									}
+								}
+								prev_dir = direction % 4 + 1;
 
-				if(! changes)
-				{
-					//if(memory.IsNIL())
-					//{
-						active = false;
-					//}
-					//else
-					//{
-					//	memory = VM::Object(env);
-					//}
+								if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR))
+								{
+									quality = 100;
+								}
+								if(world.Move(direction % 4 + 1))
+								{
+									dirs[direction % 4] = true;
+									changes = true;
+									max_stops = MAX_STOPS;
+									result.m_Quality[Result::ST_GOOD_MOVES] ++;
+								}
+								result.m_Quality[Result::ST_SUM_MOVES] ++;
+							}
+						}
+						result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
+						if(quality < 8)
+						{
+							// Individual must return good moves.
+							active = false;
+						}
+					}
+					break;
+				case VM::ERROR:
+					break;
+				default:
+					result.m_Quality[Result::ST_ANSWER_QUALITY] += 1;
+					break;
 				}
-				else
-				{
-					result.m_Quality[Result::ST_STATE_CHANGES]++;
-				}
-				max_stops --;
-			}// end moving
-			result.m_Quality[Result::ST_AREA_SIZE] = world.GetAreaSize();
-			if(result.m_Quality[Result::ST_AREA_SIZE] > 1)
-			{
-				ss << world;
 			}
-			for(size_t i = 0; i < 4; ++ i)
+
+			if(! changes)
 			{
-				if(dirs[i])
-				{
-					result.m_Quality[Result::ST_DIRS] ++;
-				}
+				active = false;
 			}
+			else
+			{
+				result.m_Quality[Result::ST_STATE_CHANGES]++;
+			}
+			max_stops --;
+		}// end moving
+
+		result.m_Quality[Result::ST_AREA_SIZE] = world.GetAreaSize();
+		if(result.m_Quality[Result::ST_AREA_SIZE] > 1)
+		{
+			ss << world;
+		}
+		for(size_t i = 0; i < 4; ++ i)
+		{
+			if(dirs[i])
+			{
+				result.m_Quality[Result::ST_DIRS] ++;
+			}
+		}
 		
 		result.m_Result = ss.str();
 		results.push_back(std::move(result));

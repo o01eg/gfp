@@ -26,6 +26,7 @@ Now
    - Show parents of winner individual.
    - Add IF_TOTAL criteria (count of IFs in program).
    - Store Program instead its text (good speedup).
+   - Add STATIC_WORLD_ACCESS and STATIC_MEMORY_ACCESS for check if the program access to memory and world.
    * Static types
      + Remove types in file.
 
