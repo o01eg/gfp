@@ -53,7 +53,11 @@ const size_t MAX_BLOCKS = 1024;//1 * 1024 * 1024 / (BLOCK_SIZE * sizeof(Heap::UI
 Heap::Heap()
 	:blocks(1)
 {
-	blocks[0] = new Heap::Element[BLOCK_SIZE];
+	blocks[0] = new (std::nothrow) Heap::Element[BLOCK_SIZE];
+	if(! blocks[0])
+	{
+		THROW("Cann't alloc first block.");
+	}
 	memset(blocks[0], 0, BLOCK_SIZE * sizeof(Heap::Element));
 	blocks[0][0].tail = 1;
 #if _DEBUG_HEAP_

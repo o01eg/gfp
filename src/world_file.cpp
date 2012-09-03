@@ -46,10 +46,18 @@ bool WorldFile::SetFile(const char* filename)
 	}
 	f >> m_Width;
 	f >> m_Height;
-	m_Map = new char*[m_Height];
+	m_Map = new (std::nothrow) char*[m_Height];
+	if(! m_Map)
+	{
+		return false;
+	}
 	for(size_t h = 0; h < m_Height; ++ h)
 	{
-		m_Map[h] = new char[m_Width];
+		m_Map[h] = new (std::nothrow) char[m_Width];
+		if(! m_Map[h])
+		{
+			return false;
+		}
 		for(size_t w = 0; w < m_Width; ++ w)
 		{
 			f >> m_Map[h][w];
