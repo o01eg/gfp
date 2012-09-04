@@ -35,6 +35,11 @@ namespace GP
 	/// \return Count of IFs.
 	size_t CountIFs(const VM::WeakObject& obj);
 
+	/// \brief Count ERRORs in object.
+	/// \param obj Object.
+	/// \return Count of ERRORs.
+	size_t CountERRORs(const VM::WeakObject& obj);
+
 	/// \brief Check if object contain evalable PARAM
 	/// \param obj Object.
 	/// \return Is PARAM contained.

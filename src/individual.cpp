@@ -79,9 +79,11 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
 		result.m_Quality[Result::ST_IF_TOTAL] = 0;
+		result.m_Quality[Result::ST_NEG_ERROR_TOTAL] = 0;
 		for(size_t f = 0; f < MAX_FUNCTIONS; ++ f)
 		{
 			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
+			result.m_Quality[Result::ST_NEG_ERROR_TOTAL] -= GP::CountERRORs(population[i].GetProgram().GetADF(f));
 		}
 		if(result.m_Quality[Result::ST_IF_TOTAL] > 3)
 		{

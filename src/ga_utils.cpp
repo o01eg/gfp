@@ -69,6 +69,39 @@ size_t GP::CountIFs(const VM::WeakObject& obj)
 	return result;
 }
 
+size_t GP::CountERRORs(const VM::WeakObject& obj)
+{
+	std::stack<VM::WeakObject> stack;
+	size_t result = 0;
+	stack.push(obj);
+	while(! stack.empty())
+	{
+		VM::WeakObject t = stack.top();
+		stack.pop();
+
+		if(! t.IsNIL())
+		{
+			switch(t.GetType())
+			{
+			case VM::LIST:
+				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+				{
+					stack.push(t.GetHead());
+
+					t = t.GetTail();
+				}
+				break;
+			case VM::ERROR:
+				++ result;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	return result;
+}
+
 bool GP::IsContainParam(const VM::WeakObject &obj)
 {
 	std::stack<VM::WeakObject> stack;
@@ -272,22 +305,39 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 		else
 		{
 			// obj is LIST not ( QUOTE ... )
-			VM::Object t = obj;
-			std::stack<VM::Object> stack;
-			while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+			// form is ( ADF|FUNC|IF|EVAL args... )
+			if((! obj.IsNIL()) && (obj.GetType() == VM::LIST))
 			{
-				stack.push(GP::Optimize(t.GetHead(), prog));
+				VM::Object head = obj.GetHead();
+				// ( IF check no-check no-check ) | ( ADF|FUNC|EVAL check...)
+				const bool check_no_if = head.IsNIL() || (head.GetType() != VM::IF);
+				bool check_1st = true;
+				VM::Object t = obj.GetTail();
+				std::stack<VM::Object> stack;
+				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
+				{
+					VM::Object opt = GP::Optimize(t.GetHead(), prog);
+					if(check_no_if || check_1st)
+					{
+						check_1st = false;
+						if((! opt.IsNIL()) && (opt.GetType() == VM::ERROR))
+						{
+							return opt;
+						}
+					}
+					stack.push(std::move(opt));
 
-				t = t.GetTail();
-			}
+					t = t.GetTail();
+				}
 
-			t = VM::Object(env);
-			while(! stack.empty())
-			{
-				t = VM::Object(stack.top(), t);
-				stack.pop();
+				t = VM::Object(env);
+				while(! stack.empty())
+				{
+					t = VM::Object(stack.top(), t);
+					stack.pop();
+				}
+				return VM::Object(head, t);
 			}
-			return t;
 		}
 	}
 	else //if(GP::IsContainParam(obj))
@@ -316,15 +366,17 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 		}
 	}// if(GP::IsContainParam(obj))
 
-	return res;
+	// Something wrong
+	return env.GetERROR();
 }
 
 VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
 	VM::Object res(obj.GetEnv());
+	bool err = (! obj.IsNIL()) && (obj.GetType() == VM::ERROR);
 	if(is_exec)
 	{
-		if((rand() % 100) > 90)
+		if(err || ((rand() % 100) > 90))
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth, current_adf);
 		}
@@ -371,7 +423,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if((rand() % 100) > 90)
+		if(err || ((rand() % 100) > 90))
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth, current_adf);
 		}

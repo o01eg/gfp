@@ -24,10 +24,12 @@ Now
    - Speed-up by using pregenerated parameterless objects.
  * GP
    - Add optimization.
+   - Optimization of wrong code returns ERROR.
    - Show parents of winner individual.
    - Add IF_TOTAL criteria (count of IFs in program).
    - Store Program instead its text (good speedup).
    - Add STATIC_WORLD_ACCESS and STATIC_MEMORY_ACCESS for check if the program access to memory and world.
+   - Add NEG_ERROR_TOTAL criteria (count of ERRORs in program after optimization).
    * Static types
      + Remove types in file.
 

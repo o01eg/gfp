@@ -50,6 +50,7 @@ public:
 			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
 			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_STATIC_MEMORY_ACCESS, ///< Static check for memory access.
+			ST_NEG_ERROR_TOTAL, ///< Sum of ERRORs.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
 			ST_MOVE_DIFF, ///< Different from 0 in move code. (Aggregate by move)
 			ST_DIR_DIFF, ///< Different from 1-4 in direction. (Aggrerage by move)
@@ -134,6 +135,7 @@ public:
 			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
 			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
 			os << "result[STATIC_MEMORY_ACCESS] = " << m_Quality[ST_STATIC_MEMORY_ACCESS] << std::endl;
+			os << "result[NEG_ERROR_TOTAL] = " << m_Quality[ST_NEG_ERROR_TOTAL] << std::endl;
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
 			os << "result[MOVE_DIFF] = " << m_Quality[ST_MOVE_DIFF] << std::endl;
 			os << "result[DIR_DIFF] = " << m_Quality[ST_DIR_DIFF] << std::endl;
