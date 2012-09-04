@@ -30,6 +30,7 @@ Now
    - Store Program instead its text (good speedup).
    - Add STATIC_WORLD_ACCESS and STATIC_MEMORY_ACCESS for check if the program access to memory and world.
    - Add NEG_ERROR_TOTAL criteria (count of ERRORs in program after optimization).
+   - Optimize individual on load.
    * Static types
      + Remove types in file.
 

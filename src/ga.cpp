@@ -148,7 +148,13 @@ bool GA::Load(const char* filename, Individual *ind) const
 	f >> obj;
 	if(ind)
 	{
-		(*ind) = Individual(VM::Program(obj), {});
+		VM::Program prog(obj);
+		for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
+		{
+			prog.SetADF(adf_index, GP::Optimize(prog.GetADF(adf_index), prog));
+		}
+		prog.Minimize();
+		(*ind) = Individual(std::move(prog), {});
 	}
 	return true;
 }
