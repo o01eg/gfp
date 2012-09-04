@@ -290,13 +290,18 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 			return t;
 		}
 	}
-	else
+	else //if(GP::IsContainParam(obj))
 	{
+		if(obj.IsNIL() || (obj.GetType() != VM::LIST))
+		{
+			// don't optimize atoms.
+			return obj;
+		}
 		size_t circle_count = MAX_OPT_LOOPS;
 		res = env.Eval(obj, &circle_count);
 		if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
 		{
-			return obj;
+			return res; // return ERROR for wrong code.
 		}
 		else
 		{
@@ -309,7 +314,7 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 				return VM::Object(VM::Object(env, VM::QUOTE), VM::Object(res, VM::Object(env)));
 			}
 		}
-	}
+	}// if(GP::IsContainParam(obj))
 
 	return res;
 }

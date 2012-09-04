@@ -53,7 +53,10 @@ int main(int argc, char** argv)
 		VM::Program prog(obj);
 		for(size_t i = 0; i < prog.GetSize(); ++ i)
 		{
-			prog.SetADF(i, GP::Optimize(prog.GetADF(i), prog));
+			VM::Object adf = prog.GetADF(i);
+			VM::Object new_adf = GP::Optimize(adf, prog);
+			prog.SetADF(i, new_adf);
+			std::cout << "Opt %" << i << ": " << adf << " -> " << new_adf << std::endl;
 		}
 		prog.Minimize();
 		std::cout << "Opt: " << prog.Save() << std::endl;
