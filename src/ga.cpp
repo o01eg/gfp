@@ -31,8 +31,8 @@
 GA::GA(size_t population_size_)
 	: m_PopulationSize(population_size_)
 {
-	m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::IF), 3));
-	m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::EVAL), 1));
+	m_Funcs.push_back(std::make_pair(m_Env.GetIF(), 3));
+	m_Funcs.push_back(std::make_pair(m_Env.GetEVAL(), 1));
 	VM::Environment::Func* array = func_array;
 	while(array->func)
 	{

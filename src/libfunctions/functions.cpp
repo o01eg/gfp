@@ -73,7 +73,7 @@ void func_02_car(const std::vector<Object>& args, Object *result)
 	}
 	else
 	{
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -89,7 +89,7 @@ void func_03_cdr(const std::vector<Object>& args, Object *result)
 	}
 	else
 	{
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -237,7 +237,7 @@ void func_11_int_plus(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -255,7 +255,7 @@ void func_12_int_minus(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -273,7 +273,7 @@ void func_13_int_mult(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -291,7 +291,7 @@ void func_14_int_div(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types or division by zero
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -309,7 +309,7 @@ void func_15_int_mod(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types or division by zero
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 }
 
@@ -392,7 +392,7 @@ void func_19_int_less(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 
 }
@@ -420,7 +420,7 @@ void func_20_int_greater(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 
 }
@@ -448,7 +448,7 @@ void func_21_int_equal(const std::vector<Object>& args, Object *result)
 	else
 	{
 		// wrong types
-		(*result) = Object(arg1.GetEnv(), ERROR);
+		(*result) = arg1.GetEnv().GetERROR();
 	}
 
 }

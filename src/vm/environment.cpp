@@ -42,18 +42,24 @@ bool Environment::s_Stop = false;
 
 Environment::Environment()
 	:m_Program(0),
-	m_Symbols(new (std::nothrow) std::unordered_map<std::string, Object>),
-	m_SymbolValues(new (std::nothrow) std::vector<Object>)
+	m_Symbols(new (std::nothrow) std::unordered_map<std::string, Object>)
 {
-	if((! m_Symbols) && (! m_SymbolValues))
+	if(! m_Symbols)
 	{
 		THROW("Cann't allocate environment.");
 	}
 	m_Symbols->insert(std::make_pair("NIL", Object(*this)));
-	m_Symbols->insert(std::make_pair("$", Object(*this, PARAM)));
-	m_Symbols->insert(std::make_pair("QUOTE", Object(*this, QUOTE)));
-	m_Symbols->insert(std::make_pair("IF", Object(*this, IF)));
-	m_Symbols->insert(std::make_pair("EVAL", Object(*this, EVAL)));
+
+	m_CacheERROR = std::unique_ptr<Object>(new (std::nothrow) Object(*this, ERROR));
+	m_Symbols->insert(std::make_pair("ERROR", *m_CacheERROR));
+	m_CachePARAM = std::unique_ptr<Object>(new (std::nothrow) Object(*this, PARAM));
+	m_Symbols->insert(std::make_pair("$", *m_CachePARAM));
+	m_CacheQUOTE = std::unique_ptr<Object>(new (std::nothrow) Object(*this, QUOTE));
+	m_Symbols->insert(std::make_pair("QUOTE", *m_CacheQUOTE));
+	m_CacheIF = std::unique_ptr<Object>(new (std::nothrow) Object(*this, IF));
+	m_Symbols->insert(std::make_pair("IF", *m_CacheIF));
+	m_CacheEVAL = std::unique_ptr<Object>(new (std::nothrow) Object(*this, EVAL));
+	m_Symbols->insert(std::make_pair("EVAL", *m_CacheEVAL));
 
 #if _DEBUG_ENV_
 	//DefineSymbol("^_^", Object(*this, INTEGER, 12345));
@@ -114,7 +120,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #if _DEBUG_EVAL_
 			std::clog << "Reach maximum depth." << std::endl;
 #endif
-			return Object(*this, ERROR);
+			return *m_CacheERROR;
 		}
 		Object obj = std::move(obj_to_calc.top());
 		obj_to_calc.pop();
@@ -138,7 +144,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 						Object head = obj.GetHead();
 						if(head.IsNIL())
 						{
-							return Object(*this, ERROR);
+							return *m_CacheERROR;
 						}
 						else
 						{
@@ -160,7 +166,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									else
 									{
-										return Object(*this, ERROR);
+										return *m_CacheERROR;
 									}
 									break;
 								case IF:
@@ -185,11 +191,11 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									else
 									{
-										return Object(*this, ERROR);
+										return *m_CacheERROR;
 									}
 									break;
 								case SYMBOL:
-									obj_to_calc.push(m_SymbolValues->at(head.GetValue()));
+									obj_to_calc.push(m_SymbolValues[head.GetValue()]);
 									obj = obj.GetTail();
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
 									{
@@ -205,7 +211,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									else
 									{
-										return Object(*this, ERROR);
+										return *m_CacheERROR;
 									}
 									obj = obj.GetTail();
 									while((! obj.IsNIL()) && (obj.GetType() == LIST)) // while LIST isn't ended
@@ -216,7 +222,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									}
 									break;
 								default: // here get ERROR and INTEGER
-									return Object(*this, ERROR);
+									return *m_CacheERROR;
 									break;
 							}
 						}
@@ -248,7 +254,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						return Object(*this, ERROR);
+						return *m_CacheERROR;
 					}
 					break;
 				case EVAL:
@@ -260,7 +266,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						return Object(*this, ERROR);
+						return *m_CacheERROR;
 					}
 					break;
 				case ADF:
@@ -271,7 +277,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					if(obj_from_calc.empty())
 					{
 						// got ERROR
-						return Object(*this, ERROR);
+						return *m_CacheERROR;
 					}
 					else
 					{
@@ -283,7 +289,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #endif
 						if(m_Program->GetADF(obj.GetValue()).IsNIL())
 						{
-							return Object(*this, ERROR);
+							return *m_CacheERROR;
 						}
 						obj_to_calc.push(m_Program->GetADF(obj.GetValue()));
 					}
@@ -295,15 +301,15 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 					}
 					else
 					{
-						return Object(*this, ERROR);
+						return *m_CacheERROR;
 					}
 					break;
 				case SYMBOL:
-					obj_from_calc.push(m_SymbolValues->at(obj.GetValue()));
+					obj_from_calc.push(m_SymbolValues[obj.GetValue()]);
 					break;
 				case QUOTE:
 				default:
-					return Object(*this, ERROR);
+					return *m_CacheERROR;
 					break;
 			}
 		}
@@ -318,7 +324,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #if _DEBUG_ENV_
 		std::clog << "Environment::Eval: Stop by interrupt." << std::endl;
 #endif
-		return Object(*this, ERROR);
+		return *m_CacheERROR;
 	}
 
 	if((obj_from_calc.size() == 1) && circle_count)
@@ -331,7 +337,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 #if _DEBUG_ENV_
 	std::clog << "Error in evalation" << std::endl;
 #endif
-	return Object(*this, ERROR);
+	return *m_CacheERROR;
 }
 
 size_t Environment::LoadFunction(const std::string &name, size_t argc, FunctionPtr ptr)
@@ -381,14 +387,14 @@ Object Environment::CallFunction(Heap::UInt func_number, std::stack<Object> *ptr
 #if _DEBUG_EVAL_
 		std::clog << " -> ERROR" << std::endl;
 #endif
-		return Object(*this, ERROR);
+		return *m_CacheERROR;
 	}
 	if(function.func == NULL)
 	{
 #if _DEBUG_EVAL_
 		std::clog << " -> ERROR (not defined)" << std::endl;
 #endif
-		return Object(*this, ERROR);
+		return *m_CacheERROR;
 	}
 	Object result(*this);
 	function.func(args, &result);
@@ -443,7 +449,7 @@ Object Environment::Run(const Object& param, size_t *p_circle_counter) const
 	{
 		THROW("Null pointer to program");
 	}
-	Object param_adf0(Object(*this, QUOTE), Object(param, Object(*this)));
+	Object param_adf0(*m_CacheQUOTE, Object(param, Object(*this)));
 	Object expr(Object(*this, ADF, 0), Object(param_adf0, Object(*this)));
 	return Eval(expr, p_circle_counter);
 }
@@ -490,7 +496,7 @@ const Object& Environment::DefineSymbol(const std::string& name, const Object& o
 		Heap::UInt index = symbol_names.size();
 		Object sym(*this, SYMBOL, index);
 		res = m_Symbols->insert(std::make_pair(name, sym));
-		m_SymbolValues->push_back(obj);
+		m_SymbolValues.push_back(obj);
 		symbol_names.push_back(name);
 		if(! res.second)
 		{
@@ -503,7 +509,7 @@ const Object& Environment::DefineSymbol(const std::string& name, const Object& o
 		Heap::UInt index = it - symbol_names.begin();
 		Object sym(*this, SYMBOL, index);
 		res = m_Symbols->insert(std::make_pair(name, sym));
-		m_SymbolValues->at(index) = obj;
+		m_SymbolValues[index] = obj;
 		res.first->second = std::move(sym);
 	}
 	return res.first->second;

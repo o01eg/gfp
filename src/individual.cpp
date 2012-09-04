@@ -92,7 +92,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		bool dirs[4] = {false, false, false, false};
 
 		// static check (memory)
-		VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), VM::Object(env, VM::ERROR)), &circle_count);
+		VM::Object res = env.Run(VM::Object(world.GetCurrentWorld(), env.GetERROR()), &circle_count);
 		if((! res.IsNIL()) && (res.GetType() == VM::ERROR) && circle_count)
 		{
 			result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 1;

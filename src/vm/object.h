@@ -32,6 +32,7 @@ namespace VM
 	/// \brief LISP Objects.
 	class Object : public WeakObject
 	{
+		friend VM::Environment::Environment();
 	public:
 		/// \brief Copy constructor.
 		/// \param obj Object.
@@ -44,11 +45,6 @@ namespace VM
 		/// \brief Create NIL object.
 		/// \param env Used environment.
 		explicit Object(const Environment &env);
-
-		/// \brief Create parameterless object.
-		/// \param env_ Used environment.
-		/// \param type Type of object, may be ERROR, PARAM, QUOTE, IF, EVAL.
-		Object(const Environment &env_, Types type);
 
 		/// \brief Create object with one object.
 		/// \param env_ Used environment.
@@ -87,6 +83,11 @@ namespace VM
 		/// \return Environment.
 		Environment& GetEnv() const {return const_cast<Environment&>(WeakObject::GetEnv());}
 	private:
+		/// \brief Create parameterless object.
+		/// \param env_ Used environment.
+		/// \param type Type of object, may be ERROR, PARAM, QUOTE, IF, EVAL.
+		Object(const Environment &env_, Types type);
+
 #if _DEBUG_OBJECT_
 		/// \brief Print all exist objects.
 		static void PrintObjects(Environment &env, std::ostream &os);

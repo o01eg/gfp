@@ -143,7 +143,7 @@ VM::Object World::GetErrorWorld(VM::Environment& env) const
 		{
 			if(hm || wm)
 			{
-				line = VM::Object(VM::Object(env, VM::ERROR), line);
+				line = VM::Object(env.GetERROR(), line);
 			}
 			else
 			{
@@ -161,7 +161,7 @@ VM::Object World::GetErrorWorldLines(VM::Environment &env) const
 	VM::Object res(env);
 	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
-		res = VM::Object(VM::Object(env, VM::ERROR), res);
+		res = VM::Object(env.GetERROR(), res);
 	}
 	return res;
 }

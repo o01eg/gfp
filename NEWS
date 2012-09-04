@@ -21,6 +21,7 @@ Now
  - Add optimization program.
  * VM
    - Add comparator for WeakObject and Object to use with STL containers.
+   - Speed-up by using pregenerated parameterless objects.
  * GP
    - Add optimization.
    - Show parents of winner individual.

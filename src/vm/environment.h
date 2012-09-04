@@ -142,6 +142,32 @@ namespace VM
 			return symbol_names[value];
 		}
 
+		const Object& GetERROR() const
+		{
+			return *m_CacheERROR;
+		}
+
+		const Object& GetPARAM() const
+		{
+			return *m_CachePARAM;
+		}
+
+		const Object& GetQUOTE() const
+		{
+			return *m_CacheQUOTE;
+		}
+
+		const Object& GetIF() const
+		{
+			return *m_CacheIF;
+		}
+
+		const Object& GetEVAL() const
+		{
+			return *m_CacheEVAL;
+		}
+
+
 #if _DEBUG_OBJECT_
 		std::set<Object*>& AllObjectsInstance()
 		{
@@ -184,7 +210,12 @@ namespace VM
 		static bool s_Stop; ///< Stop all evalations.
 
 		std::unique_ptr<std::unordered_map<std::string, Object> > m_Symbols; ///< String to object conversion.
-		std::unique_ptr<std::vector<Object> > m_SymbolValues; ///< List of symbols values.
+		std::vector<Object> m_SymbolValues; ///< List of symbols values.
+		std::unique_ptr<Object> m_CacheERROR;
+		std::unique_ptr<Object> m_CachePARAM;
+		std::unique_ptr<Object> m_CacheQUOTE;
+		std::unique_ptr<Object> m_CacheIF;
+		std::unique_ptr<Object> m_CacheEVAL;
 	};
 }
 

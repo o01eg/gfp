@@ -205,10 +205,10 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	case 2: // NIL
 		break;
 	case 3: // parameter
-		res = VM::Object(env, VM::PARAM);
+		res = env.GetPARAM();
 		break;
 	case 4: // quote
-		res = VM::Object(env, VM::QUOTE);
+		res = env.GetQUOTE();
 		break;
 	case 5: // ADF
 		res = VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1));
@@ -232,11 +232,11 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	case 1: // nil
 		break;
 	case 2: // parameter
-		res = VM::Object(env, VM::PARAM);
+		res = env.GetPARAM();
 		break;
 	case 3: // ( ' object )
 		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), res);
-		res = VM::Object(VM::Object(env, VM::QUOTE), res);
+		res = VM::Object(env.GetQUOTE(), res);
 		break;
 	case 4: // ( %ADF arg )
 		res = VM::Object(GP::GenerateExec(env, funcs, depth + 1, current_adf), res); // ( arg )
@@ -311,7 +311,7 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 			}
 			else
 			{
-				return VM::Object(VM::Object(env, VM::QUOTE), VM::Object(res, VM::Object(env)));
+				return VM::Object(env.GetQUOTE(), VM::Object(res, VM::Object(env)));
 			}
 		}
 	}// if(GP::IsContainParam(obj))

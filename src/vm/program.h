@@ -119,7 +119,7 @@ namespace VM
 			{
 				return m_ADFs[num];
 			}
-			return Object(m_Env, ERROR);
+			return m_Env.GetERROR();
 		}
 
 		/// \brief Get size.

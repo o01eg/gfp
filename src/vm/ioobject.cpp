@@ -264,7 +264,7 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				quote_stack.pop();
 				if(quote)
 				{
-					obj_stack.push(Object(Object(env, QUOTE), Object(obj_temp, Object(env))));
+					obj_stack.push(Object(env.GetQUOTE(), Object(obj_temp, Object(env))));
 					quote = false;
 				}
 				else
@@ -283,7 +283,7 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				obj_temp = str2atom(str, env);
 				if(quote)
 				{
-					obj_stack.push(Object(Object(env, QUOTE), Object(obj_temp, Object(env))));
+					obj_stack.push(Object(env.GetQUOTE(), Object(obj_temp, Object(env))));
 					quote = false;
 				}
 				else
@@ -344,6 +344,6 @@ Object str2atom(const std::string& str, Environment &env)
 				}
 		}
 	}
-	return Object(env, ERROR);
+	return env.GetERROR();
 }
 

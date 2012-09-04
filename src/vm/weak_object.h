@@ -32,15 +32,15 @@ namespace VM
 	/// \brief Types of objects.
 	enum Types
 	{
-		ERROR = 0,
+		ERROR = 0, // 0-ary object
 		INTEGER,
 		FUNC,
 		ADF,
-		PARAM,
-		QUOTE,
-		IF,
+		PARAM, // 0-ary object
+		QUOTE, // 0-ary object
+		IF, // 0-ary object
 		LIST,
-		EVAL,
+		EVAL, // 0-ary object
 		SYMBOL,
 		MACRO
 	};
