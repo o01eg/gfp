@@ -11,14 +11,13 @@ Snapshot ????-??-?? ToDo
      + Generate ADF.
      + Mutate ADF.
      + Crossover ADF.
-   - Program optimization.
    - Multithread examine.
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
-Now
+Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)
- - Add optimization program.
+ - Add optimization of programs.
  * VM
    - Add comparator for WeakObject and Object to use with STL containers.
    - Speed-up by using pregenerated parameterless objects.

@@ -1,3 +1,21 @@
+Version 0.0.5 2012-09-05
+ - Support for C++0x (GCC 4.5.3)
+ - Add optimization of programs.
+ * VM
+   - Add comparator for WeakObject and Object to use with STL containers.
+   - Speed-up by using pregenerated parameterless objects.
+ * GP
+   - Add optimization.
+   - Optimization of wrong code returns ERROR.
+   - Show parents of winner individual.
+   - Add IF_TOTAL criteria (count of IFs in program).
+   - Store Program instead its text (good speedup).
+   - Add STATIC_WORLD_ACCESS and STATIC_MEMORY_ACCESS for check if the program access to memory and world.
+   - Add NEG_ERROR_TOTAL criteria (count of ERRORs in program after optimization).
+   - Optimize individual on load.
+   * Static types
+     + Remove types in file.
+
 Version 0.0.4 2012-01-30
  - Support for win32.
  - Relicense as MIT.
