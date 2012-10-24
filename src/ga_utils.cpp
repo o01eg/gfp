@@ -226,7 +226,7 @@ bool GP::CheckForParam(const VM::WeakObject &func)
 
 VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
-	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 6 : 7); // don't choose LIST on more depth.
+	size_t choose = rand() % ((depth >= MAX_DEPTH) ? 5 : 6); // don't choose LIST on more depth.
 	VM::Object res(env);
 	switch(choose)
 	{
@@ -244,10 +244,7 @@ VM::Object GP::GenerateObj(VM::Environment &env, const std::vector<std::pair<VM:
 	case 4: // quote
 		res = env.GetQUOTE();
 		break;
-	case 5: // ADF
-		res = VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1));
-		break;
-	case 6: // list
+	case 5: // list
 		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), GP::GenerateObj(env, funcs, depth + 1, current_adf));
 		break;
 	}
