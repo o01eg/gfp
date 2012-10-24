@@ -15,6 +15,10 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
+Now
+ * GP
+  - Add type optimization.
+
 Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)
  - Add optimization of programs.

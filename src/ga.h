@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <memory>
 #include "individual.h"
+#include "ga_utils.h"
 
 /// \class GA
 /// \brief Genetic Algoritms.
@@ -103,6 +104,7 @@ private:
 	size_t m_PopulationSize; ///< Size of population.
 	Population m_Population; ///< Auto pointer to population.
 	std::vector<std::pair<VM::Object, size_t> > m_Funcs; ///< Functions for GA.
+	GP::OptimizeRules m_OptimizeRules;
 };
 
 #endif

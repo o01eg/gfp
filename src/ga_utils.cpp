@@ -25,6 +25,7 @@
 #include "ga_utils.h"
 #include "vm/program.h"
 #include "conf.h"
+//#include "vm/ioobject.h"
 
 const size_t MAX_DEPTH = Config::Instance().GetSLong("max-object-depth", 8);
 const size_t MAX_OPT_LOOPS = Config::Instance().GetSLong("max-opt-loops", 512);
@@ -289,7 +290,7 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	return res;
 }
 
-VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
+VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode)
 {
 	VM::Environment &env = obj.GetEnv();
 	VM::Object res(env);
@@ -316,12 +317,49 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 				std::stack<VM::Object> stack;
 				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
 				{
-					VM::Object opt = GP::Optimize(t.GetHead(), prog);
+					VM::Object opt(env);
+					if(check_no_if)
+					{
+						std::unordered_map<VM::Object, OptimizeMode>::const_iterator it = rules.returnERRORat.find(head);
+						if((it != rules.returnERRORat.end()) && (mode != OPT_BOOL) && (mode & it->second))
+						{
+							//std::cerr << "Error mode=" << mode << " head=" << head << std::endl;
+							return env.GetERROR();
+						}
+						if((mode == OPT_BOOL) && rules.return0atBOOL.count(head))
+						{
+							return VM::Object(env, VM::INTEGER, 0);
+						}
+
+						// get mode for arguments
+						OptimizeMode mode_arg = OPT_NONE;
+						it = rules.mode.find(head);
+						if(it != rules.mode.end())
+						{
+							mode_arg = it->second;
+						}
+
+						opt = GP::Optimize(t.GetHead(), prog, rules, mode_arg);
+					}
+					else // get IF
+					{
+						if(check_1st)
+						{
+							opt = GP::Optimize(t.GetHead(), prog, rules, OPT_BOOL);
+						}
+						else
+						{
+							// other args must support current mode.
+							opt = GP::Optimize(t.GetHead(), prog, rules, mode);
+						}
+					}
+
 					if(check_no_if || check_1st)
 					{
 						check_1st = false;
 						if((! opt.IsNIL()) && (opt.GetType() == VM::ERROR))
 						{
+							//std::cerr << "Error mode=" << mode << " opt=" << opt << std::endl;
 							return opt;
 						}
 					}
@@ -336,32 +374,60 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog)
 					t = VM::Object(stack.top(), t);
 					stack.pop();
 				}
+				if(! GP::IsContainParam(t))
+				{
+					return GP::Optimize(VM::Object(head, t), prog, rules, mode);
+				}
 				return VM::Object(head, t);
 			}
 		}
 	}
 	else //if(GP::IsContainParam(obj))
 	{
-		if(obj.IsNIL() || (obj.GetType() != VM::LIST))
-		{
-			// don't optimize atoms.
-			return obj;
-		}
 		size_t circle_count = MAX_OPT_LOOPS;
 		res = env.Eval(obj, &circle_count);
 		if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
 		{
+			//std::cerr << "Error mode=" << mode << " obj=" << obj << std::endl;
 			return res; // return ERROR for wrong code.
 		}
-		else
+		else // get value.
 		{
-			if(res.IsNIL() || (res.GetType() == VM::INTEGER))
+			if(res.IsNIL())
 			{
+				// not allow at OPT_REQ_INT and OPT_REQ_LIST
+				if((mode == GP::OPT_REQ_INT) || (mode == GP::OPT_REQ_LIST))
+				{
+					//std::cerr << "Error mode=" << mode << " obj=" << obj << " res=NIL" << std::endl;
+					return env.GetERROR();
+				}
 				return res;
 			}
-			else
+			else // no-NIL
 			{
-				return VM::Object(env.GetQUOTE(), VM::Object(res, VM::Object(env)));
+				if(mode == GP::OPT_BOOL)
+				{
+					return VM::Object(env, VM::INTEGER, 0);
+				}
+				if((mode == GP::OPT_REQ_LIST) && (res.GetType() != VM::LIST))
+				{
+					//std::cerr << "Error mode=" << mode << " obj=" << obj << " res=" << res << std::endl;
+					return env.GetERROR();
+				}
+				if((mode == GP::OPT_REQ_INT) && (res.GetType() != VM::INTEGER))
+				{
+					//std::cerr << "Error mode=" << mode << " obj=" << obj << " res=" << res << std::endl;
+					return env.GetERROR();
+				}
+
+				if(res.GetType() == VM::INTEGER)
+				{
+					return res;
+				}
+				else
+				{
+					return VM::Object(env.GetQUOTE(), VM::Object(res, VM::Object(env)));
+				}
 			}
 		}
 	}// if(GP::IsContainParam(obj))
@@ -443,7 +509,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	return res;
 }
 
-VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs)
+VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
 {
 	VM::Program res(env);
 	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
@@ -455,13 +521,13 @@ VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<V
 		}
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
 	}
 	res.Minimize();
 	return res;
 }
 
-VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs)
+VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
 {
 	VM::Environment& env = prog.GetEnv();
 	VM::Program res(env);
@@ -487,13 +553,13 @@ VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
 	}
 	res.Minimize();
 	return res;
 }
 
-VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2)
+VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules)
 {
 	VM::Environment &env = prog1.GetEnv();
 	if(&env != &prog2.GetEnv())
@@ -533,7 +599,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 			}
 		}
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
 	}
 	res.Minimize();
 	return res;

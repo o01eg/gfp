@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	}
 	{
 		VM::Environment env;
-		VM::Environment::Func* array = func_array;
+		FuncData* array = func_array;
 		while(array->func)
 		{
 			env.LoadFunction(array->name, array->number_param, array->func);

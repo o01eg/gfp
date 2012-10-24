@@ -25,11 +25,29 @@
 #ifndef _GA_UTILS_H_
 #define _GA_UTILS_H_
 
+#include <unordered_set>
+#include <unordered_map>
 #include "vm/object.h"
 
 /// \brief GP-related stuff.
 namespace GP
 {
+	enum OptimizeMode
+	{
+		OPT_NONE = 0,
+		OPT_REQ_LIST = 1,
+		OPT_REQ_INT = 2,
+		OPT_BOOL = 3
+	};
+
+	struct OptimizeRules
+	{
+	public:
+		std::unordered_map<VM::Object, OptimizeMode> mode;
+		std::unordered_map<VM::Object, OptimizeMode> returnERRORat;
+		std::unordered_set<VM::Object> return0atBOOL;
+	};
+
 	/// \brief Count IFs in object exclude quoted.
 	/// \param obj Object.
 	/// \return Count of IFs.
@@ -61,8 +79,9 @@ namespace GP
 	/// \brief Reduce all constant parts.
 	/// \param obj Object to reduction.
 	/// \param prog Context of evalation.
+	/// \param[in] mode Mode of optimization.
 	/// \return Optimized object.
-	VM::Object Optimize(const VM::Object& obj, VM::Program& prog);
+	VM::Object Optimize(const VM::Object& obj, VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode = OPT_NONE);
 
 	/// \brief Generate any object.
 	/// \param env Environment.
@@ -85,19 +104,19 @@ namespace GP
 	/// \param env Environment.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs);
+	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
 
 	/// \brief Mutate program.
 	/// \param prog Program.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs);
+	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
 
 	/// \brief Crossover programs.
 	/// \param prog1 First program.
 	/// \param prog2 Second program.
 	/// \return Generated program.
-	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2);
+	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules);
 }
 
 #endif

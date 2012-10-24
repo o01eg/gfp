@@ -41,10 +41,20 @@ int main(int argc, char** argv)
 			return -1;
 		}
 		VM::Environment env;
-		VM::Environment::Func* array = func_array;
+		FuncData* array = func_array;
+		GP::OptimizeRules rules;
 		while(array->func)
 		{
-			env.LoadFunction(array->name, array->number_param, array->func);
+			size_t index = env.LoadFunction(array->name, array->number_param, array->func);
+			VM::Object f = VM::Object(env, VM::FUNC, index);
+			//load optimize rules
+			rules.mode.insert({f, array->mode});
+			rules.returnERRORat.insert({f, array->returnERRORat});
+			if(array->return0atBOOL)
+			{
+				rules.return0atBOOL.insert(f);
+			}
+
 			++ array;
 		}
 
@@ -54,7 +64,7 @@ int main(int argc, char** argv)
 		for(size_t i = 0; i < prog.GetSize(); ++ i)
 		{
 			VM::Object adf = prog.GetADF(i);
-			VM::Object new_adf = GP::Optimize(adf, prog);
+			VM::Object new_adf = GP::Optimize(adf, prog, rules);
 			prog.SetADF(i, new_adf);
 			std::cout << "Opt %" << i << ": " << adf << " -> " << new_adf << std::endl;
 		}

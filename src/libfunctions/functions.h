@@ -26,6 +26,7 @@
 #define _FUNCTIONS_H_
 
 #include "vm/environment.h"
+#include "ga_utils.h"
 
 using namespace VM;
 
@@ -51,7 +52,25 @@ void func_19_int_less(const std::vector<Object>& args, Object *result);
 void func_20_int_greater(const std::vector<Object>& args, Object *result);
 void func_21_int_equal(const std::vector<Object>& args, Object *result);
 
-extern Environment::Func func_array[];
+struct FuncData : public Environment::Func
+{
+	FuncData(FunctionPtr func_, const std::string& name_, unsigned char number_param_, GP::OptimizeMode mode_, GP::OptimizeMode returnERRORat_, bool return0atBOOL_)
+		: Environment::Func(func_, name_, number_param_)
+		, mode(mode_)
+		, returnERRORat(returnERRORat_)
+		, return0atBOOL(return0atBOOL_)
+	{
+	}
+	FuncData()
+		: Environment::Func()
+	{
+	}
+	GP::OptimizeMode mode;
+	GP::OptimizeMode returnERRORat;
+	bool return0atBOOL;
+};
+
+extern FuncData func_array[];
 
 #endif
 

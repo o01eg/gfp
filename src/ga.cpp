@@ -33,11 +33,20 @@ GA::GA(size_t population_size_)
 {
 	m_Funcs.push_back(std::make_pair(m_Env.GetIF(), 3));
 	m_Funcs.push_back(std::make_pair(m_Env.GetEVAL(), 1));
-	VM::Environment::Func* array = func_array;
+	FuncData* array = func_array;
 	while(array->func)
 	{
 		size_t index = m_Env.LoadFunction(array->name, array->number_param, array->func);
-		m_Funcs.push_back(std::make_pair(VM::Object(m_Env, VM::FUNC, index), array->number_param));
+		VM::Object f = VM::Object(m_Env, VM::FUNC, index);
+		m_Funcs.push_back(std::make_pair(f, array->number_param));
+		// load optimize rules
+		m_OptimizeRules.mode.insert({f, array->mode});
+		m_OptimizeRules.returnERRORat.insert({f, array->returnERRORat});
+		if(array->return0atBOOL)
+		{
+			m_OptimizeRules.return0atBOOL.insert(f);
+		}
+
 		++ array;
 	}
 
@@ -123,18 +132,18 @@ void GA::Save(const char *filename)
 
 Individual GA::GenerateRand() const
 {
-	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs);
+	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs, m_OptimizeRules);
 	return Individual(prog, {});
 }
 
 Individual GA::Mutation(const Individual& ind) const
 {
-	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs), ind.GetParents());
+	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs, m_OptimizeRules), ind.GetParents());
 }
 
 Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
 {
-	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram()), {ind1, ind2});
+	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram(), m_OptimizeRules), {ind1, ind2});
 }
 
 bool GA::Load(const char* filename, Individual *ind) const
@@ -151,7 +160,7 @@ bool GA::Load(const char* filename, Individual *ind) const
 		VM::Program prog(obj);
 		for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
 		{
-			prog.SetADF(adf_index, GP::Optimize(prog.GetADF(adf_index), prog));
+			prog.SetADF(adf_index, GP::Optimize(prog.GetADF(adf_index), prog, m_OptimizeRules));
 		}
 		prog.Minimize();
 		(*ind) = Individual(std::move(prog), {});
