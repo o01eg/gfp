@@ -79,7 +79,6 @@ AC_CONFIG_FILES([
 	doc/Makefile
 	m4/Makefile
 	src/Makefile
-	src/libfunctions/Makefile
 	src/vm/Makefile
 	tools/Makefile
 	win32/Makefile

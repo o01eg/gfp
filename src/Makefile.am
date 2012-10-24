@@ -1,29 +1,29 @@
-SUBDIRS = libfunctions \
-	vm
+SUBDIRS = vm
 bin_PROGRAMS = gfp gplisp gfpstatic gpoptimize
 gfp_SOURCES = conf.cpp \
 	current_state.cpp \
+	functions.cpp \
 	ga.cpp \
 	ga_utils.cpp \
 	individual.cpp \
-	libfunctions/functions.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object_utils.cpp \
 	world.cpp \
 	world_file.cpp
 gplisp_SOURCES = current_state.cpp \
+	functions.cpp \
 	gplisp.cpp \
-	libfunctions/functions.cpp \
 	logbuf.cpp
 gfpstatic_SOURCES = gfpstatic.cpp
 gpoptimize_SOURCES = conf.cpp \
+	functions.cpp \
 	ga_utils.cpp \
-	gpoptimize.cpp \
-	libfunctions/functions.cpp
+	gpoptimize.cpp
 noinst_HEADERS = conf.h \
 	current_state.h \
 	dot_dump.h \
+	functions.h \
 	ga.h \
 	ga_utils.h \
 	individual.h \

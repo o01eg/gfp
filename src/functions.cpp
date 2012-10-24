@@ -23,7 +23,7 @@
  */
 
 #include "functions.h"
-#include "../vm/object.h"
+#include "vm/object.h"
 
 /// \file functions.cpp
 

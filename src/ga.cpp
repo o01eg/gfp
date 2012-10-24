@@ -26,7 +26,7 @@
 #include "ga.h"
 #include "conf.h"
 #include "ga_utils.h"
-#include "libfunctions/functions.h"
+#include "functions.h"
 
 GA::GA(size_t population_size_)
 	: m_PopulationSize(population_size_)

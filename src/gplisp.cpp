@@ -24,7 +24,7 @@
 
 #include "vm/program.h"
 #include "vm/ioobject.h"
-#include "libfunctions/functions.h"
+#include "functions.h"
 
 /// \brief Main Function.
 /// \param argc Number of arguments.

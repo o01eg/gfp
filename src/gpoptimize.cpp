@@ -27,7 +27,7 @@
 #include "vm/environment.h"
 #include "vm/program.h"
 #include "vm/ioobject.h"
-#include "libfunctions/functions.h"
+#include "functions.h"
 #include "ga_utils.h"
 
 int main(int argc, char** argv)
