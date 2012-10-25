@@ -518,7 +518,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<V
 		}
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;
@@ -550,7 +550,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;
@@ -596,7 +596,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 			}
 		}
 		res.SetADF(adf_index, adf);
-		res.SetADF(adf_index, GP::Optimize(adf, res, rules));
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;
