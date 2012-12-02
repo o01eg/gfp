@@ -312,6 +312,8 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const Optimize
 				bool check_1st = true;
 				VM::Object t = obj.GetTail();
 				std::stack<VM::Object> stack;
+
+				/// \todo Rewrite to foreach.
 				while((! t.IsNIL()) && (t.GetType() == VM::LIST))
 				{
 					VM::Object opt(env);
@@ -363,7 +365,7 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const Optimize
 					stack.push(std::move(opt));
 
 					t = t.GetTail();
-				}
+				} //while((! t.IsNIL()) && (t.GetType() == VM::LIST))
 
 				t = VM::Object(env);
 				while(! stack.empty())
@@ -375,6 +377,15 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const Optimize
 				{
 					return GP::Optimize(VM::Object(head, t), prog, rules, mode);
 				}
+
+				if(! check_no_if) // get IF, t.GetTail() = ( TRUE-BRANCH FALSE-BRANCH )
+				{
+					if(t.GetTail().GetHead() == t.GetTail().GetTail().GetHead()) // if TRUE-BRACH equal to FALSE-BRANCH
+					{
+						return t.GetTail().GetHead();
+					}
+				}
+
 				return VM::Object(head, t);
 			}
 		}

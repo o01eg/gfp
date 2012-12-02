@@ -21,6 +21,7 @@ Now
   - Move functions to base GP folder.
   - Remove ADF from generated objects.
   - Optimize %0 as returning LIST.
+  - Optimize IF with TRUE branch equal to FALSE branch.
 
 Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)
