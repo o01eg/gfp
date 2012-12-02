@@ -39,16 +39,16 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_DIRS = 0, ///< Number of used directions.
-			ST_AREA_SIZE, ///< Size of path's area.
+			ST_AREA_SIZE = 0, ///< Size of path's area.
+			ST_DIRS, ///< Number of used directions.
 			ST_DIR_CHANGES, ///< Number of direction changes.
+			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.
 			ST_STATE_CHANGES, ///< Number when memory or world changes.
 			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
-			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_STATIC_MEMORY_ACCESS, ///< Static check for memory access.
 			ST_NEG_ERROR_TOTAL, ///< Sum of ERRORs.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
@@ -124,16 +124,16 @@ public:
 		void Dump(std::ostream &os) const
 		{
 			os << "result = " << m_Result;
-			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
 			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
+			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
 			os << "result[DIR_CHANGES] = " << m_Quality[ST_DIR_CHANGES] << std::endl;
+			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
 			os << "result[MOVE_CHANGES] = " << m_Quality[ST_MOVE_CHANGES] << std::endl;
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
 			os << "result[SUM_MOVES] = " << m_Quality[ST_SUM_MOVES] << std::endl;
 			os << "result[STATE_CHANGES] = " << m_Quality[ST_STATE_CHANGES] << std::endl;
 			os << "result[ANSWER_CHANGES] = " << m_Quality[ST_ANSWER_CHANGES] << std::endl;
 			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
-			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
 			os << "result[STATIC_MEMORY_ACCESS] = " << m_Quality[ST_STATIC_MEMORY_ACCESS] << std::endl;
 			os << "result[NEG_ERROR_TOTAL] = " << m_Quality[ST_NEG_ERROR_TOTAL] << std::endl;
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
