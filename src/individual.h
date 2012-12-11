@@ -41,8 +41,8 @@ public:
 		{
 			ST_AREA_SIZE = 0, ///< Size of path's area.
 			ST_DIRS, ///< Number of used directions.
-			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
+			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_MOVE_CHANGES, ///< Number of move changes.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.
@@ -126,8 +126,8 @@ public:
 			os << "result = " << m_Result;
 			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
 			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
-			os << "result[DIR_CHANGES] = " << m_Quality[ST_DIR_CHANGES] << std::endl;
 			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
+			os << "result[DIR_CHANGES] = " << m_Quality[ST_DIR_CHANGES] << std::endl;
 			os << "result[MOVE_CHANGES] = " << m_Quality[ST_MOVE_CHANGES] << std::endl;
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
 			os << "result[SUM_MOVES] = " << m_Quality[ST_SUM_MOVES] << std::endl;

@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 				remain_steps --;
 				//std::cout << "steps: " << remain_steps << std::endl;
 			}
-			if(generation % 10 == 0)
+			if(generation % 200 == 0)
 			{
 				time_t cur = time(NULL);
 				std::cout << "\x1b[0`generation = " << generation << " (" << static_cast<double>(generation)/(cur - st_time) << "g/s) (" << (remain_steps * 100 / MAX_STEP_UNCHANGED) << "%)            ";
