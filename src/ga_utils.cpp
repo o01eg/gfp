@@ -29,6 +29,7 @@
 
 const size_t MAX_DEPTH = Config::Instance().GetSLong("max-object-depth", 8);
 const size_t MAX_OPT_LOOPS = Config::Instance().GetSLong("max-opt-loops", 512);
+const size_t MUTATION_RATE_PERCENT = Config::Instance().GetSLong("mutation-rate-percent", 10);
 
 size_t GP::CountIFs(const VM::WeakObject& obj)
 {
@@ -450,7 +451,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	bool err = (! obj.IsNIL()) && (obj.GetType() == VM::ERROR);
 	if(is_exec)
 	{
-		if(err || ((rand() % 100) > 90))
+		if(err || ((rand() % 100) <= MUTATION_RATE_PERCENT))
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth, current_adf);
 		}
@@ -497,7 +498,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if(err || ((rand() % 100) > 90))
+		if(err || ((rand() % 100) <= MUTATION_RATE_PERCENT))
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth, current_adf);
 		}
