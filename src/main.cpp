@@ -36,7 +36,7 @@ const size_t MAX_STEP_UNCHANGED = Config::Instance().GetSLong("max-step-unchange
 
 /// \brief Handler of Ctrl+C event.
 /// \param signum Number of signal.
-void interrupt_handler(int signum)
+void interrupt_handler(int /*signum*/)
 {
 	CurrentState::Dump();
 	CurrentState::Shutdown();

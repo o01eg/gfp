@@ -27,7 +27,7 @@
 #include <set>
 #include <vm/ioobject.h>
 
-int main(int argc, char **argv)
+int main(int, char **)
 {
 	srand(time(NULL));
 	{

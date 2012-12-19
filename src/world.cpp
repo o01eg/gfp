@@ -36,7 +36,7 @@ World::World(VM::Environment &env, const char *filename)
 {
 	if(! s_File.SetFile(filename))
 	{
-		std::cerr << "Cann't load world file" << std::endl;
+		std::cerr << "Cann't load world file: " << filename << std::endl;
 		abort();
 		return;
 	}
