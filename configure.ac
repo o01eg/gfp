@@ -33,13 +33,25 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],[CXXFLAGS="-std=c++11 -Wc++11-compat $CXXFLAG
 
 AC_ARG_ENABLE([lto],
 	[AS_HELP_STRING([--enable-lto], [Enable Link-Time Optimization @<:@default=no@:>@])],
-	[CXXFLAGS="-flto $CXXFLAGS";LDFLAGS="-flto $LDFLAGS"],
+	[CXXFLAGS="-flto $CXXFLAGS";LDFLAGS="-flto -fuse-linker-plugin $LDFLAGS"],
 	[])
 
 AC_ARG_ENABLE([gprof],
 	[AS_HELP_STRING([--enable-gprof],
 		[support for profiling @<:@default=no@:>@])],
 	[CXXFLAGS="-pg $CXXFLAGS";LDFLAGS="-pg $LDFLAGS"],
+	[])
+
+AC_ARG_ENABLE([prof-gen],
+	[AS_HELP_STRING([--enable-prof-gen],
+		[generate profile information @<:@default=no@:>@])],
+	[CXXFLAGS="-fprofile-generate $CXXFLAGS";LDFLAGS="-fprofile-generate $LDFLAGS"],
+	[])
+
+AC_ARG_ENABLE([prof-use],
+	[AS_HELP_STRING([--enable-prof-use],
+		[use profile information @<:@default=no@:>@])],
+	[CXXFLAGS="-fprofile-use $CXXFLAGS";LDFLAGS="-fprofile-use $LDFLAGS"],
 	[])
 
 AC_ARG_ENABLE([debug],
