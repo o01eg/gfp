@@ -1,6 +1,6 @@
 SUBDIRS = vm
-bin_PROGRAMS = gfp gplisp gfpstatic gpoptimize
-gfp_SOURCES = conf.cpp \
+bin_PROGRAMS = gfp-labirinth gplisp gfpstatic gpoptimize
+gfp_labirinth_SOURCES = conf.cpp \
 	current_state.cpp \
 	functions.cpp \
 	ga.cpp \
@@ -32,13 +32,13 @@ noinst_HEADERS = conf.h \
 	world.h \
 	world_file.h
 
-gfp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
+gfp_labirinth_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gplisp_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 gfpstatic_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\" -I.
 gpoptimize_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -DLIB_DIR=\"$(pkglibdir)/\"
 
 gfpstatic_LDADD = vm/libvm.a
-gfp_LDADD = vm/libvm.a
+gfp_labirinth_LDADD = vm/libvm.a
 gplisp_LDADD = vm/libvm.a
 gpoptimize_LDADD = vm/libvm.a
 
