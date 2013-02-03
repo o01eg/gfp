@@ -81,17 +81,12 @@ bool GA::Step()
 	Population new_population;
 	bool updated = false;
 	{
+		// add elite individual
+		new_population.push_back(m_Population[results[0].GetIndex()]);
+
 		if(results[0].GetIndex() != 0)
 		{
 			updated = true;
-
-			//optimize elite individual
-			new_population.push_back(Individual(GP::OptimizeProg(m_Population[results[0].GetIndex()].GetProgram(), m_OptimizeRules), m_Population[results[0].GetIndex()].GetParents()));
-		}
-		else
-		{
-			// add elite individual
-			new_population.push_back(m_Population[results[0].GetIndex()]);
 		}
 
 		// make parent pool by tournament
@@ -137,18 +132,18 @@ void GA::Save(const char *filename)
 
 Individual GA::GenerateRand() const
 {
-	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs);
+	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs, m_OptimizeRules);
 	return Individual(prog, {});
 }
 
 Individual GA::Mutation(const Individual& ind) const
 {
-	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs), ind.GetParents());
+	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs, m_OptimizeRules), ind.GetParents());
 }
 
 Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
 {
-	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram()), {ind1, ind2});
+	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram(), m_OptimizeRules), {ind1, ind2});
 }
 
 bool GA::Load(const char* filename, Individual *ind) const

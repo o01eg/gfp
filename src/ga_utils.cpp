@@ -288,7 +288,7 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 	return res;
 }
 
-VM::Object GP::Optimize(const VM::Object& obj, const VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode)
+VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode)
 {
 	VM::Environment &env = obj.GetEnv();
 	VM::Object res(env);
@@ -445,16 +445,6 @@ VM::Object GP::Optimize(const VM::Object& obj, const VM::Program& prog, const Op
 	return env.GetERROR();
 }
 
-VM::Program GP::OptimizeProg(const VM::Program& prog, const GP::OptimizeRules& rules)
-{
-	VM::Program res(prog.GetEnv());
-	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
-	{
-		res.SetADF(adf_index, GP::Optimize(prog.GetADF(adf_index), res, rules, adf_index == 0 ? GP::OPT_REQ_LIST : GP::OPT_NONE));
-	}
-	return res;
-}
-
 VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<std::pair<VM::Object, size_t> > &funcs, size_t depth, size_t current_adf)
 {
 	VM::Object res(obj.GetEnv());
@@ -528,7 +518,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	return res;
 }
 
-VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs)
+VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
 {
 	VM::Program res(env);
 	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
@@ -540,12 +530,13 @@ VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<V
 		}
 		while(! GP::CheckForParam(adf));
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;
 }
 
-VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs)
+VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
 {
 	VM::Environment& env = prog.GetEnv();
 	VM::Program res(env);
@@ -571,12 +562,13 @@ VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<
 			adf = new_adf;
 		}
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;
 }
 
-VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2)
+VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules)
 {
 	VM::Environment &env = prog1.GetEnv();
 	if(&env != &prog2.GetEnv())
@@ -616,6 +608,7 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 			}
 		}
 		res.SetADF(adf_index, adf);
+		res.SetADF(adf_index, GP::Optimize(adf, res, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
 	}
 	res.Minimize();
 	return res;

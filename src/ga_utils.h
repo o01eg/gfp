@@ -79,16 +79,9 @@ namespace GP
 	/// \brief Reduce all constant parts.
 	/// \param obj Object to reduction.
 	/// \param prog Context of evalation.
-	/// \param[in] rules Rules of optimization.
 	/// \param[in] mode Mode of optimization.
 	/// \return Optimized object.
-	VM::Object Optimize(const VM::Object& obj, const VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode = OPT_NONE);
-
-	/// \brief Optimize whole program.
-	/// \param prog Context of evalation.
-	/// \param[in] rules Rules of optimization.
-	/// \return Optimized program.
-	VM::Program OptimizeProg(const VM::Program& prog, const OptimizeRules& rules);
+	VM::Object Optimize(const VM::Object& obj, VM::Program& prog, const OptimizeRules& rules, const OptimizeMode mode = OPT_NONE);
 
 	/// \brief Generate any object.
 	/// \param env Environment.
@@ -111,19 +104,19 @@ namespace GP
 	/// \param env Environment.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs);
+	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
 
 	/// \brief Mutate program.
 	/// \param prog Program.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs);
+	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
 
 	/// \brief Crossover programs.
 	/// \param prog1 First program.
 	/// \param prog2 Second program.
 	/// \return Generated program.
-	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2);
+	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules);
 }
 
 #endif
