@@ -1,5 +1,6 @@
-if ARGV.size != 2
-	puts "Usage: width height"
+#!/usr/bin/env ruby
+if ARGV.size != 3
+	puts "Usage: width height filename"
 	exit
 end
 
@@ -303,6 +304,26 @@ class Map
 		str
 	end
 
+	def save
+		str = String.new
+		str += @width.to_s + " " + @height.to_s + "\n"
+		@height.times do |y|
+			@width.times do |x|
+				if (x == @center.x) && (y == @center.y)
+					str += "@"
+				else
+					if @array[Point.new(x, y)]
+						str += "#"
+					else
+						str += "."
+					end
+				end
+			end
+			str += "\n"
+		end
+		str
+	end
+
 	def array
 		@array
 	end
@@ -314,12 +335,14 @@ end
 
 width = ARGV[0].to_i
 height = ARGV[1].to_i
+fn = ARGV[2]
 
 map = nil
-bm(6) do |x|
+bm(10) do |x|
 	x.report("map") do map = Map.new(width, height)
 	end
 end
 
 puts map
+File.new(fn, File::CREAT|File::TRUNC|File::RDWR) << map.save
 
