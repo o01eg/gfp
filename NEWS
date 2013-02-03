@@ -16,6 +16,8 @@ Snapshot ????-??-?? ToDo
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
 Now
+ * VM
+  - Speep-up by move-constructor of LIST.
  * GP
   - Add type optimization.
   - Move functions to base GP folder.

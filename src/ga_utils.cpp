@@ -267,21 +267,21 @@ VM::Object GP::GenerateExec(VM::Environment &env, const std::vector<std::pair<VM
 		res = env.GetPARAM();
 		break;
 	case 3: // ( ' object )
-		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), res);
-		res = VM::Object(env.GetQUOTE(), res);
+		res = VM::Object(GP::GenerateObj(env, funcs, depth + 1, current_adf), std::move(res));
+		res = VM::Object(env.GetQUOTE(), std::move(res));
 		break;
 	case 4: // ( %ADF arg )
-		res = VM::Object(GP::GenerateExec(env, funcs, depth + 1, current_adf), res); // ( arg )
-		res = VM::Object(VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1)), res);
+		res = VM::Object(GP::GenerateExec(env, funcs, depth + 1, current_adf), std::move(res)); // ( arg )
+		res = VM::Object(VM::Object(env, VM::ADF, current_adf + rand() % (MAX_FUNCTIONS - current_adf + 1)), std::move(res));
 		break;
 	default: // call
 		{
 			size_t func_num = rand() % funcs.size();
 			for(size_t param = 0; param < funcs[func_num].second; ++ param)
 			{
-				res = VM::Object(GenerateExec(env, funcs, depth + 1, current_adf), res);
+				res = VM::Object(GenerateExec(env, funcs, depth + 1, current_adf), std::move(res));
 			}
-			res = VM::Object(funcs[func_num].first, res);
+			res = VM::Object(funcs[func_num].first, std::move(res));
 		}
 		break;
 	}
@@ -371,12 +371,12 @@ VM::Object GP::Optimize(const VM::Object& obj, const VM::Program& prog, const Op
 				t = VM::Object(env);
 				while(! stack.empty())
 				{
-					t = VM::Object(stack.top(), t);
+					t = VM::Object(std::move(stack.top()), std::move(t));
 					stack.pop();
 				}
 				if(! GP::IsContainParam(t))
 				{
-					return GP::Optimize(VM::Object(head, t), prog, rules, mode);
+					return GP::Optimize(VM::Object(std::move(head), std::move(t)), prog, rules, mode);
 				}
 
 				if(! check_no_if) // get IF, t.GetTail() = ( TRUE-BRANCH FALSE-BRANCH )
@@ -387,7 +387,7 @@ VM::Object GP::Optimize(const VM::Object& obj, const VM::Program& prog, const Op
 					}
 				}
 
-				return VM::Object(head, t);
+				return VM::Object(std::move(head), std::move(t));
 			}
 		}
 	}
@@ -435,7 +435,7 @@ VM::Object GP::Optimize(const VM::Object& obj, const VM::Program& prog, const Op
 				}
 				else
 				{
-					return VM::Object(env.GetQUOTE(), VM::Object(res, VM::Object(env)));
+					return VM::Object(env.GetQUOTE(), VM::Object(std::move(res), VM::Object(env)));
 				}
 			}
 		}
@@ -480,7 +480,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 				{
 					// it's quote, make argument as non executable
 					res = GP::Mutation(obj.GetTail().GetHead(), false, funcs, depth + 1, current_adf);
-					res = VM::Object(res, VM::Object(obj.GetEnv()));
+					res = VM::Object(std::move(res), VM::Object(obj.GetEnv()));
 				}
 				else
 				{
@@ -493,11 +493,11 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 					}
 					while(! stack.empty())
 					{
-						res = VM::Object(GP::Mutation(stack.top(), true, funcs, depth + 1, current_adf), res);
+						res = VM::Object(GP::Mutation(stack.top(), true, funcs, depth + 1, current_adf), std::move(res));
 						stack.pop();
 					}
 				}
-				res = VM::Object(head, res);
+				res = VM::Object(std::move(head), std::move(res));
 			}
 			else
 			{

@@ -250,7 +250,7 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				while((! stack.empty()) && (stack.top() == level))
 				{
 					stack.pop();
-					obj_temp = Object(obj_stack.top(), obj_temp);
+					obj_temp = Object(std::move(obj_stack.top()), std::move(obj_temp));
 					obj_stack.pop();
 					if(stack.empty())
 					{
@@ -264,12 +264,12 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				quote_stack.pop();
 				if(quote)
 				{
-					obj_stack.push(Object(env.GetQUOTE(), Object(obj_temp, Object(env))));
+					obj_stack.push(Object(env.GetQUOTE(), Object(std::move(obj_temp), Object(env))));
 					quote = false;
 				}
 				else
 				{
-					obj_stack.push(obj_temp);
+					obj_stack.push(std::move(obj_temp));
 				}
 				stack.push(level);
 				break;
@@ -283,12 +283,12 @@ std::istream& VM::operator>>(std::istream& is, Object& obj)
 				obj_temp = str2atom(str, env);
 				if(quote)
 				{
-					obj_stack.push(Object(env.GetQUOTE(), Object(obj_temp, Object(env))));
+					obj_stack.push(Object(env.GetQUOTE(), Object(std::move(obj_temp), Object(env))));
 					quote = false;
 				}
 				else
 				{
-					obj_stack.push(obj_temp);
+					obj_stack.push(std::move(obj_temp));
 				}
 				stack.push(level);
 				break;

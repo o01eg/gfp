@@ -186,7 +186,7 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 									{
 										// move arg into to-calc stack.
 										Object arg = obj.GetTail().GetHead();
-										obj_to_calc.push(head);
+										obj_to_calc.push(std::move(head));
 										obj_to_calc.push(std::move(arg));
 									}
 									else
@@ -260,9 +260,8 @@ Object Environment::Eval(const Object &arg1, size_t *p_circle_counter) const
 				case EVAL:
 					if(! obj_from_calc.empty())
 					{
-						Object arg = std::move(obj_from_calc.top());
+						obj_to_calc.push(std::move(obj_from_calc.top()));
 						obj_from_calc.pop();
-						obj_to_calc.push(std::move(arg));
 					}
 					else
 					{

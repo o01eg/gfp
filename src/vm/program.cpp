@@ -98,11 +98,11 @@ Object Program::Save() const
 		if(! m_ADFs[index].IsNIL())
 		{
 			Object func_entry = Object(m_ADFs[index], Object(env));
-			func_entry = Object(Object(env, ADF, index), func_entry);
-			res = Object(func_entry, res);
+			func_entry = Object(Object(env, ADF, index), std::move(func_entry));
+			res = Object(std::move(func_entry), std::move(res));
 		}
 	}
-	return Object(Object(env, INTEGER, m_ADFs.size()), res);
+	return Object(Object(env, INTEGER, m_ADFs.size()), std::move(res));
 }
 
 void Program::SetADF(size_t num, const Object& obj)

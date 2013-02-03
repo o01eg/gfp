@@ -58,9 +58,9 @@ World::World(VM::Environment &env, const char *filename)
 				m_Area.push_back(std::make_pair(m_PosX, m_PosY));
 				break;
 			}
-			line = VM::Object(obj, line);
+			line = VM::Object(std::move(obj), std::move(line));
 		}
-		m_Map = VM::Object(line, m_Map);
+		m_Map = VM::Object(std::move(line), std::move(m_Map));
 	}
 	m_IndObject = VM::Object(VM::Object(env, VM::INTEGER, -1), VM::Object(env));
 	UpdateCurrentMap();
@@ -128,7 +128,7 @@ void World::UpdateCurrentMap()
 	m_CurrentMap = VM::Object(EditList(p.GetHead(), m_PosX, m_IndObject), p.GetTail());
 	while(! obj_stack.empty())
 	{
-		m_CurrentMap = VM::Object(obj_stack.top(), m_CurrentMap);
+		m_CurrentMap = VM::Object(std::move(obj_stack.top()), std::move(m_CurrentMap));
 		obj_stack.pop();
 	}
 }
@@ -143,15 +143,15 @@ VM::Object World::GetErrorWorld(VM::Environment& env) const
 		{
 			if(hm || wm)
 			{
-				line = VM::Object(env.GetERROR(), line);
+				line = VM::Object(env.GetERROR(), std::move(line));
 			}
 			else
 			{
 				// avoid simple "(CAR (CAR (CAR $)))" solve.
-				line = VM::Object(VM::Object(env), line);
+				line = VM::Object(VM::Object(env), std::move(line));
 			}
 		}
-		res = VM::Object(line, res);
+		res = VM::Object(std::move(line), std::move(res));
 	}
 	return res;
 }
@@ -161,7 +161,7 @@ VM::Object World::GetErrorWorldLines(VM::Environment &env) const
 	VM::Object res(env);
 	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
-		res = VM::Object(env.GetERROR(), res);
+		res = VM::Object(env.GetERROR(), std::move(res));
 	}
 	return res;
 }

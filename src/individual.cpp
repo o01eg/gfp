@@ -147,7 +147,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 						if(new_mem != memory)
 						{
 							changes = true;
-							memory = new_mem;
+							memory = std::move(new_mem);
 						}
 						VM::Object move = res.GetHead();
 						if(! prev_move.IsNIL())

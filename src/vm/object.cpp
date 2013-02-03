@@ -132,6 +132,99 @@ Object::Object(const Object& head, const Object& tail)
 	}
 }
 
+Object::Object(Object&& head, const Object& tail)
+	:WeakObject(head.GetEnv())
+{
+#if _DEBUG_OBJECT_
+	GetEnv().AllObjectsInstance().insert(this);
+#endif
+#if _DEBUG_OBJECT_
+	if(&GetEnv() != &tail.GetEnv())
+	{
+		THROW(FormatString("Object 0x", &head, " and 0x", &tail, ": Different environment."));
+	}
+#endif
+	Heap::UInt hash = LIST;
+	if(head.m_Pos)
+	{
+		hash = hash | (head.GetEnv().heap.At(head.m_Pos).hash << 4);
+		//GetEnv().heap.Attach(head.m_Pos);
+	}
+	if(tail.m_Pos)
+	{
+		hash = hash ^ (tail.GetEnv().heap.At(tail.m_Pos).hash << 4);
+		GetEnv().heap.Attach(tail.m_Pos);
+	}
+	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
+	head.m_Pos = 0;
+	if(! m_Pos)
+	{
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
+	}
+}
+
+Object::Object(const Object& head, Object&& tail)
+	:WeakObject(head.GetEnv())
+{
+#if _DEBUG_OBJECT_
+	GetEnv().AllObjectsInstance().insert(this);
+#endif
+#if _DEBUG_OBJECT_
+	if(&GetEnv() != &tail.GetEnv())
+	{
+		THROW(FormatString("Object 0x", &head, " and 0x", &tail, ": Different environment."));
+	}
+#endif
+	Heap::UInt hash = LIST;
+	if(head.m_Pos)
+	{
+		hash = hash | (head.GetEnv().heap.At(head.m_Pos).hash << 4);
+		GetEnv().heap.Attach(head.m_Pos);
+	}
+	if(tail.m_Pos)
+	{
+		hash = hash ^ (tail.GetEnv().heap.At(tail.m_Pos).hash << 4);
+		//GetEnv().heap.Attach(tail.m_Pos);
+	}
+	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
+	tail.m_Pos = 0;
+	if(! m_Pos)
+	{
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
+	}
+}
+
+Object::Object(Object&& head, Object&& tail)
+	:WeakObject(head.GetEnv())
+{
+#if _DEBUG_OBJECT_
+	GetEnv().AllObjectsInstance().insert(this);
+#endif
+#if _DEBUG_OBJECT_
+	if(&GetEnv() != &tail.GetEnv())
+	{
+		THROW(FormatString("Object 0x", &head, " and 0x", &tail, ": Different environment."));
+	}
+#endif
+	Heap::UInt hash = LIST;
+	if(head.m_Pos)
+	{
+		hash = hash | (head.GetEnv().heap.At(head.m_Pos).hash << 4);
+		//GetEnv().heap.Attach(head.m_Pos);
+	}
+	if(tail.m_Pos)
+	{
+		hash = hash ^ (tail.GetEnv().heap.At(tail.m_Pos).hash << 4);
+		//GetEnv().heap.Attach(tail.m_Pos);
+	}
+	m_Pos = GetEnv().heap.Alloc(hash, head.m_Pos, tail.m_Pos);
+	head.m_Pos = tail.m_Pos = 0;
+	if(! m_Pos)
+	{
+		THROW(FormatString("Object 0x", this, ": Couldn't alloc memory"));
+	}
+}
+
 Object::~Object()
 {
 #if _DEBUG_OBJECT_

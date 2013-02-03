@@ -37,7 +37,7 @@ VM::Object EditList(const VM::Object& list, size_t pos, const VM::Object& obj)
 	VM::Object res(obj, p.GetTail());
 	while(! obj_stack.empty())
 	{
-		res = VM::Object(obj_stack.top(), res);
+		res = VM::Object(std::move(obj_stack.top()), std::move(res));
 		obj_stack.pop();
 	}
 	return res;

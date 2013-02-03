@@ -57,6 +57,21 @@ namespace VM
 		/// \param tail Tail object.
 		Object(const Object& head, const Object& tail);
 
+		/// \brief Create LIST object.
+		/// \param head Head object.
+		/// \param tail Tail object.
+		Object(Object&& head, const Object& tail);
+
+		/// \brief Create LIST object.
+		/// \param head Head object.
+		/// \param tail Tail object.
+		Object(const Object& head, Object&& tail);
+
+		/// \brief Create LIST object.
+		/// \param head Head object.
+		/// \param tail Tail object.
+		Object(Object&& head, Object&& tail);
+
 		/// \brief Destructor.
 		~Object();
 
