@@ -3,6 +3,8 @@
 .deps
 *.o
 *.a
+*.gcda
+*.orig
 Makefile
 Makefile.in
 aclocal.m4

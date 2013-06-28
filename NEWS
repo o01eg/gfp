@@ -11,7 +11,6 @@ Snapshot ????-??-?? ToDo
      + Generate ADF.
      + Mutate ADF.
      + Crossover ADF.
-   - Multithread examine.
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
@@ -25,6 +24,7 @@ Now
   - Optimize %0 as returning LIST.
   - Optimize IF with TRUE branch equal to FALSE branch.
   - Add configurable MUTATUION-RATE-PERCENT parameter.
+  - Multithread examine.
 
 Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)

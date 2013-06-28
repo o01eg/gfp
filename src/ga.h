@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -29,6 +29,7 @@
 #include <memory>
 #include "individual.h"
 #include "ga_utils.h"
+#include "thread-pool.h"
 
 /// \class GA
 /// \brief Genetic Algoritms.
@@ -46,11 +47,10 @@ public:
 	
 	/// \brief GA constructor.
 	/// \param population_size_ Size of population.
-	GA(size_t population_size_);
+	/// \param thread_num Additional threads.
+	GA(size_t population_size_, size_t thread_num);
 	
-	~GA() ///< GA Desctructor
-	{
-	}
+	~GA() = default; ///< GA Desctructor
 
 	/// \brief Step.
 	/// \return True if best individuals changed.
@@ -105,6 +105,7 @@ private:
 	Population m_Population; ///< Auto pointer to population.
 	std::vector<std::pair<VM::Object, size_t> > m_Funcs; ///< Functions for GA.
 	GP::OptimizeRules m_OptimizeRules;
+	mutable ThreadPool m_ThreadPool;
 };
 
 #endif

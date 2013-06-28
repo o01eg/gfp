@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -28,6 +28,7 @@
 #include <iomanip>
 #include "vm/program.h"
 #include "vm/ioobject.h"
+#include "thread-pool.h"
 
 class Individual
 {
@@ -249,7 +250,7 @@ public:
 		m_Result = res;
 	}
 
-	static std::vector<Result> Execute(VM::Environment &env, const std::vector<Individual>& population);
+	static std::vector<Result> Execute(ThreadPool &thread_pool, VM::Environment &env, const std::vector<Individual>& population);
 
 private:
 	/// \brief Check move.
@@ -258,6 +259,10 @@ private:
 	/// \param[out] direction Direction of move.
 	/// \return Quality of move.
 	static size_t CheckMove(const VM::WeakObject &result, signed long *code, signed long *direction);
+
+	static void CalculateProg(VM::Environment &env, const VM::Program& prog, Individual::Result &result);
+
+	static void ThreadedExecute(VM::Environment &env, std::string code, Individual::Result &result);
 
 	void Init()
 	{

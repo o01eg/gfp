@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -25,9 +25,13 @@
 #ifndef _CURRENT_STATE_H_
 #define _CURRENT_STATE_H_
 
-#include <string>
 #include <iostream>
+#include <string>
+#include <thread>
+#include <unordered_map>
+
 #include <assert.h>
+
 #include "vm/program.h"
 #include "vm/ioobject.h"
 
@@ -35,14 +39,32 @@
 class CurrentState
 {
 public:
+	class UseProgram
+	{
+	public:
+		UseProgram(const VM::Program& prog)
+		{
+			CurrentState::SetProgram(&prog);
+		}
+		~UseProgram()
+		{
+			CurrentState::SetProgram(nullptr);
+		}
+	private:
+	};
+
 	/// \brief Dump current state
 	static void Dump()
 	{
 		std::cerr << "Dump state:" << std::endl;
 		std::cerr << " Generation: " << s_Generation << std::endl;
-		if(s_Program)
+		std::unique_lock<std::mutex> lock(s_ProgramsLock);
+		for(const auto& prog : s_Programs)
 		{
-			std::cerr << " Program Text: " << s_Program->Save() << std::endl;
+			if(prog.second)
+			{
+				std::cerr << " Program Text: " << prog.second->Save() << std::endl;
+			}
 		}
 		std::cerr << std::endl;
 	}
@@ -60,10 +82,27 @@ public:
 		return s_AppIsRun;
 	}
 
-	static const VM::Program *s_Program; ///< Current evalating program.
 	static size_t s_Generation; ///< Current generation.
 private:
-	static bool s_AppIsRun; ///< Run flag.
+	/// \brief Set Program pointer.
+	/// \param[in] ptr_program Pointer to current program.
+	static void SetProgram(const VM::Program* ptr_prog)
+	{
+		std::unique_lock<std::mutex> lock(s_ProgramsLock);
+		auto it = s_Programs.find(std::this_thread::get_id());
+		if(it != s_Programs.end())
+		{
+			it->second = ptr_prog;
+		}
+		else
+		{
+			s_Programs.insert({std::this_thread::get_id(), ptr_prog});
+		}
+	}
+
+	static std::unordered_map<std::thread::id, const VM::Program *> s_Programs; ///< Current evalating programs.
+	static volatile bool s_AppIsRun; ///< Run flag.
+	static std::mutex s_ProgramsLock; ///< Share access to s_Programs.
 };
 
 #endif

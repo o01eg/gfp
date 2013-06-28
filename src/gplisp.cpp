@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
 		{
 			VM::Program prog(env, argv[1]);
-			env.SetProgram(prog);
+			VM::Environment::UseProgram use(env, prog);
 			const size_t MAX_CIRCLES = 100;
 			size_t max_circles = MAX_CIRCLES;
 			VM::Object a(env);

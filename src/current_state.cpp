@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -24,7 +24,8 @@
 
 #include "current_state.h"
 
-const VM::Program* CurrentState::s_Program = NULL;
+std::unordered_map<std::thread::id, const VM::Program *> CurrentState::s_Programs;
 size_t CurrentState::s_Generation = 0;
-bool CurrentState::s_AppIsRun = true;
+volatile bool CurrentState::s_AppIsRun = true;
+std::mutex CurrentState::s_ProgramsLock;
 

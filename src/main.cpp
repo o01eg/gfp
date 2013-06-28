@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	std::clog << "Start application" << std::endl;
 	
 		// Genetic programming
-		GA ga(Config::Instance().GetSLong("population-size", 10));
+		GA ga(Config::Instance().GetSLong("population-size", 10), Config::Instance().GetSLong("threads", 1));
 		if(filename)
 		{
 			if(! ga.Load(filename))
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 				remain_steps --;
 				//std::cout << "steps: " << remain_steps << std::endl;
 			}
-			if(generation % 200 == 0)
+			if(generation % 50 == 0)
 			{
 				time_t cur = time(NULL);
 				std::cout << "\x1b[0`generation = " << generation << " (" << static_cast<double>(generation)/(cur - st_time) << "g/s) (" << (remain_steps * 100 / MAX_STEP_UNCHANGED) << "%)            ";

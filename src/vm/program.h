@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -77,7 +77,7 @@ namespace VM
 			return *this;
 		}
 
-		/// \brief Copy-assignment
+		/// \brief Move-assignment
 		/// \param prog Program.
 		/// \return Program.
 		Program& operator=(Program&& prog)

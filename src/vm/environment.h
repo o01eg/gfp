@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -54,6 +54,22 @@ namespace VM
 		friend struct ::std::hash<Object>;
 		friend ::std::ostream& operator<<(::std::ostream&, const VM::WeakObject&);
 	public:
+		class UseProgram
+		{
+		public:
+			UseProgram(Environment& env, const VM::Program& prog)
+			: m_Env(env)
+			{
+				m_Env.SetProgram(&prog);
+			}
+			~UseProgram()
+			{
+				m_Env.SetProgram(nullptr);
+			}
+		private:
+			Environment& m_Env;
+		};
+
 		/// \brief Function data.
 		struct Func
 		{
@@ -105,13 +121,6 @@ namespace VM
 		/// \param[in,out] p_circle_counter Circle counter.
 		/// \return Result.
 		Object Run(const Object& param, size_t *p_circle_counter) const;
-
-		/// \brief Set current program.
-		/// \param[in] prog Program.
-		void SetProgram(const VM::Program &prog)
-		{
-			m_Program = &prog;
-		}
 
 		/// \brief Stop all evalation.
 		static void Stop()
@@ -195,6 +204,13 @@ namespace VM
 		/// \return Array of arguments which empty if error.
 		std::vector<Object> GenerateArgsList(unsigned char param_number, std::stack<Object> *ptr_obj_from_calc) const;
 
+		/// \brief Set current program.
+		/// \param[in] prog Program.
+		void SetProgram(const VM::Program *prog)
+		{
+			m_Program = prog;
+		}
+
 #if _DEBUG_EVAL_
 		/// \brief Dump content of stack.
 		/// \param stack Stack of object.
@@ -205,7 +221,7 @@ namespace VM
 		std::set<Object*> m_AllObjects; /// Set of all objects in this environment.
 #endif
 
-		const Program *m_Program; ///< Program executing in environment.
+		const Program* m_Program; ///< Program executing in environment.
 
 		static bool s_Stop; ///< Stop all evalations.
 

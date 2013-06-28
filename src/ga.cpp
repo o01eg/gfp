@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -28,8 +28,9 @@
 #include "ga_utils.h"
 #include "functions.h"
 
-GA::GA(size_t population_size_)
+GA::GA(size_t population_size_, size_t threads_num)
 	: m_PopulationSize(population_size_)
+	, m_ThreadPool(threads_num)
 {
 	m_Funcs.push_back(std::make_pair(m_Env.GetIF(), 3));
 	m_Funcs.push_back(std::make_pair(m_Env.GetEVAL(), 1));
@@ -60,7 +61,7 @@ GA::GA(size_t population_size_)
 
 GA::Results GA::Examine() const
 {
-	Results res = Individual::Execute(m_Env, m_Population);
+	Results res = Individual::Execute(m_ThreadPool, m_Env, m_Population);
 	return res;
 }
 

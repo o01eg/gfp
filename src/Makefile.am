@@ -9,6 +9,7 @@ gfp_labirinth_SOURCES = conf.cpp \
 	logbuf.cpp \
 	main.cpp \
 	object_utils.cpp \
+	thread-pool.cpp \
 	world.cpp \
 	world_file.cpp
 gplisp_SOURCES = current_state.cpp \
@@ -29,6 +30,7 @@ noinst_HEADERS = conf.h \
 	individual.h \
 	logbuf.h \
 	object_utils.h \
+	thread-pool.h \
 	world.h \
 	world_file.h
 

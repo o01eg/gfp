@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -292,7 +292,7 @@ VM::Object GP::Optimize(const VM::Object& obj, VM::Program& prog, const Optimize
 {
 	VM::Environment &env = obj.GetEnv();
 	VM::Object res(env);
-	env.SetProgram(prog);
+	VM::Environment::UseProgram use(env, prog);
 
 	if(GP::IsContainParam(obj))
 	{
