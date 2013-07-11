@@ -39,23 +39,23 @@ namespace VM
 		/// \brief Construct empty program.
 		/// \param env Environment.
 		Program(Environment &env)
-			: m_Env(env)
+			: m_CachedSave(env)
 		{
 		}
 
 		/// \brief Copy-constructor for program.
 		/// \param prog Program.
 		Program(const Program& prog)
-			: m_Env(prog.m_Env)
-			, m_ADFs(prog.m_ADFs)
+			: m_ADFs(prog.m_ADFs)
+			, m_CachedSave(prog.m_CachedSave)
 		{
 		}
 
 		/// \brief Move-constructor for program.
 		/// \param prog Program.
 		Program(Program&& prog)
-			: m_Env(prog.m_Env)
-			, m_ADFs(prog.m_ADFs)
+			: m_ADFs(std::move(prog.m_ADFs))
+			, m_CachedSave(std::move(prog.m_CachedSave))
 		{
 		}
 
@@ -65,7 +65,7 @@ namespace VM
 		Program& operator=(const Program& prog)
 		{
 #if _DEBUG_OBJECT_
-			if(&this->m_Env != &prog.m_Env)
+			if(&this->GetEnv() != &prog.GetEnv())
 			{
 				THROW("Programs have different environments.");
 			}
@@ -73,6 +73,7 @@ namespace VM
 			if(this != &prog)
 			{
 				m_ADFs = prog.m_ADFs;
+				m_CachedSave = prog.m_CachedSave;
 			}
 			return *this;
 		}
@@ -83,14 +84,15 @@ namespace VM
 		Program& operator=(Program&& prog)
 		{
 #if _DEBUG_OBJECT_
-			if(&this->m_Env != &prog.m_Env)
+			if(&this->GetEnv() != &prog.GetEnv())
 			{
 				THROW("Programs have different environments.");
 			}
 #endif
 			if(this != &prog)
 			{
-				m_ADFs = prog.m_ADFs;
+				m_ADFs = std::move(prog.m_ADFs);
+				m_CachedSave = std::move(prog.m_CachedSave);
 			}
 			return *this;
 		}
@@ -105,7 +107,14 @@ namespace VM
 
 		/// \brief Saving program.
 		/// \return Object.
-		Object Save() const;
+		Object Save() const
+		{
+			if(m_CachedSave.IsNIL())
+			{
+				m_CachedSave = InnerSave();
+			}
+			return m_CachedSave;
+		}
 
 		/// \brief Remove unused ADFs.
 		void Minimize();
@@ -119,7 +128,7 @@ namespace VM
 			{
 				return m_ADFs[num];
 			}
-			return m_Env.GetERROR();
+			return GetEnv().GetERROR();
 		}
 
 		/// \brief Get size.
@@ -142,11 +151,15 @@ namespace VM
 		/// \return Environment.
 		Environment &GetEnv() const
 		{
-			return m_Env;
+			return m_CachedSave.GetEnv();
 		}
 	private:
-		Environment &m_Env; ///< Environment.
+		/// \brief Saving program.
+		/// \return Object.
+		Object InnerSave() const;
+
 		std::vector<Object> m_ADFs; ///< List of ADFs in program.
+		mutable Object m_CachedSave; ///< Program as object for saving.
 	};
 }
 
