@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -190,6 +190,7 @@ const Heap::Element& Heap::UnsafeAt(Heap::UInt position, bool allow_free) const
 Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 {
 #if _DEBUG_HEAP_
+	CheckFreeChainConsistency();
 	if(! hash)
 	{
 		THROW(FormatString("Heap 0x", this, ": Alloc free element."));
@@ -231,22 +232,46 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 		THROW(FormatString("Heap 0x", this, ": Trying to allocate used element at position ", pos, "."));
 	}
 #endif
-	// element is free. Tail point to other free element.
-	if((! elem.tail) && (pos < ((blocks.size() << BLOCK_ADDRESS_OFFSET) - 1)) && (! UnsafeAt(pos + 1, true).hash))
+	Heap::UInt next_tail = elem.tail; // elem tail point to free element
+	if(! elem.tail)
 	{
-		// elem.tail point to null and allocated position before end and next element is free
-		blocks[0][0].tail = pos + 1;
+		// elem tail don point to any element, use next after pos
+		next_tail = pos + 1;
 	}
-	else
+	if((next_tail >> BLOCK_ADDRESS_OFFSET) >= blocks.size() || UnsafeAt(next_tail, true).hash)
 	{
+		next_tail = 0;
+	}
+
 #if _DEBUG_HEAP_
-		if((elem.tail >> BLOCK_ADDRESS_OFFSET) >= blocks.size())
+	if(next_tail && UnsafeAt(next_tail, true).hash)
+	{
+		//get blocks statictics
+		for(Heap::UInt i = 0; i < blocks.size(); ++ i)
 		{
-			THROW(FormatString("Heap 0x", this, ": Try to set free out of array at position ", elem.tail, ", block ", elem.tail >> BLOCK_ADDRESS_OFFSET, "."));
+			Heap::UInt total_free = 0;
+			Heap::UInt first_free = (MAX_BLOCKS << BLOCK_ADDRESS_OFFSET) + 1;
+			for(Heap::UInt j = 0; j < BLOCK_SIZE; ++ j)
+			{
+				Heap::UInt p = (i << BLOCK_ADDRESS_OFFSET) | j;
+				if((! blocks[i][j].hash) && (pos != p) && p)
+				{
+					++ total_free;
+					if(first_free > p)
+					{
+						first_free = p;
+					}
+				}
+			}
+			std::cerr << "Block " << i << ": total_free=" << total_free << ", first_free=" << first_free << std::endl;
 		}
-#endif
-		blocks[0][0].tail = elem.tail;
+
+		THROW(FormatString("Heap 0x", this, ": Try to set free to busy element at position ", next_tail, ", block ", next_tail >> BLOCK_ADDRESS_OFFSET, "."));
 	}
+#endif
+
+	blocks[0][0].tail = next_tail;
+
 	elem.hash = hash;
 	elem.count = 1;
 	elem.value = value;
@@ -269,7 +294,8 @@ Heap::UInt Heap::AllocD(const char *at, UInt hash, UInt value, UInt tail)
 void Heap::Attach(Heap::UInt pos)
 {
 #if _DEBUG_HEAP_
-	if(!pos)
+	CheckFreeChainConsistency();
+	if(! pos)
 	{
 		THROW(FormatString("Heap 0x", this, ": Trying to attach to zero positin"));
 	}
@@ -281,6 +307,7 @@ void Heap::Attach(Heap::UInt pos)
 void Heap::Detach(Heap::UInt pos)
 {
 #if _DEBUG_HEAP_
+	CheckFreeChainConsistency();
 	if(! pos)
 	{
 		THROW(FormatString("Heap 0x", this, ": Trying to detach to zero positin"));
@@ -291,9 +318,34 @@ void Heap::Detach(Heap::UInt pos)
 	if(! elem.count)
 	{
 		//unallocate element
+#if _DEBUG_HEAP_
+		if(blocks[0][0].tail && UnsafeAt(blocks[0][0].tail, true).hash)
+		{
+			THROW(FormatString("Heap 0x", this, ": Try to set free chain to busy element at position ", blocks[0][0].tail, ", block ", blocks[0][0].tail >> BLOCK_ADDRESS_OFFSET, "."));
+		}
+#endif
 		elem.tail = blocks[0][0].tail;
 		elem.hash = 0;
 		blocks[0][0].tail = pos;
 	}
 }
+
+#if _DEBUG_HEAP_
+void Heap::CheckFreeChainConsistency() const
+{
+	// [0][0].tail -> free.tail -> free.tail -> ... -> 0.
+	Heap::UInt p = blocks[0][0].tail;
+	while(p)
+	{
+		// check at p
+		const Heap::Element& elem = UnsafeAt(p, true);
+		if(elem.hash != 0)
+		{
+			THROW(FormatString("Heap 0x", this, ": Busy block in free chain ", p, ", block ", p >> BLOCK_ADDRESS_OFFSET, "."));
+		}
+
+		p = elem.tail;
+	}
+}
+#endif
 

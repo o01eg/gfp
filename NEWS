@@ -18,6 +18,7 @@ Snapshot ????-??-?? ToDo
 Now
  * VM
   - Speep-up by move-constructor of LIST.
+  - Fix free chain's consistency.
  * GP
   - Add type optimization.
   - Move functions to base GP folder.

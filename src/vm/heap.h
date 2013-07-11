@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -123,6 +123,9 @@ namespace VM
 		/// \param allow_free Allow access to free element.
 		/// \return Request element.
 		const Element& UnsafeAt(UInt position, bool allow_free) const;
+#if _DEBUG_HEAP_
+		void CheckFreeChainConsistency() const;
+#endif
 
 		std::vector<Element*> blocks; ///< Blocks of elements.
 
