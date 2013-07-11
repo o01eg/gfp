@@ -59,7 +59,7 @@ AC_ARG_ENABLE([debug],
 		[support for debugging @<:@default=no@:>@])],
 	[CXXFLAGS="-fno-inline -ggdb3 -O0 `echo $CXXFLAGS | sed \"s/-O.//\"`"
 	LGFLAGS="-O0 `echo $LDFLAGS | sed \"s/-O.//\"`"
-#	AC_DEFINE([_DEBUG_OBJECT_],[1],[Desc])
+	AC_DEFINE([_DEBUG_OBJECT_],[1],[Desc])
 	AC_DEFINE([_DEBUG_HEAP_],[1],[Desc])
 #	AC_DEFINE([_DEBUG_EVAL_],[1],[Desc])
 	AC_DEFINE([_DOT_MEMORY_],[1],[Desc])],
