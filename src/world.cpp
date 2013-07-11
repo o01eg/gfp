@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -30,9 +30,11 @@
 WorldFile World::s_File;
 
 World::World(VM::Environment &env, const char *filename)
-	:m_Map(env),
-	m_CurrentMap(env),
-	m_IndObject(env)
+	: m_PosX(-10)
+	, m_PosY(-10)
+	, m_Map(env)
+	, m_CurrentMap(env)
+	, m_IndObject(env)
 {
 	if(! s_File.SetFile(filename))
 	{
@@ -116,6 +118,10 @@ bool World::Move(int dir)
 
 void World::UpdateCurrentMap()
 {
+	if((m_PosX < 0) || (m_PosY < 0))
+	{
+		THROW("Cannot update map with wrong position.");
+	}
 	int y = m_PosY;
 	std::stack<VM::Object> obj_stack;
 	VM::Object p(m_Map);
