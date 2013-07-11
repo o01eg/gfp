@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -30,7 +30,7 @@
 using namespace VM;
 
 Program::Program(const Object &obj)
-	:m_Env(obj.GetEnv())
+	: m_CachedSave(obj)
 {
 	Object head = obj.GetHead();
 	Heap::UInt num_adfs = head.GetValue();
@@ -75,7 +75,7 @@ Program::Program(const Object &obj)
 }
 
 Program::Program(Environment &env, const char *fn)
-	:m_Env(env)
+	: m_CachedSave(env)
 {
 	std::ifstream f(fn);
 	Object obj(env);
@@ -84,13 +84,13 @@ Program::Program(Environment &env, const char *fn)
 	new (this) Program(obj);
 }
 
-Object Program::Save() const
+Object Program::InnerSave() const
 {
 	if(m_ADFs.size() == 0)
 	{
 		THROW("No ADFs in program");
 	}
-	Environment &env = m_ADFs[0].GetEnv();
+	Environment &env = m_CachedSave.GetEnv();
 	Object res(env);
 	signed long index;
 	for(index = m_ADFs.size() - 1; index >= 0; index --)
@@ -107,9 +107,10 @@ Object Program::Save() const
 
 void Program::SetADF(size_t num, const Object& obj)
 {
+	m_CachedSave = Object(m_CachedSave.GetEnv()); // clean cache
 	if(m_ADFs.size() <= num)
 	{
-		m_ADFs.resize(num + 1, Object(m_Env));
+		m_ADFs.resize(num + 1, Object(m_CachedSave.GetEnv()));
 	}
 	m_ADFs[num] = obj;
 }
@@ -181,7 +182,9 @@ void Program::Minimize()
 		if(! called)
 		{
 			// remove ADF
-			m_ADFs[adf_index] = Object(m_Env);
+			m_CachedSave = Object(m_CachedSave.GetEnv()); // clean cache
+
+			m_ADFs[adf_index] = Object(m_CachedSave.GetEnv());
 			for(size_t adf_below_index = adf_index; adf_below_index < m_ADFs.size(); adf_below_index ++)
 			{
 				adf_calls[adf_index * m_ADFs.size() + adf_below_index] = false;
