@@ -28,6 +28,7 @@ Now
   - Add configurable MUTATUION-RATE-PERCENT parameter.
   - Multithread examine.
   - Fix world if individual position was not read.
+  - Move interthreaded serizalization to secondary thread.
 
 Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)

@@ -212,9 +212,11 @@ void Individual::CalculateProg(VM::Environment &env, const VM::Program& prog, In
 	result.m_Result = ss.str();
 }
 
-void Individual::ThreadedExecute(VM::Environment &env, std::string code, Individual::Result &result)
+void Individual::ThreadedExecute(VM::Environment &env, const VM::WeakObject code, Individual::Result &result)
 {
-	std::stringstream ss(std::move(code));
+	std::stringstream ss;
+	ss << code;
+
 	VM::Object prog_obj(env);
 	ss >> prog_obj;
 	VM::Program prog(prog_obj);
@@ -229,6 +231,7 @@ std::vector<Individual::Result> Individual::Execute(ThreadPool &thread_pool, VM:
 
 	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); ++ i)
 	{
+		const VM::Program& prog = population[i].GetProgram();
 		if(population[i].GetResult().IsTested())
 		{
 			results.push_back(population[i].GetResult(i));
@@ -237,7 +240,7 @@ std::vector<Individual::Result> Individual::Execute(ThreadPool &thread_pool, VM:
 		bool equal_ind = false;
 		for(size_t j = 0; j < i; ++ j)
 		{
-			if(population[j].GetProgram().Save() == population[i].GetProgram().Save())
+			if(population[j].GetProgram().Save() == prog.Save())
 			{
 				equal_ind = true;
 				break;
@@ -256,14 +259,11 @@ std::vector<Individual::Result> Individual::Execute(ThreadPool &thread_pool, VM:
 
 		if(thread_pool.IsEmpty())
 		{
-			std::stringstream ss;
-			ss << population[i].GetProgram().Save();
-
-			thread_pool.AddTask(std::bind(Individual::ThreadedExecute, std::placeholders::_1, ss.str(), *it));
+			thread_pool.AddTask(std::bind(Individual::ThreadedExecute, std::placeholders::_1, prog.Save(), *it));
 			continue;
 		}
 		
-		CalculateProg(env, population[i].GetProgram(), *it);
+		CalculateProg(env, prog, *it);
 	} // for(size_t i
 
 	thread_pool.WaitFinish();

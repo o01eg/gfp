@@ -262,7 +262,7 @@ private:
 
 	static void CalculateProg(VM::Environment &env, const VM::Program& prog, Individual::Result &result);
 
-	static void ThreadedExecute(VM::Environment &env, std::string code, Individual::Result &result);
+	static void ThreadedExecute(VM::Environment &env, const VM::WeakObject code, Individual::Result &result);
 
 	void Init()
 	{
