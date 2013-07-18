@@ -201,6 +201,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 		if(blocks.size() >= MAX_BLOCKS)
 		{
 //#if _DEBUG_HEAP_
+			ShowBlocksStatistic(0);
 			std::cerr << "Heap " << this << ": Reach maximum blocks: " << blocks.size() + 1 << std::endl;
 //#endif
 			return 0;
@@ -246,25 +247,7 @@ Heap::UInt Heap::Alloc(Heap::UInt hash, Heap::UInt value, Heap::UInt tail)
 #if _DEBUG_HEAP_
 	if(next_tail && UnsafeAt(next_tail, true).hash)
 	{
-		//get blocks statictics
-		for(Heap::UInt i = 0; i < blocks.size(); ++ i)
-		{
-			Heap::UInt total_free = 0;
-			Heap::UInt first_free = (MAX_BLOCKS << BLOCK_ADDRESS_OFFSET) + 1;
-			for(Heap::UInt j = 0; j < BLOCK_SIZE; ++ j)
-			{
-				Heap::UInt p = (i << BLOCK_ADDRESS_OFFSET) | j;
-				if((! blocks[i][j].hash) && (pos != p) && p)
-				{
-					++ total_free;
-					if(first_free > p)
-					{
-						first_free = p;
-					}
-				}
-			}
-			std::cerr << "Block " << i << ": total_free=" << total_free << ", first_free=" << first_free << std::endl;
-		}
+		ShowBlocksStatistic(pos);
 
 		THROW(FormatString("Heap 0x", this, ": Try to set free to busy element at position ", next_tail, ", block ", next_tail >> BLOCK_ADDRESS_OFFSET, "."));
 	}
@@ -348,4 +331,27 @@ void Heap::CheckFreeChainConsistency() const
 	}
 }
 #endif
+
+void Heap::ShowBlocksStatistic(Heap::UInt exclude_pos)
+{
+	//get blocks statictics
+	for(Heap::UInt i = 0; i < blocks.size(); ++ i)
+	{
+		Heap::UInt total_free = 0;
+		Heap::UInt first_free = (MAX_BLOCKS << BLOCK_ADDRESS_OFFSET) + 1;
+		for(Heap::UInt j = 0; j < BLOCK_SIZE; ++ j)
+		{
+			Heap::UInt p = (i << BLOCK_ADDRESS_OFFSET) | j;
+			if((! blocks[i][j].hash) && (exclude_pos != p) && p)
+			{
+				++ total_free;
+				if(first_free > p)
+				{
+					first_free = p;
+				}
+			}
+		}
+		std::cerr << "Block " << i << ": total_free=" << total_free << ", first_free=" << first_free << std::endl;
+	}
+}
 

@@ -127,6 +127,8 @@ namespace VM
 		void CheckFreeChainConsistency() const;
 #endif
 
+		void ShowBlocksStatistic(Heap::UInt exclude_pos);
+
 		std::vector<Element*> blocks; ///< Blocks of elements.
 
 		Heap(const Heap&) = delete; //Prevent copy-constructor.
