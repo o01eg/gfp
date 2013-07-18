@@ -259,7 +259,8 @@ std::vector<Individual::Result> Individual::Execute(ThreadPool &thread_pool, VM:
 
 		if(thread_pool.IsEmpty())
 		{
-			thread_pool.AddTask(std::bind(Individual::ThreadedExecute, std::placeholders::_1, prog.Save(), *it));
+			// std::bind doesn't convert Object to weakObject in this thread. Be sure that std::bind in AddTask get WeakObject.
+			thread_pool.AddTask(std::bind(Individual::ThreadedExecute, std::placeholders::_1, static_cast<const VM::WeakObject>(prog.Save()), *it));
 			continue;
 		}
 		
