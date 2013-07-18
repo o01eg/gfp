@@ -47,7 +47,7 @@ void Individual::CalculateProg(VM::Environment &env, const VM::Program& prog, In
 	VM::Environment::UseProgram use_curr(env, prog);
 	CurrentState::UseProgram use_st(prog);
 
-	World world(env, DATA_DIR "labirint.txt");
+	World world(env);
 	VM::Object memory(env);
 	VM::Object prev_res(env);
 	VM::Object prev_move(env);

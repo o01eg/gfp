@@ -33,8 +33,7 @@ public:
 
 	/// \brief Construct world from file.
 	/// \param[in] env Environment.
-	/// \param[in] filename Name of file with world.
-	World(VM::Environment &env, const char* filename);
+	World(VM::Environment &env);
 
 	/// \brief Desctruct world.
 	~World()

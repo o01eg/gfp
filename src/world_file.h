@@ -34,15 +34,11 @@ public:
 	/// \brief Construct world file context.
 	WorldFile()
 	{
-		m_Map = 0;
+		SetFile(DATA_DIR "labirint.txt");
 	}
 
 	/// \brief Desruct world file context.
 	~WorldFile();
-
-	/// \brief Change current file.
-	/// \param[in] filename File with world context.
-	bool SetFile(const char* filename);
 
 	/// \brief Read width of map.
 	/// \return Width.
@@ -65,6 +61,9 @@ public:
 		return m_Map;
 	}
 private:
+	/// \brief Change current file.
+	/// \param[in] filename File with world context.
+	bool SetFile(const char* filename);
 
 	WorldFile(const WorldFile&) = delete; //Prevent copy-constructor.
 	WorldFile(WorldFile&&) = delete; //Prevent move-constructor.

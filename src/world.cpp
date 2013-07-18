@@ -29,19 +29,13 @@
 
 WorldFile World::s_File;
 
-World::World(VM::Environment &env, const char *filename)
+World::World(VM::Environment &env)
 	: m_PosX(-10)
 	, m_PosY(-10)
 	, m_Map(env)
 	, m_CurrentMap(env)
 	, m_IndObject(env)
 {
-	if(! s_File.SetFile(filename))
-	{
-		std::cerr << "Cann't load world file: " << filename << std::endl;
-		abort();
-		return;
-	}
 	for(int hm = s_File.GetHeight() - 1; hm >= 0; -- hm)
 	{
 		VM::Object line(env);
@@ -65,6 +59,11 @@ World::World(VM::Environment &env, const char *filename)
 		m_Map = VM::Object(std::move(line), std::move(m_Map));
 	}
 	m_IndObject = VM::Object(VM::Object(env, VM::INTEGER, -1), VM::Object(env));
+
+	if((m_PosX < 0) || (m_PosY < 0))
+	{
+		THROW("Cannot update map with wrong position.");
+	}
 	UpdateCurrentMap();
 }
 
@@ -118,10 +117,6 @@ bool World::Move(int dir)
 
 void World::UpdateCurrentMap()
 {
-	if((m_PosX < 0) || (m_PosY < 0))
-	{
-		THROW("Cannot update map with wrong position.");
-	}
 	int y = m_PosY;
 	std::stack<VM::Object> obj_stack;
 	VM::Object p(m_Map);
