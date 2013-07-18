@@ -19,6 +19,7 @@ Now
   - Speep-up by move-constructor of LIST.
   - Fix free chain's consistency.
   - Cache Program as Object for speed-up.
+  - Get fill statistic about the heap.
  * GP
   - Add type optimization.
   - Move functions to base GP folder.
