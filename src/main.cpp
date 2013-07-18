@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 {
 	signal(SIGINT, interrupt_handler);
 
-	time_t seed = time(NULL);
+	time_t seed = Config::Instance().GetSLong("seed", time(NULL));
 	std::cout << "seed = " << seed << std::endl;
 	srand(static_cast<unsigned int>(seed));
 
