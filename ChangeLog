@@ -1,3 +1,18 @@
+Version 0.0.6 2013-07-19
+ * VM
+  - Speep-up by move-constructor of LIST.
+  - Fix the free chain's consistency.
+  - Cache Program as Object for speed-up.
+  - Get fill statistics about the heap.
+ * GP
+  - Add type optimization.
+  - Move functions to base GP folder.
+  - Remove ADF from generated objects.
+  - Optimize %0 as returning LIST.
+  - Optimize IF with TRUE branch equal to FALSE branch.
+  - Add configurable MUTATUION-RATE-PERCENT parameter.
+  - Make random SEED configurable.
+
 Version 0.0.5 2012-09-05
  - Support for C++0x (GCC 4.5.3)
  - Add optimization of programs.

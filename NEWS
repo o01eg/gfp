@@ -15,12 +15,12 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
-Now
+Version 0.0.6 2013-07-19
  * VM
   - Speep-up by move-constructor of LIST.
-  - Fix free chain's consistency.
+  - Fix the free chain's consistency.
   - Cache Program as Object for speed-up.
-  - Get fill statistic about the heap.
+  - Get fill statistics about the heap.
  * GP
   - Add type optimization.
   - Move functions to base GP folder.
