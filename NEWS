@@ -15,6 +15,10 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
+Now
+ * GP
+   - Change output format.
+
 Version 0.0.6 2013-07-19
  * VM
   - Speep-up by move-constructor of LIST.

@@ -85,9 +85,9 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
 			result.m_Quality[Result::ST_NEG_ERROR_TOTAL] -= GP::CountERRORs(population[i].GetProgram().GetADF(f));
 		}
-		if(result.m_Quality[Result::ST_IF_TOTAL] > 3)
+		if(result.m_Quality[Result::ST_IF_TOTAL] > 5)
 		{
-			result.m_Quality[Result::ST_IF_TOTAL] = 3;
+			result.m_Quality[Result::ST_IF_TOTAL] = 5;
 		}
 		std::stringstream ss;
 		size_t max_stops = MAX_STOPS;
@@ -158,34 +158,52 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 							}
 						}
 						prev_move = move;
-						signed long code = 0, direction = 0;
-						size_t quality = CheckMove(move, &code, &direction);
+						std::map<int, signed long> directions;
+						size_t quality = CheckMove(move, directions);
 						
-						if(quality >= 6) // got code
+						if(! directions.empty()) // got direction
 						{
-							const signed long CODE_VALUE = -15000;
-							result.m_Quality[Result::ST_MOVE_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_MOVE_DIFF], (((code - CODE_VALUE) >= 0) ? -1L : 1L) * (code - CODE_VALUE));
-							if(quality == 8) // got direction
+							// get best direction
+							auto it = directions.begin();
+							int dir = it->first;
+							signed long power = it->second;
+							bool doubles = false;
+							++ it;
+
+							for(; it != directions.end(); ++ it)
 							{
-								const signed long MIN_DIR = 10000;
-								const signed long MAX_DIR = MIN_DIR + 3;
-								result.m_Quality[Result::ST_DIR_DIFF] = antioverflow_plus(result.m_Quality[Result::ST_DIR_DIFF], (direction < MIN_DIR) ? (direction - MIN_DIR) : ((direction > MAX_DIR) ? (MAX_DIR - direction) : 0));
+								if(power < it->second)
+								{
+									power = it->second;
+									dir = it->first;
+									doubles = false;
+								}
+								else if(power == it->second)
+								{
+									doubles = true;
+								}
+							}
+
+							if(doubles)
+							{
+								active = false;
+							}
+							else
+							{
+								++ quality;
+							
 								if(prev_dir)
 								{
-									if((direction % 4 + 1) != prev_dir)
+									if(dir != prev_dir)
 									{
 										result.m_Quality[Result::ST_DIR_CHANGES] ++;
 									}
 								}
-								prev_dir = direction % 4 + 1;
+								prev_dir = dir;
+								dirs[dir - 1] = true;
 
-								if((code == CODE_VALUE) && (direction >= MIN_DIR) && (direction <= MAX_DIR))
+								if(world.Move(dir))
 								{
-									quality = 100;
-								}
-								if(world.Move(direction % 4 + 1))
-								{
-									dirs[direction % 4] = true;
 									changes = true;
 									max_stops = MAX_STOPS;
 									result.m_Quality[Result::ST_GOOD_MOVES] ++;
@@ -194,7 +212,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 							}
 						}
 						result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
-						if(quality < 8)
+						if(directions.empty())
 						{
 							// Individual must return good moves.
 							active = false;
@@ -249,43 +267,72 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 	return results;
 }
 
-size_t Individual::CheckMove(const VM::WeakObject &move, signed long *code, signed long *direction)
+size_t Individual::CheckMove(const VM::WeakObject &move, std::map<int, signed long>& directions)
 {
+	directions.clear();
 	if(move.IsNIL())
 	{
-		return 2;
+		return 0;
 	}
 	if(move.GetType() != VM::LIST)
 	{
-		return 3;
+		return 1;
 	}
 	// move is LIST
-	VM::WeakObject code_obj = move.GetHead();
-	if(code_obj.IsNIL())
+	// ( UP RIGHT DOWN LEFT )
+	VM::WeakObject l = move;
+	size_t quality = 1;
+	for(int dir = 1; dir <= 4; ++ dir)
 	{
-		return 4;
+		// head
+		VM::WeakObject head = l.GetHead();
+		if(head.IsNIL())
+		{
+			quality += dir;
+		}
+		else
+		{
+			if(head.GetType() == VM::INTEGER)
+			{
+				quality += dir;
+				directions.insert({dir, static_cast<signed long>(head.GetValue())});
+			}
+			else
+			{
+				directions.clear();
+				return quality;
+			}
+		}
+		
+		// tail
+		VM::WeakObject tail = l.GetTail();
+		if(tail.IsNIL())
+		{
+			return quality;
+		}
+		else
+		{
+			if(tail.GetType() == VM::LIST)
+			{
+				quality += dir;
+				l = tail;
+			}
+			else
+			{
+				directions.clear();
+				return quality;				
+			}
+		}
 	}
-	if(code_obj.GetType() != VM::INTEGER)
+
+	if(l.IsNIL())
 	{
-		return 5;
+		quality += 10;
 	}
-	if(code)
+	else
 	{
-		(*code) = static_cast<signed long>(code_obj.GetValue());
+		directions.clear();
 	}
-	VM::WeakObject dir_obj = move.GetTail();
-	if(dir_obj.IsNIL())
-	{
-		return 6;
-	}
-	if(dir_obj.GetType() != VM::INTEGER)
-	{
-		return 7;
-	}
-	if(direction)
-	{
-		(*direction) = static_cast<signed long>(dir_obj.GetValue());
-	}
-	return 8;
+	return quality;
 }
 

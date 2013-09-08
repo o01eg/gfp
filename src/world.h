@@ -42,7 +42,7 @@ public:
 	}
 
 	/// \brief Move individual in world.
-	/// \param[in] dir Direction.
+	/// \param[in] dir Direction. (1 - up, 2 - right, 3 - down, 4 - left)
 	/// \return true if success.
 	bool Move(int dir);
 

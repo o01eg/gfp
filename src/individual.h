@@ -26,6 +26,7 @@
 #define _INDIVIDUAL_H_
 
 #include <iomanip>
+#include <map>
 #include "vm/program.h"
 #include "vm/ioobject.h"
 
@@ -44,16 +45,14 @@ public:
 			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_DIR_CHANGES, ///< Number of direction changes.
 			ST_MOVE_CHANGES, ///< Number of move changes.
+			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_GOOD_MOVES, ///< Number of moves without collisions with walls.
 			ST_SUM_MOVES, ///< Number of summary moves.
 			ST_STATE_CHANGES, ///< Number when memory or world changes.
-			ST_ANSWER_CHANGES, ///< Numbers of different answers.
 			ST_ANSWER_QUALITY, ///< Level of answer quality. (Aggregate by move)
 			ST_STATIC_MEMORY_ACCESS, ///< Static check for memory access.
 			ST_NEG_ERROR_TOTAL, ///< Sum of ERRORs.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
-			ST_MOVE_DIFF, ///< Different from 0 in move code. (Aggregate by move)
-			ST_DIR_DIFF, ///< Different from 1-4 in direction. (Aggrerage by move)
 			ST_IF_TOTAL, ///< Count of IFs in program.
 			STATUS_VARIABLES
 		};
@@ -129,16 +128,14 @@ public:
 			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
 			os << "result[DIR_CHANGES] = " << m_Quality[ST_DIR_CHANGES] << std::endl;
 			os << "result[MOVE_CHANGES] = " << m_Quality[ST_MOVE_CHANGES] << std::endl;
+			os << "result[ANSWER_CHANGES] = " << m_Quality[ST_ANSWER_CHANGES] << std::endl;
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
 			os << "result[SUM_MOVES] = " << m_Quality[ST_SUM_MOVES] << std::endl;
 			os << "result[STATE_CHANGES] = " << m_Quality[ST_STATE_CHANGES] << std::endl;
-			os << "result[ANSWER_CHANGES] = " << m_Quality[ST_ANSWER_CHANGES] << std::endl;
 			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
 			os << "result[STATIC_MEMORY_ACCESS] = " << m_Quality[ST_STATIC_MEMORY_ACCESS] << std::endl;
 			os << "result[NEG_ERROR_TOTAL] = " << m_Quality[ST_NEG_ERROR_TOTAL] << std::endl;
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
-			os << "result[MOVE_DIFF] = " << m_Quality[ST_MOVE_DIFF] << std::endl;
-			os << "result[DIR_DIFF] = " << m_Quality[ST_DIR_DIFF] << std::endl;
 			os << "result[IF_TOTAL] = " << m_Quality[ST_IF_TOTAL] << std::endl;
 		}
 		bool IsTested() const
@@ -254,10 +251,9 @@ public:
 private:
 	/// \brief Check move.
 	/// \param[in] result Returned res for move.
-	/// \param[out] code Code of move.
-	/// \param[out] direction Direction of move.
+	/// \param[out] directions Directions of move with power to them.
 	/// \return Quality of move.
-	static size_t CheckMove(const VM::WeakObject &result, signed long *code, signed long *direction);
+	static size_t CheckMove(const VM::WeakObject &result, std::map<int, signed long>& directions);
 
 	void Init()
 	{
