@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <list>
 #include "individual.h"
 #include "world.h"
 #include "current_state.h"
@@ -38,9 +39,8 @@ inline signed long antioverflow_plus(signed long x, signed long y)
 	return (z & (f | f1)) | (x & (~(f | f1)));
 }
 
-const size_t MAX_STOPS = Config::Instance().GetSLong("max-stop-moves", 1); ///< Maximum of stop moves.
 const size_t MAX_CIRCLES = Config::Instance().GetSLong("max-evalation-loops", 1000); ///< Maximum of eval circles.
-const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 1); ///< Maximum of any moves.
+const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 16); ///< Maximum of any moves.
 
 std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const std::vector<Individual>& population)
 {
@@ -72,25 +72,20 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		env.SetProgram(population[i].GetProgram());
 		CurrentState::s_Program = &population[i].GetProgram();
 		VM::Object memory(env);
-		VM::Object prev_res(env);
-		VM::Object prev_move(env);
-		signed long prev_dir = 0;
-		bool active = true;
 		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
-		result.m_Quality[Result::ST_IF_TOTAL] = 0;
-		result.m_Quality[Result::ST_NEG_ERROR_TOTAL] = 0;
+		result.m_Quality[Result::ST_STATIC_IF_TOTAL] = 0;
+		result.m_Quality[Result::ST_STATIC_NEG_ERROR_TOTAL] = 0;
 		for(size_t f = 0; f < MAX_FUNCTIONS; ++ f)
 		{
-			result.m_Quality[Result::ST_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
-			result.m_Quality[Result::ST_NEG_ERROR_TOTAL] -= GP::CountERRORs(population[i].GetProgram().GetADF(f));
+			result.m_Quality[Result::ST_STATIC_IF_TOTAL] += GP::CountIFs(population[i].GetProgram().GetADF(f));
+			result.m_Quality[Result::ST_STATIC_NEG_ERROR_TOTAL] -= GP::CountERRORs(population[i].GetProgram().GetADF(f));
 		}
-		if(result.m_Quality[Result::ST_IF_TOTAL] > 5)
+		if(result.m_Quality[Result::ST_STATIC_IF_TOTAL] > 5)
 		{
-			result.m_Quality[Result::ST_IF_TOTAL] = 5;
+			result.m_Quality[Result::ST_STATIC_IF_TOTAL] = 5;
 		}
 		std::stringstream ss;
-		size_t max_stops = MAX_STOPS;
 		bool dirs[4] = {false, false, false, false};
 
 		// static check (memory)
@@ -108,135 +103,89 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		}
 
 		// moving in labirint
-		circle_count = MAX_CIRCLES;
-		for(size_t step = 0; active && max_stops && CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
+		std::list<VM::Object> inputs;
+		for(size_t step = 0; CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
 		{
-			circle_count = MAX_CIRCLES;
-			bool changes = false;
-			res = env.Run(VM::Object(world.GetCurrentWorld(), memory), &circle_count);
-			if(! prev_res.IsNIL())
+			VM::Object input(world.GetCurrentWorld(), memory);
+			if(std::find(inputs.begin(), inputs.end(), input) != inputs.end())
 			{
-				if(res != prev_res)
-				{
-					result.m_Quality[Result::ST_ANSWER_CHANGES] ++;
-				}
+				// unuseful move
+				result.m_Quality[Result::ST_STEPS] = step;
+				break;
 			}
-				
+
+			// new input, calculate move
+			circle_count = MAX_CIRCLES;
+			res = env.Run(input, &circle_count);
+			inputs.push_back(std::move(input));
+			result.m_Quality[Result::ST_NEG_CIRCLES] = antioverflow_plus(result.m_Quality[Result::ST_NEG_CIRCLES], MAX_CIRCLES - circle_count);
+			ss << std::setw(70) << res << std::endl;
+
 			if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
 			{
-				// it's simply bugged program
-				result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 0;
-				result.m_Quality[Result::ST_STATIC_WORLD_ACCESS] = 0;
-				active = false;
-			}
-			
-			prev_res = res;
-			if(circle_count >= MAX_CIRCLES - 1000)
-			{
-				circle_count = MAX_CIRCLES;
-			}
-			result.m_Quality[Result::ST_NEG_CIRCLES] += circle_count - MAX_CIRCLES;
-			ss << std::setw(70) << res << std::endl;
-			if(! res.IsNIL())
-			{
-				switch(res.GetType())
+				memory = VM::Object(env);
+				result.m_Quality[Result::ST_NEG_ERROR_RESET] ++;
+				result.m_Quality[Result::ST_NEG_RESET] ++;
+				if(step == 0)
 				{
-				case VM::LIST:
-					{
-						VM::Object new_mem = res.GetTail();
-						if(new_mem != memory)
-						{
-							changes = true;
-							memory = std::move(new_mem);
-						}
-						VM::Object move = res.GetHead();
-						if(! prev_move.IsNIL())
-						{
-							if(move != prev_move)
-							{
-								result.m_Quality[Result::ST_MOVE_CHANGES] ++;
-							}
-						}
-						prev_move = move;
-						std::map<int, signed long> directions;
-						size_t quality = CheckMove(move, directions);
-						
-						if(! directions.empty()) // got direction
-						{
-							// get best direction
-							auto it = directions.begin();
-							int dir = it->first;
-							signed long power = it->second;
-							bool doubles = false;
-							++ it;
-
-							for(; it != directions.end(); ++ it)
-							{
-								if(power < it->second)
-								{
-									power = it->second;
-									dir = it->first;
-									doubles = false;
-								}
-								else if(power == it->second)
-								{
-									doubles = true;
-								}
-							}
-
-							if(doubles)
-							{
-								active = false;
-							}
-							else
-							{
-								++ quality;
-							
-								if(prev_dir)
-								{
-									if(dir != prev_dir)
-									{
-										result.m_Quality[Result::ST_DIR_CHANGES] ++;
-									}
-								}
-								prev_dir = dir;
-								dirs[dir - 1] = true;
-
-								if(world.Move(dir))
-								{
-									changes = true;
-									max_stops = MAX_STOPS;
-									result.m_Quality[Result::ST_GOOD_MOVES] ++;
-								}
-								result.m_Quality[Result::ST_SUM_MOVES] ++;
-							}
-						}
-						result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
-						if(directions.empty())
-						{
-							// Individual must return good moves.
-							active = false;
-						}
-					}
-					break;
-				case VM::ERROR:
-					break;
-				default:
-					result.m_Quality[Result::ST_ANSWER_QUALITY] += 1;
-					break;
+					result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 0;
+					result.m_Quality[Result::ST_STATIC_WORLD_ACCESS] = 0;
 				}
 			}
-
-			if(! changes)
+			else if((! res.IsNIL()) && (res.GetType() == VM::LIST))
 			{
-				active = false;
+				memory = res.GetTail();
+				VM::Object move(res.GetHead());
+
+				std::map<int, signed long> directions;
+				size_t quality = CheckMove(move, directions);
+
+				result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
+				result.m_Quality[Result::ST_MAX_ANSWER_QUALITY] = std::max<long int>(result.m_Quality[Result::ST_MAX_ANSWER_QUALITY], quality);
+
+				if(! directions.empty())
+				{
+					auto it = directions.begin();
+					int dir = it->first;
+					signed long power = it->second;
+					bool doubles = false;
+					++ it;
+
+					for(; it != directions.end(); ++ it)
+					{
+						if(power < it->second)
+						{
+							power = it->second;
+							dir = it->first;
+							doubles = false;
+						}
+						else if(power == it->second)
+						{
+							doubles = true;
+						}
+					}
+
+					if(! doubles)
+					{
+						dirs[dir - 1] = true;
+						if(world.Move(dir))
+						{
+							result.m_Quality[Result::ST_GOOD_MOVES] ++;
+						}
+					}
+
+					result.m_Quality[Result::ST_ALL_MOVES] ++;
+				}
 			}
 			else
 			{
-				result.m_Quality[Result::ST_STATE_CHANGES]++;
+				memory = VM::Object(env);
+				result.m_Quality[Result::ST_NEG_RESET] ++;
 			}
-			max_stops --;
+
 		}// end moving
+
+		result.m_Quality[Result::ST_NEG_CIRCLES] *= -1;
 
 		result.m_Quality[Result::ST_AREA_SIZE] = world.GetAreaSize();
 		if(result.m_Quality[Result::ST_AREA_SIZE] > 1)
