@@ -124,8 +124,8 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			if((! res.IsNIL()) && (res.GetType() == VM::ERROR))
 			{
 				memory = VM::Object(env);
-				result.m_Quality[Result::ST_NEG_ERROR_RESET] ++;
-				result.m_Quality[Result::ST_NEG_RESET] ++;
+				result.m_Quality[Result::ST_NEG_ERROR_RESET] --;
+				result.m_Quality[Result::ST_NEG_RESET] --;
 				if(step == 0)
 				{
 					result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 0;
@@ -180,7 +180,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			else
 			{
 				memory = VM::Object(env);
-				result.m_Quality[Result::ST_NEG_RESET] ++;
+				result.m_Quality[Result::ST_NEG_RESET] --;
 			}
 
 		}// end moving
