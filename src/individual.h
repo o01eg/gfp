@@ -43,11 +43,11 @@ public:
 		{
 			ST_AREA_SIZE = 0, ///< Size of path's area.
 			ST_DIRS, ///< Number of used directions.
-			ST_STEPS, ///< Number of steps.
 			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_STATIC_MEMORY_ACCESS, ///< Static check for memory access.
-			ST_ALL_MOVES, ///< Count of any correct moves.
 			ST_GOOD_MOVES, ///< Count of good moves.
+			ST_ALL_MOVES, ///< Count of any correct moves.
+			ST_STEPS, ///< Number of steps.
 			ST_MAX_ANSWER_QUALITY, ///< Max of move quality.
 			ST_MIN_ANSWER_QUALITY, ///< Max of move quality.
 			ST_COUNT_MEMORY, ///< Count of different memories.
@@ -128,11 +128,11 @@ public:
 			os << "result = " << m_Result;
 			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
 			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
-			os << "result[STEPS] = " << m_Quality[ST_STEPS] << std::endl;
 			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
 			os << "result[STATIC_MEMORY_ACCESS] = " << m_Quality[ST_STATIC_MEMORY_ACCESS] << std::endl;
-			os << "result[ALL_MOVES] = " << m_Quality[ST_ALL_MOVES] << std::endl;
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
+			os << "result[ALL_MOVES] = " << m_Quality[ST_ALL_MOVES] << std::endl;
+			os << "result[STEPS] = " << m_Quality[ST_STEPS] << std::endl;
 			os << "result[MAX_ANSWER_QUALITY] = " << m_Quality[ST_MAX_ANSWER_QUALITY] << std::endl;
 			os << "result[MIN_ANSWER_QUALITY] = " << m_Quality[ST_MIN_ANSWER_QUALITY] << std::endl;
 			os << "result[COUNT_MEMORY] = " << m_Quality[ST_COUNT_MEMORY] << std::endl;

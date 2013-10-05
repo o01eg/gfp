@@ -131,6 +131,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 				{
 					result.m_Quality[Result::ST_STATIC_MEMORY_ACCESS] = 0;
 					result.m_Quality[Result::ST_STATIC_WORLD_ACCESS] = 0;
+					break;
 				}
 			}
 			else if((! res.IsNIL()) && (res.GetType() == VM::LIST))
