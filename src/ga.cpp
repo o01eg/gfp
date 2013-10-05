@@ -54,6 +54,7 @@ GA::GA(size_t population_size_)
 	{
 		//std::clog << "Generating " << i << " individual..." << std::endl;
 		m_Population.push_back(GenerateRand());
+		m_Population[i].Optimize(m_OptimizeRules);
 		//std::clog << "Generated " << i << " individual..." << std::endl;
 	}
 }
@@ -113,6 +114,10 @@ bool GA::Step()
 
 	}
 	m_Population = std::move(new_population);
+	for(auto& ind : m_Population)
+	{
+		ind.Optimize(m_OptimizeRules);
+	}
 	return updated;
 }
 
@@ -158,12 +163,8 @@ bool GA::Load(const char* filename, Individual *ind) const
 	if(ind)
 	{
 		VM::Program prog(obj);
-		for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
-		{
-			prog.SetADF(adf_index, GP::Optimize(prog.GetADF(adf_index), prog, m_OptimizeRules));
-		}
-		prog.Minimize();
 		(*ind) = Individual(std::move(prog), {});
+		ind->Optimize(m_OptimizeRules);
 	}
 	return true;
 }

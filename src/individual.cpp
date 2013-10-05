@@ -29,7 +29,6 @@
 #include "world.h"
 #include "current_state.h"
 #include "conf.h"
-#include "ga_utils.h"
 
 inline signed long antioverflow_plus(signed long x, signed long y)
 {
@@ -104,13 +103,15 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 
 		// moving in labirint
 		std::list<VM::Object> inputs;
-		for(size_t step = 0; CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
+		std::list<VM::Object> memories;
+		memories.push_back(memory);
+		size_t step = 0;
+		for(; CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
 		{
 			VM::Object input(world.GetCurrentWorld(), memory);
 			if(std::find(inputs.begin(), inputs.end(), input) != inputs.end())
 			{
 				// unuseful move
-				result.m_Quality[Result::ST_STEPS] = step;
 				break;
 			}
 
@@ -135,6 +136,11 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 			else if((! res.IsNIL()) && (res.GetType() == VM::LIST))
 			{
 				memory = res.GetTail();
+				if(std::find(memories.begin(), memories.end(), memory) == memories.end())
+				{
+					memories.push_back(memory);
+				}
+
 				VM::Object move(res.GetHead());
 
 				std::map<int, signed long> directions;
@@ -142,6 +148,14 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 
 				result.m_Quality[Result::ST_ANSWER_QUALITY] = antioverflow_plus(result.m_Quality[Result::ST_ANSWER_QUALITY], quality);
 				result.m_Quality[Result::ST_MAX_ANSWER_QUALITY] = std::max<long int>(result.m_Quality[Result::ST_MAX_ANSWER_QUALITY], quality);
+				if(step != 0)
+				{
+					result.m_Quality[Result::ST_MIN_ANSWER_QUALITY] = std::min<long int>(result.m_Quality[Result::ST_MIN_ANSWER_QUALITY], quality);
+				}
+				else
+				{
+					result.m_Quality[Result::ST_MIN_ANSWER_QUALITY] = quality;
+				}
 
 				if(! directions.empty())
 				{
@@ -185,6 +199,10 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 
 		}// end moving
 
+		result.m_Quality[Result::ST_STEPS] = step;
+
+		result.m_Quality[Result::ST_COUNT_MEMORY] = memories.size();
+
 		result.m_Quality[Result::ST_NEG_CIRCLES] *= -1;
 
 		result.m_Quality[Result::ST_AREA_SIZE] = world.GetAreaSize();
@@ -221,11 +239,11 @@ size_t Individual::CheckMove(const VM::WeakObject &move, std::map<int, signed lo
 	directions.clear();
 	if(move.IsNIL())
 	{
-		return 0;
+		return 1;
 	}
 	if(move.GetType() != VM::LIST)
 	{
-		return 1;
+		return 2;
 	}
 	// move is LIST
 	// ( UP RIGHT DOWN LEFT )
@@ -276,12 +294,24 @@ size_t Individual::CheckMove(const VM::WeakObject &move, std::map<int, signed lo
 
 	if(l.IsNIL())
 	{
-		quality += 10;
+		quality += 16;
 	}
 	else
 	{
 		directions.clear();
 	}
 	return quality;
+}
+
+void Individual::Optimize(const GP::OptimizeRules& rules)
+{
+	if(! m_Result.IsTested())
+	{
+		for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
+		{
+			m_Program.SetADF(adf_index, GP::Optimize(m_Program.GetADF(adf_index), m_Program, rules, (adf_index == 0) ? GP::OPT_REQ_LIST : GP::OPT_NONE));
+		}
+		m_Program.Minimize();
+	}
 }
 

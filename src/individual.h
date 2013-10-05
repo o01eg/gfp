@@ -29,6 +29,7 @@
 #include <map>
 #include "vm/program.h"
 #include "vm/ioobject.h"
+#include "ga_utils.h"
 
 class Individual
 {
@@ -48,6 +49,8 @@ public:
 			ST_ALL_MOVES, ///< Count of any correct moves.
 			ST_GOOD_MOVES, ///< Count of good moves.
 			ST_MAX_ANSWER_QUALITY, ///< Max of move quality.
+			ST_MIN_ANSWER_QUALITY, ///< Max of move quality.
+			ST_COUNT_MEMORY, ///< Count of different memories.
 			ST_ANSWER_QUALITY, ///< Aggregation of move quality.
 			ST_NEG_ERROR_RESET, ///< Count of memory reset by ERROR.
 			ST_NEG_RESET, ///< Count of memoty reset by not LIST.
@@ -131,6 +134,8 @@ public:
 			os << "result[ALL_MOVES] = " << m_Quality[ST_ALL_MOVES] << std::endl;
 			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
 			os << "result[MAX_ANSWER_QUALITY] = " << m_Quality[ST_MAX_ANSWER_QUALITY] << std::endl;
+			os << "result[MIN_ANSWER_QUALITY] = " << m_Quality[ST_MIN_ANSWER_QUALITY] << std::endl;
+			os << "result[COUNT_MEMORY] = " << m_Quality[ST_COUNT_MEMORY] << std::endl;
 			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
 			os << "result[NEG_ERROR_RESET] = " << m_Quality[ST_NEG_ERROR_RESET] << std::endl;
 			os << "result[NEG_RESET] = " << m_Quality[ST_NEG_RESET] << std::endl;
@@ -246,8 +251,9 @@ public:
 		m_Result = res;
 	}
 
-	static std::vector<Result> Execute(VM::Environment &env, const std::vector<Individual>& population);
+	void Optimize(const GP::OptimizeRules& rules);
 
+	static std::vector<Result> Execute(VM::Environment &env, const std::vector<Individual>& population);
 private:
 	/// \brief Check move.
 	/// \param[in] result Returned res for move.
