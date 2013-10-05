@@ -49,7 +49,16 @@ void interrupt_handler(int /*signum*/)
 /// \return Exit code.
 int main(int argc, char **argv)
 {
-	signal(SIGINT, interrupt_handler);
+	struct sigaction sa;
+	sa.sa_handler = interrupt_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	int res = sigaction(SIGINT, &sa, nullptr);
+	if(res < 0)
+	{
+		std::cerr << "Cann't set interrupt handler." << std::endl;
+		return 1;
+	}
 
 	time_t seed = Config::Instance().GetSLong("seed", time(NULL));
 	std::cout << "seed = " << seed << std::endl;
