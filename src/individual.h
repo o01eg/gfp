@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -61,12 +61,24 @@ public:
 		};
 
 		Result(int index)
-			:m_Index(index)
+			: m_Index(index)
 		{
 			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
 			{
 				m_Quality[i] = 0;
 			}
+		}
+		Result(Result&& res)
+			: m_Result(std::move(res.m_Result))
+			, m_Index(res.m_Index)
+		{
+			std::copy(std::begin(res.m_Quality), std::end(res.m_Quality), std::begin(m_Quality));
+		}
+		Result(const Result& res)
+		: m_Result(res.m_Result)
+		, m_Index(res.m_Index)
+		{
+			std::copy(std::begin(res.m_Quality), std::end(res.m_Quality), std::begin(m_Quality));
 		}
 		~Result()
 		{
@@ -99,10 +111,7 @@ public:
 			{
 				m_Index = result.m_Index;
 				m_Result = result.m_Result;
-				for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
-				{
-					m_Quality[i] = result.m_Quality[i];
-				}
+				std::copy(std::begin(result.m_Quality), std::end(result.m_Quality), std::begin(m_Quality));
 			}
 			return *this;
 		}
@@ -114,7 +123,7 @@ public:
 				m_Result = std::move(result.m_Result);
 				for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
 				{
-					m_Quality[i] = result.m_Quality[i];
+					std::copy(std::begin(result.m_Quality), std::end(result.m_Quality), std::begin(m_Quality));
 				}
 			}
 			return *this;
@@ -147,6 +156,7 @@ public:
 		{
 			return (m_Index != -1);
 		}
+
 		signed long m_Quality[STATUS_VARIABLES];
 		std::string m_Result;
 	private:
@@ -249,6 +259,11 @@ public:
 	void SetResult(const Result& res)
 	{
 		m_Result = res;
+	}
+
+	void SetResult(Result&& res)
+	{
+		m_Result = std::move(res);
 	}
 
 	void Optimize(const GP::OptimizeRules& rules);

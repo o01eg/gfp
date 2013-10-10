@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -451,7 +451,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	bool err = (! obj.IsNIL()) && (obj.GetType() == VM::ERROR);
 	if(is_exec)
 	{
-		if(err || ((rand() % 100) <= MUTATION_RATE_PERCENT))
+		if(err || ((static_cast<size_t>(rand()) % 100) <= MUTATION_RATE_PERCENT))
 		{
 			res = GP::GenerateExec(obj.GetEnv(), funcs, depth, current_adf);
 		}
@@ -498,7 +498,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	else
 	{
 		// non exec mutation
-		if(err || ((rand() % 100) <= MUTATION_RATE_PERCENT))
+		if(err || ((static_cast<size_t>(rand()) % 100) <= MUTATION_RATE_PERCENT))
 		{
 			res = GP::GenerateObj(obj.GetEnv(), funcs, depth, current_adf);
 		}
@@ -518,7 +518,7 @@ VM::Object GP::Mutation(const VM::Object& obj, bool is_exec, const std::vector<s
 	return res;
 }
 
-VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
+VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs)
 {
 	VM::Program res(env);
 	for(int adf_index = MAX_FUNCTIONS; adf_index >= 0; -- adf_index)
@@ -534,7 +534,7 @@ VM::Program GP::GenerateProg(VM::Environment &env, const std::vector<std::pair<V
 	return res;
 }
 
-VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules)
+VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs)
 {
 	VM::Environment& env = prog.GetEnv();
 	VM::Program res(env);
@@ -564,7 +564,7 @@ VM::Program GP::MutateProg(const VM::Program &prog, const std::vector<std::pair<
 	return res;
 }
 
-VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules)
+VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2)
 {
 	VM::Environment &env = prog1.GetEnv();
 	if(&env != &prog2.GetEnv())

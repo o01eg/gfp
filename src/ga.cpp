@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -137,18 +137,18 @@ void GA::Save(const char *filename)
 
 Individual GA::GenerateRand() const
 {
-	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs, m_OptimizeRules);
+	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs);
 	return Individual(prog, {});
 }
 
 Individual GA::Mutation(const Individual& ind) const
 {
-	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs, m_OptimizeRules), ind.GetParents());
+	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs), ind.GetParents());
 }
 
 Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
 {
-	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram(), m_OptimizeRules), {ind1, ind2});
+	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram()), {ind1, ind2});
 }
 
 bool GA::Load(const char* filename, Individual *ind) const

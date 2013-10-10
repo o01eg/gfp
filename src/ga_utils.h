@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -104,19 +104,19 @@ namespace GP
 	/// \param env Environment.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
+	VM::Program GenerateProg(VM::Environment &env, const std::vector<std::pair<VM::Object, size_t> >& funcs);
 
 	/// \brief Mutate program.
 	/// \param prog Program.
 	/// \param funcs Functions for GA.
 	/// \return Generated program.
-	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs, const OptimizeRules& rules);
+	VM::Program MutateProg(const VM::Program &prog, const std::vector<std::pair<VM::Object, size_t> >& funcs);
 
 	/// \brief Crossover programs.
 	/// \param prog1 First program.
 	/// \param prog2 Second program.
 	/// \return Generated program.
-	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2, const OptimizeRules& rules);
+	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2);
 }
 
 #endif
