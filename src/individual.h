@@ -57,16 +57,13 @@ public:
 			ST_STATIC_NEG_ERROR_TOTAL, ///< Sum of ERRORs.
 			ST_STATIC_IF_TOTAL, ///< Sum of IFs.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
-			STATUS_VARIABLES
+			STATUS_VARIABLES ///< Mark of the end ResultStatus.
 		};
 
 		Result(int index)
 			: m_Index(index)
 		{
-			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
-			{
-				m_Quality[i] = 0;
-			}
+			std::fill(std::begin(m_Quality), std::end(m_Quality), 0);
 		}
 		Result(Result&& res)
 			: m_Result(std::move(res.m_Result))
@@ -93,14 +90,7 @@ public:
 				}
 				else
 				{
-					if(m_Quality[i] > result.m_Quality[i])
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return m_Quality[i] > result.m_Quality[i];
 				}
 			}
 			return false;
@@ -121,10 +111,7 @@ public:
 			{
 				m_Index = result.m_Index;
 				m_Result = std::move(result.m_Result);
-				for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
-				{
-					std::copy(std::begin(result.m_Quality), std::end(result.m_Quality), std::begin(m_Quality));
-				}
+				std::copy(std::begin(result.m_Quality), std::end(result.m_Quality), std::begin(m_Quality));
 			}
 			return *this;
 		}
@@ -248,10 +235,7 @@ public:
 	Result GetResult(int i) const
 	{
 		Result res(i);
-		for(size_t j = 0; j < Result::STATUS_VARIABLES; ++ j)
-		{
-			res.m_Quality[j] = m_Result.m_Quality[j];
-		}
+		std::copy(std::begin(m_Result.m_Quality), std::end(m_Result.m_Quality), std::begin(res.m_Quality));
 		res.m_Result = m_Result.m_Result;
 		return res;
 	}
