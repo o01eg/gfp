@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru> 
  *
  * This file is part of Genetic Function Programming.
  *
@@ -59,18 +59,8 @@ public:
 	/// \brief Examine population.
 	/// \return Results.
 	Results Examine() const;
-	
-	/// \brief Save population
-	/// \param[in] filename File for saving individual.
-	void Save(const char *filename);
-	
-	/// \brief Load population
-	/// \param[in] filename File with saved individual.
-	/// \return If file successfully loaded?
-	bool Load(const char *filename)
-	{
-		return Load(filename, &m_Population[m_PopulationSize - 1]);
-	}
+
+	void SetInd(size_t index, const std::string& str);
 
 	/// \brief Get individual from population.
 	/// Reference actual only before next Step.
@@ -93,12 +83,6 @@ private:
 	Individual GenerateRand() const;
 	Individual Mutation(const Individual& ind) const;
 	Individual Crossover(const Individual& ind1, const Individual& ind2) const;
-
-	/// \brief Load from file.
-	/// \param[in] filename File name.
-	/// \param[out] Loaded individual.
-	/// \return If loaded successly?
-	bool Load(const char* filename, Individual *ind) const;
 
 	mutable VM::Environment m_Env; ///< Environment.
 	size_t m_PopulationSize; ///< Size of population.

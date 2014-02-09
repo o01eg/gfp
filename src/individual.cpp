@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru> 
  *
  * This file is part of Genetic Function Programming.
  *
@@ -27,7 +27,6 @@
 #include <list>
 #include "individual.h"
 #include "world.h"
-#include "current_state.h"
 #include "conf.h"
 
 inline signed long antioverflow_plus(signed long x, signed long y)
@@ -44,7 +43,7 @@ const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 16)
 std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const std::vector<Individual>& population)
 {
 	std::vector<Individual::Result> results;
-	for(size_t i = 0; (i < population.size()) && CurrentState::IsRun(); ++ i)
+	for(size_t i = 0; i < population.size(); ++ i)
 	{
 		if(population[i].GetResult().IsTested())
 		{
@@ -69,7 +68,6 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		}
 		World world(env, DATA_DIR "labirint.txt");
 		env.SetProgram(population[i].GetProgram());
-		CurrentState::s_Program = &population[i].GetProgram();
 		VM::Object memory(env);
 		size_t circle_count = MAX_CIRCLES;
 		Result result(i);
@@ -106,7 +104,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		std::list<VM::Object> memories;
 		memories.push_back(memory);
 		size_t step = 0;
-		for(; CurrentState::IsRun() && (step < MAX_STEPS); ++ step)
+		for(; step < MAX_STEPS; ++ step)
 		{
 			VM::Object input(world.GetCurrentWorld(), memory);
 			if(std::find(inputs.begin(), inputs.end(), input) != inputs.end())
@@ -221,7 +219,6 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		
 		result.m_Result = ss.str();
 		results.push_back(std::move(result));
-		CurrentState::s_Program = NULL;
 	}
 	//std::sort(results.begin(), results.end());
 #if 0	

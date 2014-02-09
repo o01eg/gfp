@@ -11,15 +11,15 @@ Snapshot ????-??-?? ToDo
      + Generate ADF.
      + Mutate ADF.
      + Crossover ADF.
-   - Multithread examine.
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
-Now
+Version 0.0.7 2014-02-09
  * GP
    - Change output format.
    - Rewrite criteria.
    - Reduce optimization's steps.
+   - Multithread GA.
 
 Version 0.0.6 2013-07-19
  * VM

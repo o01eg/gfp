@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -23,6 +23,7 @@
  */
 
 #include <fstream>
+#include <sstream>
 #include "ga.h"
 #include "conf.h"
 #include "ga_utils.h"
@@ -106,7 +107,7 @@ bool GA::Step()
 
 		for(size_t i = 1; i < m_PopulationSize; ++ i)
 		{
-			if(rand() % 5 == 0)
+			if(rand() % 4 == 0)
 			{
 				new_population[i] = Mutation(new_population[i]);
 			}
@@ -129,12 +130,6 @@ void GA::DumpResults(const Population &population, std::ostream& os)
 	}
 }
 
-void GA::Save(const char *filename)
-{
-	std::ofstream f(filename);
-	f << GetInd(0).GetText();
-}
-
 Individual GA::GenerateRand() const
 {
 	VM::Program prog = GP::GenerateProg(m_Env, m_Funcs);
@@ -151,21 +146,17 @@ Individual GA::Crossover(const Individual& ind1, const Individual& ind2) const
 	return Individual(GP::CrossoverProg(ind1.GetProgram(), ind2.GetProgram()), {ind1, ind2});
 }
 
-bool GA::Load(const char* filename, Individual *ind) const
+void GA::SetInd(size_t index, const std::string& str)
 {
-	std::ifstream f(filename);
-	if(f.fail())
+	if(index < m_PopulationSize)
 	{
-		return false;
-	}
-	VM::Object obj(m_Env);
-	f >> obj;
-	if(ind)
-	{
+		VM::Object obj(m_Env);
+		std::stringstream ss(str);
+		ss >> obj;
+
 		VM::Program prog(obj);
-		(*ind) = Individual(std::move(prog), {});
-		ind->Optimize(m_OptimizeRules);
+		m_Population[index] = Individual(std::move(prog), {});
+		m_Population[index].Optimize(m_OptimizeRules);
 	}
-	return true;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -115,7 +115,7 @@ public:
 			}
 			return *this;
 		}
-		size_t GetIndex() const
+		int GetIndex() const
 		{
 			return m_Index;
 		}
