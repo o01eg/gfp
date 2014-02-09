@@ -6,7 +6,7 @@ AC_INIT(
  [o01eg@yandex.ru],
  [gfp])
 
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/gfp-labirinth-threaded.cpp])
 
 AC_CONFIG_HEADERS([config.h])
 
