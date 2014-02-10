@@ -51,7 +51,7 @@ void interrupt_handler(int /*signum*/)
 	VM::Environment::Stop();
 }
 
-void threaded_ga(size_t population_size)
+void threaded_ga(size_t thread_id, size_t population_size)
 {
 	GA ga(population_size);
 	bool publish = true;
@@ -63,7 +63,7 @@ void threaded_ga(size_t population_size)
 		if(! best_program.empty())
 		{
 			ga.SetInd(0, best_program);
-			std::clog << "Load best program: " << best_program << std::endl;
+			std::clog << "[" << thread_id << "] Load best program: " << best_program << std::endl;
 		}
 
 		publish_flag.clear(std::memory_order_release);
@@ -79,7 +79,7 @@ void threaded_ga(size_t population_size)
 		
 		thread_generation ++;
 
-		if(thread_generation > 500)
+		if(thread_generation >= 500)
 		{
 			publish = true;
 		}
@@ -107,6 +107,7 @@ void threaded_ga(size_t population_size)
 					{
 						//best into thread
 						ga.SetInd(0, best_program);
+						std::clog << "[" << thread_id << "] Accept published best." << std::endl;
 					}
 					else if(ga.GetInd(0).GetResult() < best_result)
 					{
@@ -114,7 +115,7 @@ void threaded_ga(size_t population_size)
 						best_result = ga.GetInd(0).GetResult();
 						best_program = ga.GetInd(0).GetText();
 
-						std::clog << std::endl << "Better." << std::endl;
+						std::clog << std::endl << "[" << thread_id << "] Better." << std::endl;
 						/*for(std::vector<Individual>::const_iterator parent = ga.GetInd(0).GetParents().begin(); parent != ga.GetInd(0).GetParents().end(); ++ parent)
 						{
 							std::clog << "parent = " << parent->GetText() << std::endl;
@@ -124,11 +125,15 @@ void threaded_ga(size_t population_size)
 						std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
 						ga.GetInd(0).GetResult().Dump(std::clog);
 					}
+					else
+					{
+						std::clog << "[" << thread_id << "] Thread's best same as published best." << std::endl;
+					}
 					// otherwise nothing to do.
 				}
 				
 				time_t cur = time(NULL);
-				std::clog << "generation = " << total_generations << " (" << static_cast<double>(total_generations)/(cur - st_time) << "g/s)" << std::endl << std::endl;
+				std::clog << "[" << thread_id << "] generation = " << total_generations << " (" << static_cast<double>(total_generations)/(cur - st_time) << "g/s)" << std::endl << std::endl;
 				std::cout.flush();
 				
 				publish_flag.clear(std::memory_order_release);
@@ -192,7 +197,7 @@ int main(int argc, char **argv)
 
 	for(size_t t = 0; t < num_threads; ++ t)
 	{
-		threads.push_back(std::thread(threaded_ga, population_size));
+		threads.push_back(std::thread(threaded_ga, t, population_size));
 	}
 
 	//while(CurrentState::IsRun())
