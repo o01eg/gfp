@@ -51,7 +51,7 @@ AC_ARG_ENABLE([prof-gen],
 AC_ARG_ENABLE([prof-use],
 	[AS_HELP_STRING([--enable-prof-use],
 		[use profile information @<:@default=no@:>@])],
-	[CXXFLAGS="-fprofile-use $CXXFLAGS";LDFLAGS="-fprofile-use $LDFLAGS"],
+	[CXXFLAGS="-fprofile-use -fprofile-correction $CXXFLAGS";LDFLAGS="-fprofile-use -fprofile-correction $LDFLAGS"],
 	[])
 
 AC_ARG_ENABLE([debug],
