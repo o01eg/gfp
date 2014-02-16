@@ -62,6 +62,28 @@ public:
 			STATUS_VARIABLES ///< Mark of the end ResultStatus.
 		};
 
+		static constexpr const char* ResultNames[STATUS_VARIABLES] =
+		{
+			"ST_DIRS_MIN_3",
+			"ST_AREA_SIZE", ///< Size of path's area.
+			"ST_DIRS", ///< Number of used directions.
+			"ST_STATIC_WORLD_ACCESS", ///< Static check for world access.
+			"ST_STATIC_MEMORY_ACCESS", ///< Static check for memory access.
+			"ST_GOOD_MOVES", ///< Count of good moves.
+			"ST_ALL_MOVES", ///< Count of any correct moves.
+			"ST_STEPS", ///< Number of steps.
+			"ST_MAX_ANSWER_QUALITY", ///< Max of move quality.
+			"ST_MIN_ANSWER_QUALITY", ///< Max of move quality.
+			"ST_COUNT_MEMORY", ///< Count of different memories.
+			"ST_ANSWER_QUALITY", ///< Aggregation of move quality.
+			"ST_NEG_ERROR_RESET", ///< Count of memory reset by ERROR.
+			"ST_NEG_RESET", ///< Count of memoty reset by not LIST.
+			"ST_STATIC_NEG_ERROR_TOTAL", ///< Sum of ERRORs.
+			"ST_STATIC_IF_TOTAL", ///< Sum of IFs.
+			"ST_NEG_CIRCLES", ///< Sum of least circles.
+			"ST_STATIC_FUNC_TOTAL" ///< Count of not-NIL ADFs.
+		};
+
 		Result(int index)
 			: m_Index(index)
 		{
@@ -124,24 +146,10 @@ public:
 		void Dump(std::ostream &os) const
 		{
 			os << "result = " << m_Result;
-			os << "result[DIRS_MIN_3] = " << m_Quality[ST_DIRS_MIN_3] << std::endl;
-			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
-			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
-			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
-			os << "result[STATIC_MEMORY_ACCESS] = " << m_Quality[ST_STATIC_MEMORY_ACCESS] << std::endl;
-			os << "result[GOOD_MOVES] = " << m_Quality[ST_GOOD_MOVES] << std::endl;
-			os << "result[ALL_MOVES] = " << m_Quality[ST_ALL_MOVES] << std::endl;
-			os << "result[STEPS] = " << m_Quality[ST_STEPS] << std::endl;
-			os << "result[MAX_ANSWER_QUALITY] = " << m_Quality[ST_MAX_ANSWER_QUALITY] << std::endl;
-			os << "result[MIN_ANSWER_QUALITY] = " << m_Quality[ST_MIN_ANSWER_QUALITY] << std::endl;
-			os << "result[COUNT_MEMORY] = " << m_Quality[ST_COUNT_MEMORY] << std::endl;
-			os << "result[ANSWER_QUALITY] = " << m_Quality[ST_ANSWER_QUALITY] << std::endl;
-			os << "result[NEG_ERROR_RESET] = " << m_Quality[ST_NEG_ERROR_RESET] << std::endl;
-			os << "result[NEG_RESET] = " << m_Quality[ST_NEG_RESET] << std::endl;
-			os << "result[STATIC_NEG_ERROR_TOTAL] = " << m_Quality[ST_STATIC_NEG_ERROR_TOTAL] << std::endl;
-			os << "result[STATIC_IF_TOTAL] = " << m_Quality[ST_STATIC_IF_TOTAL] << std::endl;
-			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
-			os << "result[STATIC_FUNC_TOTAL] = " << m_Quality[ST_STATIC_FUNC_TOTAL] << std::endl;
+			for(size_t i = 0; i < STATUS_VARIABLES; ++ i)
+			{
+				os << "result[" << ResultNames[i] << "] = " << m_Quality[i] << std::endl;
+			}
 		}
 		bool IsTested() const
 		{

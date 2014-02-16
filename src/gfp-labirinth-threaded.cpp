@@ -111,11 +111,20 @@ void threaded_ga(size_t thread_id, size_t population_size)
 					}
 					else if(ga.GetInd(0).GetResult() < best_result)
 					{
+						// get better status
+						for(size_t i = 0; i < Individual::Result::STATUS_VARIABLES; ++ i)
+						{
+							if(ga.GetInd(0).GetResult().m_Quality[i] > best_result.m_Quality[i])
+							{
+								std::clog << std::endl << "[" << thread_id << "] Better in " << Individual::Result::ResultNames[i] << std::endl;
+								break;
+							}
+						}
+
 						// thread into best
 						best_result = ga.GetInd(0).GetResult();
 						best_program = ga.GetInd(0).GetText();
 
-						std::clog << std::endl << "[" << thread_id << "] Better." << std::endl;
 						for(std::vector<Individual>::const_iterator parent = ga.GetInd(0).GetParents().begin(); parent != ga.GetInd(0).GetParents().end(); ++ parent)
 						{
 							std::clog << "parent = " << parent->GetText() << std::endl;

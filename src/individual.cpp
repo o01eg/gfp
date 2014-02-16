@@ -40,6 +40,8 @@ inline signed long antioverflow_plus(signed long x, signed long y)
 const size_t MAX_CIRCLES = Config::Instance().GetSLong("max-evalation-loops", 1000); ///< Maximum of eval circles.
 const size_t MAX_STEPS = Config::Instance().GetSLong("max-individual-steps", 16); ///< Maximum of any moves.
 
+constexpr const char* Individual::Result::ResultNames[STATUS_VARIABLES];
+
 std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const std::vector<Individual>& population)
 {
 	std::vector<Individual::Result> results;

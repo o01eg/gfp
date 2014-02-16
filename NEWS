@@ -6,6 +6,7 @@ Snapshot ????-??-?? ToDo
    - Macroses.
    - Own tokenizer.
    - Use SYMBOL for storing FUNC name.
+   - Merge equal Object and WeakObject on compare.
  * GP
    * Static types.
      + Generate ADF.
@@ -17,6 +18,7 @@ Snapshot ????-??-?? ToDo
 Now
  * GP
    - Split ADF.
+   - Show updated criteria.
 
 Version 0.0.7 2014-02-09
  * GP

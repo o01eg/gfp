@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru> 
  *
  * This file is part of Genetic Function Programming.
  *
@@ -24,8 +24,6 @@
 
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
-
-#include <config.h>
 
 #include <unordered_map>
 #include <stack>
