@@ -93,11 +93,12 @@ bool GA::Step()
 
 		// make parent pool by tournament
 		std::vector<size_t> parent_pool;
-		while(parent_pool.size() < m_PopulationSize - 1)
+		parent_pool.push_back(results[0].GetIndex());
+		while(parent_pool.size() < m_PopulationSize)
 		{
 			size_t i1 = rand() % results.size();
 			size_t i2 = rand() % results.size();
-			parent_pool.push_back(std::min(results[i1], results[i2]).GetIndex());
+			parent_pool.push_back(results[std::min(i1, i2)].GetIndex());
 		}
 
 		while(new_population.size() < m_PopulationSize)
