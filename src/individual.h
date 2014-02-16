@@ -41,7 +41,8 @@ public:
 	public:
 		enum ResultStatus
 		{
-			ST_AREA_SIZE = 0, ///< Size of path's area.
+			ST_DIRS_MIN_3 = 0, ///< Number of used directions if less than 3 or 3.
+			ST_AREA_SIZE, ///< Size of path's area.
 			ST_DIRS, ///< Number of used directions.
 			ST_STATIC_WORLD_ACCESS, ///< Static check for world access.
 			ST_STATIC_MEMORY_ACCESS, ///< Static check for memory access.
@@ -57,6 +58,7 @@ public:
 			ST_STATIC_NEG_ERROR_TOTAL, ///< Sum of ERRORs.
 			ST_STATIC_IF_TOTAL, ///< Sum of IFs.
 			ST_NEG_CIRCLES, ///< Sum of least circles.
+			ST_STATIC_FUNC_TOTAL, ///< Count of not-NIL ADFs.
 			STATUS_VARIABLES ///< Mark of the end ResultStatus.
 		};
 
@@ -122,6 +124,7 @@ public:
 		void Dump(std::ostream &os) const
 		{
 			os << "result = " << m_Result;
+			os << "result[DIRS_MIN_3] = " << m_Quality[ST_DIRS_MIN_3] << std::endl;
 			os << "result[AREA_SIZE] = " << m_Quality[ST_AREA_SIZE] << std::endl;
 			os << "result[DIRS] = " << m_Quality[ST_DIRS] << std::endl;
 			os << "result[STATIC_WORLD_ACCESS] = " << m_Quality[ST_STATIC_WORLD_ACCESS] << std::endl;
@@ -138,6 +141,7 @@ public:
 			os << "result[STATIC_NEG_ERROR_TOTAL] = " << m_Quality[ST_STATIC_NEG_ERROR_TOTAL] << std::endl;
 			os << "result[STATIC_IF_TOTAL] = " << m_Quality[ST_STATIC_IF_TOTAL] << std::endl;
 			os << "result[NEG_CIRCLES] = " << m_Quality[ST_NEG_CIRCLES] << std::endl;
+			os << "result[STATIC_FUNC_TOTAL] = " << m_Quality[ST_STATIC_FUNC_TOTAL] << std::endl;
 		}
 		bool IsTested() const
 		{

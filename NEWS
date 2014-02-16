@@ -14,6 +14,10 @@ Snapshot ????-??-?? ToDo
    - Add scripting for individual testing and comparsion.
    - Support for galapagos (https://github.com/brunoro/galapagos) visualisation tool.
 
+Now
+ * GP
+   - Split ADF.
+
 Version 0.0.7 2014-02-09
  * GP
    - Change output format.

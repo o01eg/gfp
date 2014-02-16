@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -115,12 +115,11 @@ void Program::SetADF(size_t num, const Object& obj)
 	m_ADFs[num] = obj;
 }
 
-void Program::Minimize()
+std::vector<unsigned int> Program::GetADFCallMap() const
 {
-	std::vector<bool> adf_calls(m_ADFs.size() * m_ADFs.size(), false);
+	std::vector<unsigned int> adf_call_map(m_ADFs.size() * m_ADFs.size(), 0);
 	std::stack<VM::WeakObject> stack;
-	size_t adf_index;
-	for(adf_index = 0; adf_index < m_ADFs.size(); adf_index ++)
+	for(size_t adf_index = 0; adf_index < m_ADFs.size(); ++ adf_index)
 	{
 		stack.push(m_ADFs[adf_index]);
 		while(! stack.empty())
@@ -133,7 +132,7 @@ void Program::Minimize()
 				{
 					if(temp.GetValue() < m_ADFs.size())
 					{
-						adf_calls[adf_index * m_ADFs.size() + temp.GetValue()] = true;
+						++ adf_call_map[adf_index * m_ADFs.size() + temp.GetValue()];
 					}
 					else
 					{
@@ -151,6 +150,13 @@ void Program::Minimize()
 		}
 	}
 
+	return adf_call_map;
+}
+
+void Program::Minimize()
+{
+	std::vector<unsigned int> adf_call_map = GetADFCallMap();
+
 #if 0
 	// dump adf_calls
 	for(adf_index = 0; adf_index < m_ADFs.size(); adf_index ++)
@@ -167,13 +173,13 @@ void Program::Minimize()
 	}
 #endif
 
-	for(adf_index = 1; adf_index < m_ADFs.size(); adf_index ++)
+	for(size_t adf_index = 1; adf_index < m_ADFs.size(); adf_index ++)
 	{
 		// check each function to calls from above ADF
 		bool called = false;
-		for(size_t adf_above_index = 0; adf_above_index < adf_index; adf_above_index ++)
+		for(size_t adf_from_index = 0; adf_from_index < adf_index; ++ adf_from_index)
 		{
-			if(adf_calls[adf_above_index * m_ADFs.size() + adf_index])
+			if(adf_call_map[adf_from_index * m_ADFs.size() + adf_index])
 			{
 				called = true;
 				break;
@@ -184,10 +190,10 @@ void Program::Minimize()
 			// remove ADF
 			m_CachedSave = Object(m_CachedSave.GetEnv()); // clean cache
 
-			m_ADFs[adf_index] = Object(m_CachedSave.GetEnv());
-			for(size_t adf_below_index = adf_index; adf_below_index < m_ADFs.size(); adf_below_index ++)
+			m_ADFs[adf_index] = m_CachedSave;
+			for(size_t adf_to_index = adf_index; adf_to_index < m_ADFs.size(); ++ adf_to_index)
 			{
-				adf_calls[adf_index * m_ADFs.size() + adf_below_index] = false;
+				adf_call_map[adf_index * m_ADFs.size() + adf_to_index] = 0;
 			}
 		}
 	}

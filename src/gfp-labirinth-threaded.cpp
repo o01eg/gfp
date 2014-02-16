@@ -116,12 +116,12 @@ void threaded_ga(size_t thread_id, size_t population_size)
 						best_program = ga.GetInd(0).GetText();
 
 						std::clog << std::endl << "[" << thread_id << "] Better." << std::endl;
-						/*for(std::vector<Individual>::const_iterator parent = ga.GetInd(0).GetParents().begin(); parent != ga.GetInd(0).GetParents().end(); ++ parent)
+						for(std::vector<Individual>::const_iterator parent = ga.GetInd(0).GetParents().begin(); parent != ga.GetInd(0).GetParents().end(); ++ parent)
 						{
 							std::clog << "parent = " << parent->GetText() << std::endl;
 							parent->GetResult().Dump(std::clog);
 							std::clog << "   =====" << std::endl;
-						}*/
+						}
 						std::clog << "1st = " << ga.GetInd(0).GetText() << std::endl;
 						ga.GetInd(0).GetResult().Dump(std::clog);
 					}

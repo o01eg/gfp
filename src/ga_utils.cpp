@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -21,6 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+#include <list>
 
 #include "ga_utils.h"
 #include "vm/program.h"
@@ -606,5 +608,113 @@ VM::Program GP::CrossoverProg(const VM::Program &prog1, const VM::Program &prog2
 		res.SetADF(adf_index, adf);
 	}
 	return res;
+}
+
+VM::Object GP::RandomChangeADF(const VM::Object& obj, size_t adf_index_from, size_t adf_index_to)
+{
+	if(! obj.IsNIL())
+	{
+		if((obj.GetType() == VM::ADF) && (obj.GetValue() == adf_index_from))
+		{
+			if(rand() % 2)
+			{
+				return VM::Object(obj.GetEnv(), VM::ADF, adf_index_to);
+			}
+		}
+
+		if(obj.GetType() == VM::LIST)
+		{
+			return VM::Object(RandomChangeADF(obj.GetHead(), adf_index_from, adf_index_to)
+				, RandomChangeADF(obj.GetTail(), adf_index_from, adf_index_to));
+		}
+	}
+	return obj;
+}
+
+VM::Program GP::SplitADFProg(const VM::Program &prog)
+{
+	const auto adf_call_map = prog.GetADFCallMap();
+
+	std::list<size_t> multi_called_func;
+	for(size_t adf_to_index = 1; adf_to_index < prog.GetSize(); ++ adf_to_index)
+	{
+		size_t calls = 0;
+		for(size_t adf_from_index = 0; adf_from_index <= adf_to_index; ++ adf_from_index)
+		{
+			calls += adf_call_map[adf_from_index * prog.GetSize() + adf_to_index];
+		}
+		if(calls >= 2)
+		{
+			multi_called_func.push_back(adf_to_index);
+		}
+	}
+
+	if(multi_called_func.empty())
+	{
+		// cann't split any.
+		return prog;
+	}
+
+	for(const size_t adf_to_split : multi_called_func)
+	{
+		std::vector<size_t> split_poss;
+
+		// going up
+		size_t adf_up = adf_to_split - 1;
+		while(adf_up >= 1)
+		{
+			//check if up ADF calls splitting ADF.
+			if(adf_call_map[adf_up * prog.GetSize() + adf_to_split] > 0)
+			{
+				break;
+			}
+
+			if(prog.GetADF(adf_up).IsNIL())
+			{
+				split_poss.push_back(adf_up);
+			}
+
+			-- adf_up;
+		}
+
+		// going down
+		size_t adf_down = adf_to_split + 1;
+		while(adf_down < prog.GetSize())
+		{
+			//check if down ADF called by splitting ADF.
+			if(adf_call_map[adf_to_split * prog.GetSize() + adf_down] > 0)
+			{
+				break;
+			}
+
+			if(prog.GetADF(adf_down).IsNIL())
+			{
+				split_poss.push_back(adf_down);
+			}
+
+			++ adf_down;
+		}
+
+		if(! split_poss.empty())
+		{
+			// choose random position
+			size_t adf_split_pos = split_poss[rand() % split_poss.size()];
+			VM::Program res(prog);
+			res.SetADF(adf_split_pos, res.GetADF(adf_to_split));
+
+			// randomizely change %adf_to_split to %adf_split_pos in caller ADF.
+			for(size_t adf_i = 0; adf_i <= std::min(adf_split_pos, adf_to_split); ++ adf_i)
+			{
+				if(adf_call_map[adf_i * prog.GetSize() + adf_to_split] > 0)
+				{
+					res.SetADF(adf_i, RandomChangeADF(res.GetADF(adf_i), adf_to_split, adf_split_pos));
+				}
+			}
+
+			return res;
+		}
+	}
+
+	return prog;
 }
 

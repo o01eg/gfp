@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -146,6 +146,10 @@ namespace VM
 		/// \brief Get number of not-NIL ADFs.
 		/// \return Number of ADFs.
 		size_t GetSettedADFs() const;
+
+		/// \brief Return call map if format [from * size + to] -> number of calls.
+		/// \return Call map.
+		std::vector<unsigned int> GetADFCallMap() const;
 
 		/// \brief Get environment.
 		/// \return Environment.

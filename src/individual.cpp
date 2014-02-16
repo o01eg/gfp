@@ -82,6 +82,8 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 		{
 			result.m_Quality[Result::ST_STATIC_IF_TOTAL] = 5;
 		}
+		result.m_Quality[Result::ST_STATIC_FUNC_TOTAL] = population[i].GetProgram().GetSettedADFs();
+
 		std::stringstream ss;
 		bool dirs[4] = {false, false, false, false};
 
@@ -216,6 +218,7 @@ std::vector<Individual::Result> Individual::Execute(VM::Environment &env, const 
 				result.m_Quality[Result::ST_DIRS] ++;
 			}
 		}
+		result.m_Quality[Result::ST_DIRS_MIN_3] = std::min<long int>(result.m_Quality[Result::ST_DIRS], 3);
 		
 		result.m_Result = ss.str();
 		results.push_back(std::move(result));
@@ -292,7 +295,8 @@ size_t Individual::CheckMove(const VM::WeakObject &move, std::map<int, signed lo
 
 	if(l.IsNIL())
 	{
-		quality += 16;
+		//add positive fitness for perfect directions object.
+		quality += 100;
 	}
 	else
 	{

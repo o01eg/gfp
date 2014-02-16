@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013 O01eg <o01eg@yandex.ru>
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -117,6 +117,14 @@ namespace GP
 	/// \param prog2 Second program.
 	/// \return Generated program.
 	VM::Program CrossoverProg(const VM::Program &prog1, const VM::Program &prog2);
+
+	/// \brief Change some %adf_index_from into %adf_index_to
+	VM::Object RandomChangeADF(const VM::Object& obj, size_t adf_index_from, size_t adf_index_to);
+
+	/// \brief Split ADF in program.
+	/// \param prog Program.
+	/// \return Generated program.
+	VM::Program SplitADFProg(const VM::Program &prog);
 }
 
 #endif

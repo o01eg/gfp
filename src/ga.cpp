@@ -138,6 +138,10 @@ Individual GA::GenerateRand() const
 
 Individual GA::Mutation(const Individual& ind) const
 {
+	if(rand() % 2)
+	{
+		Individual(GP::SplitADFProg(ind.GetProgram()), ind.GetParents());
+	}
 	return Individual(GP::MutateProg(ind.GetProgram(), m_Funcs), ind.GetParents());
 }
 
