@@ -25,7 +25,7 @@
 #include <fstream>
 #include <ctime>
 #include <set>
-#include <vm/ioobject.h>
+#include "vm/ioobject.h"
 
 int main(int, char **)
 {
