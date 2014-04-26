@@ -29,6 +29,10 @@
 //#include <mutex>
 #include <atomic>
 
+#ifdef _WINDOWS
+#include <signal.h>
+#endif
+
 #include "conf.h"
 #include "ga.h"
 
@@ -158,6 +162,7 @@ void threaded_ga(size_t thread_id, size_t population_size)
 /// \return Exit code.
 int main(int argc, char **argv)
 {
+#ifndef _WINDOWS
 	struct sigaction sa;
 	sa.sa_handler = interrupt_handler;
 	sa.sa_flags = 0;
@@ -168,6 +173,13 @@ int main(int argc, char **argv)
 		std::cerr << "Cann't set interrupt handler." << std::endl;
 		return 1;
 	}
+#else
+	signal(SIGINT, interrupt_handler);
+	if (errno != 0)
+	{
+		std::cerr << "Cann't set interrupt handler: " << strerror(errno) << std::endl;
+	}
+#endif
 
 	time_t seed = Config::Instance().GetSLong("seed", time(NULL));
 	std::cout << "seed = " << seed << std::endl;

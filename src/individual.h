@@ -62,27 +62,7 @@ public:
 			STATUS_VARIABLES ///< Mark of the end ResultStatus.
 		};
 
-		static constexpr const char* ResultNames[STATUS_VARIABLES] =
-		{
-			"ST_DIRS_MIN_3",
-			"ST_AREA_SIZE", ///< Size of path's area.
-			"ST_DIRS", ///< Number of used directions.
-			"ST_STATIC_WORLD_ACCESS", ///< Static check for world access.
-			"ST_STATIC_MEMORY_ACCESS", ///< Static check for memory access.
-			"ST_GOOD_MOVES", ///< Count of good moves.
-			"ST_ALL_MOVES", ///< Count of any correct moves.
-			"ST_STEPS", ///< Number of steps.
-			"ST_MAX_ANSWER_QUALITY", ///< Max of move quality.
-			"ST_MIN_ANSWER_QUALITY", ///< Max of move quality.
-			"ST_COUNT_MEMORY", ///< Count of different memories.
-			"ST_ANSWER_QUALITY", ///< Aggregation of move quality.
-			"ST_NEG_ERROR_RESET", ///< Count of memory reset by ERROR.
-			"ST_NEG_RESET", ///< Count of memoty reset by not LIST.
-			"ST_STATIC_NEG_ERROR_TOTAL", ///< Sum of ERRORs.
-			"ST_STATIC_IF_TOTAL", ///< Sum of IFs.
-			"ST_NEG_CIRCLES", ///< Sum of least circles.
-			"ST_STATIC_FUNC_TOTAL" ///< Count of not-NIL ADFs.
-		};
+		static const char* ResultNames[STATUS_VARIABLES];
 
 		Result(int index)
 			: m_Index(index)

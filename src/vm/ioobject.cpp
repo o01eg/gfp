@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 O01eg <o01eg@yandex.ru> 
+ * Copyright (C) 2010-2014 O01eg <o01eg@yandex.ru>
  *
  * This file is part of Genetic Function Programming.
  *
@@ -90,7 +90,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 				break;
 			case LIST:
 				{
-					signed long w = width;
+					std::streamsize w = width;
 					std::stack<bool> arrow_stack; // true - head, false - tail
 					std::stack<WeakObject> stack;
 					arrow_stack.push(true);
@@ -111,7 +111,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 								if(not_width || (w > 0))
 								{
 									os << "NIL ";
-									w = std::max(0l, w - 4);
+									w = std::max<std::streamsize>(0l, w - 4);
 								}
 							}
 							else
@@ -126,7 +126,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 									if(not_width || (w > 0))
 									{
 										os << "( ";
-										w = std::max(0l, w - 2);
+										w = std::max<std::streamsize>(0l, w - 2);
 									}
 									//level ++;
 									stack.push(object.GetTail());
@@ -139,7 +139,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 									if(not_width || (w > 0))
 									{
 										os << std::setw(w) << object;
-										w = std::max(0l, w - 2);
+										w = std::max<std::streamsize>(0l, w - 2);
 									}
 								}
 							}
@@ -151,7 +151,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 								if(not_width || (w > 0))
 								{
 									os << ") ";
-									w = std::max(0l, w - 2);
+									w = std::max<std::streamsize>(0l, w - 2);
 								}
 								//level --;
 							}
@@ -169,7 +169,7 @@ std::ostream& VM::operator<<(std::ostream& ostr, const WeakObject& obj)
 									if(not_width || (w > 0))
 									{
 										os << ". " << std::setw(w) << object << ") ";
-										w = std::max(0l, w - 6);
+										w = std::max<std::streamsize>(0l, w - 6);
 									}
 									//level --;
 								}
